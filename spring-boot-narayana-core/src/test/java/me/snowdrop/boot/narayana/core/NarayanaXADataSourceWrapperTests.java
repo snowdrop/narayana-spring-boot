@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.snowdrop.boot.narayana;
+package me.snowdrop.boot.narayana.core;
 
 import javax.sql.DataSource;
 import javax.sql.XADataSource;

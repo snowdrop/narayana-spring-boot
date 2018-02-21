@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.snowdrop.boot.narayana;
+package me.snowdrop.boot.narayana.core;
 
 import java.io.PrintWriter;
 import java.sql.Connection;

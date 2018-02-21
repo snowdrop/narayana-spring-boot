@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.snowdrop.boot.narayana;
+package me.snowdrop.boot.narayana.core;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.XAConnectionFactory;
