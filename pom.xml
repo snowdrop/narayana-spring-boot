@@ -22,8 +22,8 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>TODO</name>
-  <description>TODO</description>
+  <name>Spring Boot Narayana integration :: parent</name>
+  <description>Spring Boot Narayana integration parent</description>
 
   <properties>
     <main.basedir>${basedir}</main.basedir>
@@ -32,7 +32,17 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+    <assertj.version>3.9.0</assertj.version>
     <checkstyle.version>8.5</checkstyle.version>
+    <jboss-logging.version>3.2.1.Final</jboss-logging.version>
+    <jboss-transaction-spi.version>7.6.0.Final</jboss-transaction-spi.version>
+    <jms-api.version>2.0.1</jms-api.version>
+    <junit.version>4.12</junit.version>
+    <mockito.version>2.15.0</mockito.version>
+    <narayana.version>5.7.2.Final</narayana.version>
+    <spring.version>5.0.1.RELEASE</spring.version>
+    <spring-boot.version>2.0.0.M6</spring-boot.version>
+
     <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
     <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
     <maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
@@ -41,6 +51,71 @@
     <maven-surefire-plugin.version>2.20.1</maven-surefire-plugin.version>
     <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
   </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot</artifactId>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.narayana.jta</groupId>
+        <artifactId>jta</artifactId>
+        <version>${narayana.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.narayana.jta</groupId>
+        <artifactId>jdbc</artifactId>
+        <version>${narayana.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.narayana.jta</groupId>
+        <artifactId>jms</artifactId>
+        <version>${narayana.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.narayana.jts</groupId>
+        <artifactId>narayana-jts-integration</artifactId>
+        <version>${narayana.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss</groupId>
+        <artifactId>jboss-transaction-spi</artifactId>
+        <version>${jboss-transaction-spi.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.logging</groupId>
+        <artifactId>jboss-logging</artifactId>
+        <version>${jboss-logging.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.jms</groupId>
+        <artifactId>javax.jms-api</artifactId>
+        <version>${jms-api.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${mockito.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>${assertj.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <build>
     <pluginManagement>
@@ -174,4 +249,8 @@
       </plugin>
     </plugins>
   </build>
+
+  <modules>
+    <module>spring-boot-narayana-core</module>
+  </modules>
 </project>
