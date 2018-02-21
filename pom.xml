@@ -60,6 +60,16 @@
         <version>${spring-boot.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-autoconfigure</artifactId>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-tx</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-test</artifactId>
         <version>${spring.version}</version>
@@ -252,5 +262,6 @@
 
   <modules>
     <module>spring-boot-narayana-core</module>
+    <module>spring-boot-narayana-autoconfigure</module>
   </modules>
 </project>
