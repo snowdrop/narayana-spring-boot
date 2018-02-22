@@ -34,6 +34,7 @@ import org.jboss.narayana.jta.jms.TransactionHelper;
 import org.jboss.tm.XAResourceRecoveryRegistry;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.ApplicationHome;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.transaction.TransactionManagerCustomizers;
@@ -52,13 +53,13 @@ import org.springframework.util.StringUtils;
  * JTA Configuration for <a href="http://narayana.io/">Narayana</a>.
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
- * @author Kazuki Shimizu
  */
 @Configuration
-@ConditionalOnClass({JtaTransactionManager.class, com.arjuna.ats.jta.UserTransaction.class,
-        XAResourceRecoveryRegistry.class})
+@ConditionalOnClass(
+        { JtaTransactionManager.class, com.arjuna.ats.jta.UserTransaction.class, XAResourceRecoveryRegistry.class })
 @ConditionalOnMissingBean(PlatformTransactionManager.class)
-@EnableConfigurationProperties(JtaProperties.class)
+@EnableConfigurationProperties({ JtaProperties.class, NarayanaProperties.class })
+@AutoConfigureBefore(name = "org.springframework.boot.autoconfigure.transaction.jta.NarayanaJtaConfiguration")
 public class NarayanaJtaConfiguration {
 
     private final JtaProperties jtaProperties;
@@ -69,12 +70,6 @@ public class NarayanaJtaConfiguration {
             ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers) {
         this.jtaProperties = jtaProperties;
         this.transactionManagerCustomizers = transactionManagerCustomizers.getIfAvailable();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public NarayanaProperties narayanaProperties() {
-        return new NarayanaProperties();
     }
 
     @Bean
@@ -149,7 +144,7 @@ public class NarayanaJtaConfiguration {
      * JMS specific JTA configuration.
      */
     @Configuration
-    @ConditionalOnClass({Message.class, TransactionHelper.class})
+    @ConditionalOnClass({ Message.class, TransactionHelper.class })
     static class NarayanaJtaJmsConfiguration {
 
         @Bean

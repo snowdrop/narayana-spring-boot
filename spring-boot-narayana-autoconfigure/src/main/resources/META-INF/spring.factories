@@ -1,1 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 me.snowdrop.boot.narayana.autoconfigure.NarayanaJtaConfiguration
