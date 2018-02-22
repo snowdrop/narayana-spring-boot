@@ -26,7 +26,7 @@
 
   <artifactId>spring-boot-narayana-core</artifactId>
 
-  <name>Spring Boot Narayana integration :: core</name>
+  <name>Spring Boot Narayana :: core</name>
   <description>Spring Boot Narayana integration core</description>
 
   <dependencies>

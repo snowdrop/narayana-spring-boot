@@ -22,7 +22,7 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Spring Boot Narayana integration :: parent</name>
+  <name>Spring Boot Narayana :: parent</name>
   <description>Spring Boot Narayana integration parent</description>
 
   <properties>
@@ -42,6 +42,7 @@
     <narayana.version>5.7.2.Final</narayana.version>
     <spring.version>5.0.1.RELEASE</spring.version>
     <spring-boot.version>2.0.0.M6</spring-boot.version>
+    <transaction-api.version>1.2</transaction-api.version>
 
     <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
     <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
@@ -108,6 +109,11 @@
         <groupId>javax.jms</groupId>
         <artifactId>javax.jms-api</artifactId>
         <version>${jms-api.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.transaction</groupId>
+        <artifactId>javax.transaction-api</artifactId>
+        <version>${transaction-api.version}</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
@@ -263,5 +269,6 @@
   <modules>
     <module>spring-boot-narayana-core</module>
     <module>spring-boot-narayana-autoconfigure</module>
+    <module>spring-boot-narayana-starter</module>
   </modules>
 </project>
