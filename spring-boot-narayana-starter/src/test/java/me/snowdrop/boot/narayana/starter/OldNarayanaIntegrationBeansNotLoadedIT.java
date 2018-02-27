@@ -18,6 +18,7 @@ package me.snowdrop.boot.narayana.starter;
 
 import java.util.Arrays;
 
+import me.snowdrop.boot.narayana.starter.app.TestApplication;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,7 +45,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
 @RunWith(Parameterized.class)
-@SpringBootTest
+@SpringBootTest(classes = TestApplication.class)
 public class OldNarayanaIntegrationBeansNotLoadedIT {
 
     @ClassRule

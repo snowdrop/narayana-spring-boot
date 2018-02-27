@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.snowdrop.boot.narayana.starter;
+package me.snowdrop.boot.narayana.starter.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

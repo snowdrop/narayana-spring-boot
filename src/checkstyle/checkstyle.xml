@@ -69,7 +69,7 @@
     <module name="com.puppycrawl.tools.checkstyle.checks.imports.AvoidStarImportCheck"/>
     <module name="com.puppycrawl.tools.checkstyle.checks.imports.AvoidStaticImportCheck">
       <property name="excludes"
-                value="io.restassured.RestAssured.*, org.assertj.core.api.Assertions.*, org.junit.Assert.*, org.junit.Assume.*, org.junit.internal.matchers.ThrowableMessageMatcher.*, org.hamcrest.CoreMatchers.*, org.hamcrest.Matchers.*, org.mockito.Mockito.*, org.mockito.BDDMockito.*, org.mockito.ArgumentMatchers.*, org.mockito.Matchers.*"/>
+                value="org.awaitility.Awaitility.*, org.awaitility.Duration.*, io.restassured.RestAssured.*, org.assertj.core.api.Assertions.*, org.junit.Assert.*, org.junit.Assume.*, org.junit.internal.matchers.ThrowableMessageMatcher.*, org.hamcrest.CoreMatchers.*, org.hamcrest.Matchers.*, org.mockito.Mockito.*, org.mockito.BDDMockito.*, org.mockito.ArgumentMatchers.*, org.mockito.Matchers.*"/>
     </module>
     <module name="com.puppycrawl.tools.checkstyle.checks.imports.IllegalImportCheck"/>
     <module name="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>

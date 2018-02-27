@@ -27,6 +27,7 @@ import me.snowdrop.boot.narayana.core.NarayanaProperties;
 import me.snowdrop.boot.narayana.core.NarayanaRecoveryManagerBean;
 import me.snowdrop.boot.narayana.core.NarayanaXAConnectionFactoryWrapper;
 import me.snowdrop.boot.narayana.core.NarayanaXADataSourceWrapper;
+import me.snowdrop.boot.narayana.starter.app.TestApplication;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,7 +48,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
 @RunWith(Parameterized.class)
-@SpringBootTest
+@SpringBootTest(classes = TestApplication.class)
 public class NarayanaIntegrationBeansLoadedIT {
 
     @ClassRule
