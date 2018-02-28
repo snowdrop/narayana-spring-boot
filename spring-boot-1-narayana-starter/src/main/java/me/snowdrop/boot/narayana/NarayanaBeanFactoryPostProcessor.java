@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package me.snowdrop.boot.narayana.core;
+package me.snowdrop.boot.narayana;
 
 import javax.transaction.TransactionManager;
 
+import com.arjuna.ats.jbossatx.jta.RecoveryManagerService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -37,11 +38,11 @@ public class NarayanaBeanFactoryPostProcessor implements BeanFactoryPostProcesso
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         String[] transactionManagers = beanFactory.getBeanNamesForType(TransactionManager.class, true, false);
-        String[] recoveryManagers = beanFactory.getBeanNamesForType(NarayanaRecoveryManagerBean.class, true, false);
+        String[] recoveryManagerServices = beanFactory.getBeanNamesForType(RecoveryManagerService.class, true, false);
         addBeanDependencies(beanFactory, transactionManagers, "javax.sql.DataSource");
-        addBeanDependencies(beanFactory, recoveryManagers, "javax.sql.DataSource");
+        addBeanDependencies(beanFactory, recoveryManagerServices, "javax.sql.DataSource");
         addBeanDependencies(beanFactory, transactionManagers, "javax.jms.ConnectionFactory");
-        addBeanDependencies(beanFactory, recoveryManagers, "javax.jms.ConnectionFactory");
+        addBeanDependencies(beanFactory, recoveryManagerServices, "javax.jms.ConnectionFactory");
     }
 
     private void addBeanDependencies(ConfigurableListableBeanFactory beanFactory, String[] beanNames,

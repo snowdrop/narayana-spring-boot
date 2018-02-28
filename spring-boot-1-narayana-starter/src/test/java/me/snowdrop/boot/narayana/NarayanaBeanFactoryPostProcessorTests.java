@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package me.snowdrop.boot.narayana.core;
+package me.snowdrop.boot.narayana;
 
 import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 
+import com.arjuna.ats.jbossatx.jta.RecoveryManagerService;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -41,14 +42,14 @@ public class NarayanaBeanFactoryPostProcessorTests {
 
     @Test
     public void setsDependsOn() {
-        DefaultListableBeanFactory beanFactory = spy(new DefaultListableBeanFactory());
+        DefaultListableBeanFactory beanFactory = Mockito.spy(new DefaultListableBeanFactory());
         this.context = new AnnotationConfigApplicationContext(beanFactory);
         this.context.register(Config.class);
         this.context.refresh();
-        verify(beanFactory).registerDependentBean("narayanaTransactionManager", "dataSource");
-        verify(beanFactory).registerDependentBean("narayanaTransactionManager", "connectionFactory");
-        verify(beanFactory).registerDependentBean("narayanaRecoveryManagerBean", "dataSource");
-        verify(beanFactory).registerDependentBean("narayanaRecoveryManagerBean", "connectionFactory");
+        verify(beanFactory).registerDependentBean("transactionManager", "dataSource");
+        verify(beanFactory).registerDependentBean("transactionManager", "connectionFactory");
+        verify(beanFactory).registerDependentBean("recoveryManagerService", "dataSource");
+        verify(beanFactory).registerDependentBean("recoveryManagerService", "connectionFactory");
         this.context.close();
     }
 
@@ -66,17 +67,17 @@ public class NarayanaBeanFactoryPostProcessorTests {
         }
 
         @Bean
-        public TransactionManager narayanaTransactionManager() {
+        public TransactionManager transactionManager() {
             return mock(TransactionManager.class);
         }
 
         @Bean
-        public NarayanaRecoveryManagerBean narayanaRecoveryManagerBean() {
-            return mock(NarayanaRecoveryManagerBean.class);
+        public RecoveryManagerService recoveryManagerService() {
+            return mock(RecoveryManagerService.class);
         }
 
         @Bean
-        public static NarayanaBeanFactoryPostProcessor narayanaPostProcessor() {
+        public static NarayanaBeanFactoryPostProcessor narayanaBeanFactoryPostProcessor() {
             return new NarayanaBeanFactoryPostProcessor();
         }
 
