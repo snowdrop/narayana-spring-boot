@@ -14,45 +14,47 @@
  * limitations under the License.
  */
 
-package me.snowdrop.boot.narayana.core;
+package me.snowdrop.boot.narayana.core.recovery;
 
 import com.arjuna.ats.jbossatx.jta.RecoveryManagerService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * Tests for {@link NarayanaRecoveryManagerBean}.
+ * Tests for {@link RecoveryServiceManager}.
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-public class NarayanaRecoveryManagerBeanTests {
+@RunWith(MockitoJUnitRunner.class)
+public class RecoveryServiceManagerTests {
 
-    private RecoveryManagerService service;
+    @Mock
+    private RecoveryManagerService mockRecoveryManagerService;
 
-    private NarayanaRecoveryManagerBean recoveryManager;
+    private RecoveryServiceManager recoveryServiceManager;
 
     @Before
     public void before() {
-        this.service = mock(RecoveryManagerService.class);
-        this.recoveryManager = new NarayanaRecoveryManagerBean(this.service);
+        this.recoveryServiceManager = new RecoveryServiceManager(this.mockRecoveryManagerService);
     }
 
     @Test
-    public void shouldCreateAndStartRecoveryManagerService() throws Exception {
-        this.recoveryManager.afterPropertiesSet();
-        verify(this.service, times(1)).create();
-        verify(this.service, times(1)).start();
+    public void shouldCreateAndStartRecoveryManagerService() {
+        this.recoveryServiceManager.initialize();
+        verify(this.mockRecoveryManagerService).create();
+        verify(this.mockRecoveryManagerService).start();
     }
 
     @Test
     public void shouldStopAndDestroyRecoveryManagerService() throws Exception {
-        this.recoveryManager.destroy();
-        verify(this.service, times(1)).stop();
-        verify(this.service, times(1)).destroy();
+        this.recoveryServiceManager.destroy();
+        verify(this.mockRecoveryManagerService).stop();
+        verify(this.mockRecoveryManagerService).destroy();
     }
 
 }

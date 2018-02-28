@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.snowdrop.boot.narayana.core;
+package me.snowdrop.boot.narayana.core.jdbc;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -28,6 +28,9 @@ import com.arjuna.ats.internal.jdbc.ConnectionImple;
 import com.arjuna.ats.jdbc.TransactionalDriver;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -36,29 +39,30 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * Tests for {@link NarayanaDataSourceBean}.
+ * Tests for {@link NarayanaDataSource}.
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-public class NarayanaDataSourceBeanTests {
+@RunWith(MockitoJUnitRunner.class)
+public class NarayanaDataSourceTests {
 
-    private XADataSource dataSource;
+    @Mock
+    private XADataSource mockXaDataSource;
 
-    private NarayanaDataSourceBean dataSourceBean;
+    private NarayanaDataSource dataSourceBean;
 
     @Before
     public void before() {
-        this.dataSource = mock(XADataSource.class);
-        this.dataSourceBean = new NarayanaDataSourceBean(this.dataSource);
+        this.dataSourceBean = new NarayanaDataSource(this.mockXaDataSource);
     }
 
     @Test
-    public void shouldBeAWrapper() throws SQLException {
+    public void shouldBeAWrapper() {
         assertThat(this.dataSourceBean.isWrapperFor(DataSource.class)).isTrue();
     }
 
     @Test
-    public void shouldNotBeAWrapper() throws SQLException {
+    public void shouldNotBeAWrapper() {
         assertThat(this.dataSourceBean.isWrapperFor(XADataSource.class)).isFalse();
     }
 
@@ -71,7 +75,7 @@ public class NarayanaDataSourceBeanTests {
     @Test
     public void shouldUnwrapXaDataSource() throws SQLException {
         assertThat(this.dataSourceBean.unwrap(XADataSource.class)).isInstanceOf(XADataSource.class);
-        assertThat(this.dataSourceBean.unwrap(XADataSource.class)).isSameAs(this.dataSource);
+        assertThat(this.dataSourceBean.unwrap(XADataSource.class)).isSameAs(this.mockXaDataSource);
     }
 
     @Test
@@ -79,18 +83,18 @@ public class NarayanaDataSourceBeanTests {
         Connection mockConnection = mock(Connection.class);
         XAConnection mockXaConnection = mock(XAConnection.class);
         given(mockXaConnection.getConnection()).willReturn(mockConnection);
-        given(this.dataSource.getXAConnection()).willReturn(mockXaConnection);
+        given(this.mockXaDataSource.getXAConnection()).willReturn(mockXaConnection);
 
         // TODO properties not used
         Properties properties = new Properties();
-        properties.put(TransactionalDriver.XADataSource, this.dataSource);
+        properties.put(TransactionalDriver.XADataSource, this.mockXaDataSource);
 
         Connection connection = this.dataSourceBean.getConnection();
         assertThat(connection).isInstanceOf(ConnectionImple.class);
 
         connection.commit();
 
-        verify(this.dataSource, times(1)).getXAConnection();
+        verify(this.mockXaDataSource, times(1)).getXAConnection();
         verify(mockXaConnection, times(1)).getConnection();
         verify(mockConnection, times(1)).commit();
     }
@@ -102,11 +106,11 @@ public class NarayanaDataSourceBeanTests {
         Connection mockConnection = mock(Connection.class);
         XAConnection mockXaConnection = mock(XAConnection.class);
         given(mockXaConnection.getConnection()).willReturn(mockConnection);
-        given(this.dataSource.getXAConnection(username, password)).willReturn(mockXaConnection);
+        given(this.mockXaDataSource.getXAConnection(username, password)).willReturn(mockXaConnection);
 
         // TODO properties not used
         Properties properties = new Properties();
-        properties.put(TransactionalDriver.XADataSource, this.dataSource);
+        properties.put(TransactionalDriver.XADataSource, this.mockXaDataSource);
         properties.put(TransactionalDriver.userName, username);
         properties.put(TransactionalDriver.password, password);
 
@@ -115,7 +119,7 @@ public class NarayanaDataSourceBeanTests {
 
         connection.commit();
 
-        verify(this.dataSource, times(1)).getXAConnection(username, password);
+        verify(this.mockXaDataSource, times(1)).getXAConnection(username, password);
         verify(mockXaConnection, times(1)).getConnection();
         verify(mockConnection, times(1)).commit();
     }

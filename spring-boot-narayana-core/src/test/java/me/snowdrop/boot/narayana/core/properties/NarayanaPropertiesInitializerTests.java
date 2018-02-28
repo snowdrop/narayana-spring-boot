@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package me.snowdrop.boot.narayana.core;
+package me.snowdrop.boot.narayana.core.properties;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -28,28 +29,30 @@ import com.arjuna.ats.jta.common.JTAEnvironmentBean;
 import com.arjuna.common.internal.util.propertyservice.BeanPopulator;
 import org.junit.After;
 import org.junit.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for {@link NarayanaConfigurationBean}.
+ * Tests for {@link NarayanaPropertiesInitializer}.
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-public class NarayanaConfigurationBeanTests {
+public class NarayanaPropertiesInitializerTests {
 
     @After
-    @SuppressWarnings("unchecked")
-    public void cleanup() {
-        ((Map<String, Object>) ReflectionTestUtils.getField(BeanPopulator.class, "beanInstances")).clear();
+    public void after() throws NoSuchFieldException, IllegalAccessException {
+        // BeanPopulator holds instances in a static private map, so in order to reset it we need reflection
+        Field beanInstancesField = BeanPopulator.class.getDeclaredField("beanInstances");
+        beanInstancesField.setAccessible(true);
+        ((Map<?, ?>) beanInstancesField.get(null)).clear();
     }
 
     @Test
     public void shouldSetDefaultProperties() throws Exception {
         NarayanaProperties narayanaProperties = new NarayanaProperties();
-        NarayanaConfigurationBean narayanaConfigurationBean = new NarayanaConfigurationBean(narayanaProperties);
-        narayanaConfigurationBean.afterPropertiesSet();
+        NarayanaPropertiesInitializer narayanaPropertiesInitializer =
+                new NarayanaPropertiesInitializer(narayanaProperties);
+        narayanaPropertiesInitializer.initialize();
 
         assertThat(BeanPopulator.getDefaultInstance(CoreEnvironmentBean.class)
                 .getNodeIdentifier()).isEqualTo("1");
@@ -105,8 +108,9 @@ public class NarayanaConfigurationBeanTests {
         narayanaProperties.setRecoveryModules(Arrays.asList("test-module-1", "test-module-2"));
         narayanaProperties.setExpiryScanners(Arrays.asList("test-scanner-1", "test-scanner-2"));
 
-        NarayanaConfigurationBean narayanaConfigurationBean = new NarayanaConfigurationBean(narayanaProperties);
-        narayanaConfigurationBean.afterPropertiesSet();
+        NarayanaPropertiesInitializer narayanaPropertiesInitializer =
+                new NarayanaPropertiesInitializer(narayanaProperties);
+        narayanaPropertiesInitializer.initialize();
 
         assertThat(BeanPopulator.getDefaultInstance(CoreEnvironmentBean.class)
                 .getNodeIdentifier()).isEqualTo("test-id");

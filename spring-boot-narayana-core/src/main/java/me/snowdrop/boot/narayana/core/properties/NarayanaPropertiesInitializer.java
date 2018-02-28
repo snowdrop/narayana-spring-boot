@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.snowdrop.boot.narayana.core;
+package me.snowdrop.boot.narayana.core.properties;
 
 import java.util.List;
 
@@ -25,25 +25,26 @@ import com.arjuna.ats.arjuna.common.ObjectStoreEnvironmentBean;
 import com.arjuna.ats.arjuna.common.RecoveryEnvironmentBean;
 import com.arjuna.ats.jta.common.JTAEnvironmentBean;
 import com.arjuna.common.internal.util.propertyservice.BeanPopulator;
-import org.springframework.beans.factory.InitializingBean;
+import me.snowdrop.boot.narayana.core.Initializer;
+import me.snowdrop.boot.narayana.core.InitializerException;
 
 /**
  * Bean that configures Narayana transaction manager.
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-public class NarayanaConfigurationBean implements InitializingBean {
+public class NarayanaPropertiesInitializer implements Initializer {
 
     private static final String JBOSSTS_PROPERTIES_FILE_NAME = "jbossts-properties.xml";
 
     private final NarayanaProperties properties;
 
-    public NarayanaConfigurationBean(NarayanaProperties narayanaProperties) {
+    public NarayanaPropertiesInitializer(NarayanaProperties narayanaProperties) {
         this.properties = narayanaProperties;
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void initialize() {
         if (isPropertiesFileAvailable()) {
             return;
         }
@@ -64,8 +65,12 @@ public class NarayanaConfigurationBean implements InitializingBean {
                 .getResource(JBOSSTS_PROPERTIES_FILE_NAME) != null;
     }
 
-    private void setNodeIdentifier(String nodeIdentifier) throws CoreEnvironmentBeanException {
-        getPopulator(CoreEnvironmentBean.class).setNodeIdentifier(nodeIdentifier);
+    private void setNodeIdentifier(String nodeIdentifier) {
+        try {
+            getPopulator(CoreEnvironmentBean.class).setNodeIdentifier(nodeIdentifier);
+        } catch (CoreEnvironmentBeanException e) {
+            throw new InitializerException(e);
+        }
     }
 
     private void setObjectStoreDir(String objectStoreDir) {

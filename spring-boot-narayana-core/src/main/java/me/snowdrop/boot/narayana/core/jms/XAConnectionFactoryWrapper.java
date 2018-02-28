@@ -14,53 +14,49 @@
  * limitations under the License.
  */
 
-package me.snowdrop.boot.narayana.core;
+package me.snowdrop.boot.narayana.core.jms;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.XAConnectionFactory;
 import javax.transaction.TransactionManager;
 
+import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
+import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
 import org.jboss.narayana.jta.jms.ConnectionFactoryProxy;
 import org.jboss.narayana.jta.jms.JmsXAResourceRecoveryHelper;
 import org.jboss.narayana.jta.jms.TransactionHelperImpl;
-import org.springframework.boot.jta.XAConnectionFactoryWrapper;
-import org.springframework.util.Assert;
 
 /**
- * {@link XAConnectionFactoryWrapper} that uses {@link ConnectionFactoryProxy} to wrap an {@link XAConnectionFactory}.
+ * {@link XAConnectionFactory} wrapper that uses {@link ConnectionFactoryProxy} to wrap an {@link XAConnectionFactory}.
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-public class NarayanaXAConnectionFactoryWrapper implements XAConnectionFactoryWrapper {
+public class XAConnectionFactoryWrapper {
 
     private final TransactionManager transactionManager;
 
-    private final NarayanaRecoveryManagerBean recoveryManager;
+    private final XARecoveryModule xaRecoveryModule;
 
     private final NarayanaProperties properties;
 
     /**
-     * Create a new {@link org.springframework.boot.jta.narayana.NarayanaXAConnectionFactoryWrapper} instance.
+     * Create a new {@link XAConnectionFactoryWrapper} instance.
      *
-     * @param transactionManager the underlying transaction manager
-     * @param recoveryManager    the underlying recovery manager
-     * @param properties         the Narayana properties
+     * @param transactionManager underlying transaction manager
+     * @param xaRecoveryModule    recovery module to register data source with.
+     * @param properties         Narayana properties
      */
-    public NarayanaXAConnectionFactoryWrapper(TransactionManager transactionManager,
-            NarayanaRecoveryManagerBean recoveryManager, NarayanaProperties properties) {
-        Assert.notNull(transactionManager, "TransactionManager must not be null");
-        Assert.notNull(recoveryManager, "RecoveryManager must not be null");
-        Assert.notNull(properties, "Properties must not be null");
+    public XAConnectionFactoryWrapper(TransactionManager transactionManager, XARecoveryModule xaRecoveryModule,
+            NarayanaProperties properties) {
         this.transactionManager = transactionManager;
-        this.recoveryManager = recoveryManager;
+        this.xaRecoveryModule = xaRecoveryModule;
         this.properties = properties;
     }
 
-    @Override
     public ConnectionFactory wrapConnectionFactory(XAConnectionFactory xaConnectionFactory) {
         XAResourceRecoveryHelper recoveryHelper = getRecoveryHelper(xaConnectionFactory);
-        this.recoveryManager.registerXAResourceRecoveryHelper(recoveryHelper);
+        this.xaRecoveryModule.addXAResourceRecoveryHelper(recoveryHelper);
         return new ConnectionFactoryProxy(xaConnectionFactory, new TransactionHelperImpl(this.transactionManager));
     }
 

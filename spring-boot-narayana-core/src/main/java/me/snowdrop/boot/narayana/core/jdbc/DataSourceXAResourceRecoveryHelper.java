@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.snowdrop.boot.narayana.core;
+package me.snowdrop.boot.narayana.core.jdbc;
 
 import java.sql.SQLException;
 
@@ -25,9 +25,7 @@ import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
 import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.util.Assert;
+import org.jboss.logging.Logger;
 
 /**
  * XAResourceRecoveryHelper implementation which gets XIDs, which needs to be recovered, from the database.
@@ -38,7 +36,7 @@ public class DataSourceXAResourceRecoveryHelper implements XAResourceRecoveryHel
 
     private static final XAResource[] NO_XA_RESOURCES = {};
 
-    private static final Log logger = LogFactory.getLog(DataSourceXAResourceRecoveryHelper.class);
+    private static final Logger logger = Logger.getLogger(DataSourceXAResourceRecoveryHelper.class);
 
     private final XADataSource xaDataSource;
 
@@ -67,7 +65,6 @@ public class DataSourceXAResourceRecoveryHelper implements XAResourceRecoveryHel
      * @param password     the database password or {@code null}
      */
     public DataSourceXAResourceRecoveryHelper(XADataSource xaDataSource, String user, String password) {
-        Assert.notNull(xaDataSource, "XADataSource must not be null");
         this.xaDataSource = xaDataSource;
         this.user = user;
         this.password = password;
@@ -81,7 +78,7 @@ public class DataSourceXAResourceRecoveryHelper implements XAResourceRecoveryHel
     @Override
     public XAResource[] getXAResources() {
         if (connect()) {
-            return new XAResource[]{this};
+            return new XAResource[]{ this };
         }
         return NO_XA_RESOURCES;
     }
@@ -174,7 +171,9 @@ public class DataSourceXAResourceRecoveryHelper implements XAResourceRecoveryHel
     }
 
     private XAResource getDelegate(boolean required) {
-        Assert.state(this.delegate != null || !required, "Connection has not been opened");
+        if (this.delegate == null && required) {
+            throw new IllegalStateException("Connection has not been opened");
+        }
         return this.delegate;
     }
 

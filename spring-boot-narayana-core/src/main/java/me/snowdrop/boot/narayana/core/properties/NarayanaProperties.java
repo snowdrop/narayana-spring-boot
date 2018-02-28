@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package me.snowdrop.boot.narayana.core;
+package me.snowdrop.boot.narayana.core.properties;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * Subset of Narayana properties which can be configured via Spring configuration. Use
@@ -29,13 +27,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-@ConfigurationProperties(prefix = NarayanaProperties.PROPERTIES_PREFIX)
 public class NarayanaProperties {
-
-    /**
-     * Prefix for Narayana specific properties.
-     */
-    public static final String PROPERTIES_PREFIX = "spring.jta.narayana";
 
     /**
      * Transaction object store directory.

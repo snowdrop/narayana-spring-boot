@@ -14,44 +14,41 @@
  * limitations under the License.
  */
 
-package me.snowdrop.boot.narayana.core;
+package me.snowdrop.boot.narayana.core.jdbc;
 
 import javax.sql.DataSource;
 import javax.sql.XADataSource;
 
+import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
-import org.springframework.boot.jta.XADataSourceWrapper;
-import org.springframework.util.Assert;
+import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
 
 /**
- * {@link XADataSourceWrapper} that uses {@link NarayanaDataSourceBean} to wrap an {@link XADataSource}.
+ * XADataSource wrapper that uses {@link NarayanaDataSource} to wrap an {@link XADataSource}.
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-public class NarayanaXADataSourceWrapper implements XADataSourceWrapper {
-
-    private final NarayanaRecoveryManagerBean recoveryManager;
+public class XADataSourceWrapper {
 
     private final NarayanaProperties properties;
 
+    private final XARecoveryModule xaRecoveryModule;
+
     /**
-     * Create a new {@link NarayanaXADataSourceWrapper} instance.
+     * Create a new {@link XADataSourceWrapper} instance.
      *
-     * @param recoveryManager the underlying recovery manager
-     * @param properties      the Narayana properties
+     * @param properties       Narayana properties.
+     * @param xaRecoveryModule recovery module to register data source with.
      */
-    public NarayanaXADataSourceWrapper(NarayanaRecoveryManagerBean recoveryManager, NarayanaProperties properties) {
-        Assert.notNull(recoveryManager, "RecoveryManager must not be null");
-        Assert.notNull(properties, "Properties must not be null");
-        this.recoveryManager = recoveryManager;
+    public XADataSourceWrapper(NarayanaProperties properties, XARecoveryModule xaRecoveryModule) {
         this.properties = properties;
+        this.xaRecoveryModule = xaRecoveryModule;
     }
 
-    @Override
     public DataSource wrapDataSource(XADataSource dataSource) {
         XAResourceRecoveryHelper recoveryHelper = getRecoveryHelper(dataSource);
-        this.recoveryManager.registerXAResourceRecoveryHelper(recoveryHelper);
-        return new NarayanaDataSourceBean(dataSource);
+        this.xaRecoveryModule.addXAResourceRecoveryHelper(recoveryHelper);
+        return new NarayanaDataSource(dataSource);
     }
 
     private XAResourceRecoveryHelper getRecoveryHelper(XADataSource dataSource) {

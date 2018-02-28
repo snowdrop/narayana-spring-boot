@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.snowdrop.boot.narayana.core;
+package me.snowdrop.boot.narayana.core.jdbc;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -28,8 +28,6 @@ import javax.sql.XADataSource;
 
 import com.arjuna.ats.internal.jdbc.ConnectionManager;
 import com.arjuna.ats.jdbc.TransactionalDriver;
-import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
 
 /**
  * {@link DataSource} implementation wrapping {@link XADataSource} and using
@@ -37,17 +35,16 @@ import org.springframework.util.ClassUtils;
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-public class NarayanaDataSourceBean implements DataSource {
+public class NarayanaDataSource implements DataSource {
 
     private final XADataSource xaDataSource;
 
     /**
-     * Create a new {@link NarayanaDataSourceBean} instance.
+     * Create a new {@link NarayanaDataSource} instance.
      *
      * @param xaDataSource the XA DataSource
      */
-    public NarayanaDataSourceBean(XADataSource xaDataSource) {
-        Assert.notNull(xaDataSource, "XADataSource must not be null");
+    public NarayanaDataSource(XADataSource xaDataSource) {
         this.xaDataSource = xaDataSource;
     }
 
@@ -98,14 +95,14 @@ public class NarayanaDataSourceBean implements DataSource {
         if (isWrapperFor(iface)) {
             return (T) this;
         }
-        if (ClassUtils.isAssignableValue(iface, this.xaDataSource)) {
+        if (iface.isAssignableFrom(this.xaDataSource.getClass())) {
             return (T) this.xaDataSource;
         }
         throw new SQLException(getClass() + " is not a wrapper for " + iface);
     }
 
     @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+    public boolean isWrapperFor(Class<?> iface) {
         return iface.isAssignableFrom(getClass());
     }
 
