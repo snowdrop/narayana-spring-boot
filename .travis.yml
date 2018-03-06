@@ -1,3 +1,8 @@
 language: java
 jdk: oraclejdk8
-script: ./mvnw verify
+jobs:
+  include:
+    - stage: Spring Boot 2.x
+      script: ./mvnw clean install
+    - stage: Spring Boot 1.x
+      script: ./mvnw clean install -Dit-sb-1

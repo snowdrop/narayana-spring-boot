@@ -31,7 +31,6 @@ import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
 import org.jboss.narayana.jta.jms.TransactionHelper;
 import org.jboss.tm.XAResourceRecoveryRegistry;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.ApplicationHome;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -40,8 +39,9 @@ import org.springframework.boot.autoconfigure.transaction.TransactionManagerCust
 import org.springframework.boot.autoconfigure.transaction.jta.JtaAutoConfiguration;
 import org.springframework.boot.autoconfigure.transaction.jta.JtaProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.jta.XAConnectionFactoryWrapper;
-import org.springframework.boot.jta.XADataSourceWrapper;
+import org.springframework.boot.jdbc.XADataSourceWrapper;
+import org.springframework.boot.jms.XAConnectionFactoryWrapper;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -67,11 +67,11 @@ import org.springframework.util.StringUtils;
 })
 @ConditionalOnMissingBean(PlatformTransactionManager.class)
 @AutoConfigureBefore(JtaAutoConfiguration.class)
-public class SpringBoot1NarayanaConfiguration extends AbstractNarayanaConfiguration {
+public class SpringBoot2NarayanaConfiguration extends AbstractNarayanaConfiguration {
 
     private final JtaProperties jtaProperties;
 
-    public SpringBoot1NarayanaConfiguration(JtaProperties jtaProperties,
+    public SpringBoot2NarayanaConfiguration(JtaProperties jtaProperties,
             ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers) {
         super(jtaProperties, transactionManagerCustomizers);
         this.jtaProperties = jtaProperties;

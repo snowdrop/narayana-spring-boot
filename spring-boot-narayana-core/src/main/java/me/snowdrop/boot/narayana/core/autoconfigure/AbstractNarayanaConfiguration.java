@@ -26,18 +26,12 @@ import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import com.arjuna.ats.jbossatx.jta.RecoveryManagerService;
 import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
 import me.snowdrop.boot.narayana.core.properties.NarayanaPropertiesInitializer;
-import org.jboss.tm.XAResourceRecoveryRegistry;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.transaction.TransactionManagerCustomizers;
 import org.springframework.boot.autoconfigure.transaction.jta.JtaProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.jta.JtaTransactionManager;
 import org.springframework.util.StringUtils;
 
@@ -46,18 +40,6 @@ import org.springframework.util.StringUtils;
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-@Configuration
-@EnableConfigurationProperties({
-        JtaProperties.class,
-        NarayanaProperties.class
-})
-@ConditionalOnClass({
-        JtaTransactionManager.class,
-        XAResourceRecoveryRegistry.class,
-        com.arjuna.ats.jta.UserTransaction.class
-})
-@ConditionalOnMissingBean(PlatformTransactionManager.class)
-@AutoConfigureBefore(name = "org.springframework.boot.autoconfigure.transaction.jta.NarayanaJtaConfiguration")
 public abstract class AbstractNarayanaConfiguration {
 
     private final JtaProperties jtaProperties;

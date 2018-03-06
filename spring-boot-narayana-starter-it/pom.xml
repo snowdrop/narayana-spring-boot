@@ -39,6 +39,16 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
+        <groupId>me.snowdrop</groupId>
+        <artifactId>spring-boot-1-narayana-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.snowdrop</groupId>
+        <artifactId>spring-boot-2-narayana-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-data-jpa</artifactId>
         <version>${spring-boot.version}</version>
@@ -148,20 +158,34 @@
     </dependency>
   </dependencies>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
-
   <profiles>
+    <profile>
+      <id>sb-2</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+        <property>
+          <name>it-sb-2</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>me.snowdrop</groupId>
+          <artifactId>spring-boot-2-narayana-starter</artifactId>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <id>sb-1</id>
       <activation>
-        <activeByDefault>true</activeByDefault><!-- TODO Move to sb-2 -->
         <property>
           <name>it-sb-1</name>
         </property>
@@ -174,18 +198,17 @@
         <dependency>
           <groupId>me.snowdrop</groupId>
           <artifactId>spring-boot-1-narayana-starter</artifactId>
-          <version>${project.version}</version>
           <scope>test</scope>
         </dependency>
       </dependencies>
-    </profile>
-    <profile>
-      <id>sb-2</id>
-      <activation>
-        <property>
-          <name>it-sb-2</name>
-        </property>
-      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 </project>

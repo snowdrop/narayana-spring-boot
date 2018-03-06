@@ -51,7 +51,8 @@ public class SpringBoot1NarayanaConfigurationIT {
 
     @Test
     public void allBeansShouldBeLoaded() {
-        this.context = new AnnotationConfigApplicationContext(JtaProperties.class, SpringBoot1NarayanaConfiguration.class);
+        this.context =
+                new AnnotationConfigApplicationContext(JtaProperties.class, SpringBoot1NarayanaConfiguration.class);
         this.context.getBean(NarayanaBeanFactoryPostProcessor.class);
         this.context.getBean(XADataSourceWrapper.class);
         this.context.getBean(XAConnectionFactoryWrapper.class);

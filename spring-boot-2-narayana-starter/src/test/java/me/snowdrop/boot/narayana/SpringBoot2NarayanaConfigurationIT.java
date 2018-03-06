@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.snowdrop.boot.narayana.core.autoconfigure;
+package me.snowdrop.boot.narayana;
 
 import java.io.File;
 
@@ -23,22 +23,21 @@ import javax.transaction.UserTransaction;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import com.arjuna.ats.jbossatx.jta.RecoveryManagerService;
-import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
+import me.snowdrop.boot.narayana.core.autoconfigure.NarayanaBeanFactoryPostProcessor;
 import me.snowdrop.boot.narayana.core.properties.NarayanaPropertiesInitializer;
 import org.junit.After;
 import org.junit.Test;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.transaction.TransactionManagerCustomizers;
 import org.springframework.boot.autoconfigure.transaction.jta.JtaProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.jdbc.XADataSourceWrapper;
+import org.springframework.boot.jms.XAConnectionFactoryWrapper;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.jta.JtaTransactionManager;
+import org.springframework.util.FileSystemUtils;
 
 /**
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-public class AbstractNarayanaConfigurationIT {
+public class SpringBoot2NarayanaConfigurationIT {
 
     private AnnotationConfigApplicationContext context;
 
@@ -47,35 +46,22 @@ public class AbstractNarayanaConfigurationIT {
         if (this.context != null) {
             this.context.close();
         }
+        FileSystemUtils.deleteRecursively(new File("transaction-logs"));
     }
 
     @Test
     public void allBeansShouldBeLoaded() {
-        this.context = new AnnotationConfigApplicationContext(JtaProperties.class, TestNarayanaConfiguration.class);
+        this.context =
+                new AnnotationConfigApplicationContext(JtaProperties.class, SpringBoot2NarayanaConfiguration.class);
+        this.context.getBean(NarayanaBeanFactoryPostProcessor.class);
+        this.context.getBean(XADataSourceWrapper.class);
+        this.context.getBean(XAConnectionFactoryWrapper.class);
         this.context.getBean(NarayanaPropertiesInitializer.class);
         this.context.getBean(UserTransaction.class);
         this.context.getBean(TransactionManager.class);
         this.context.getBean(JtaTransactionManager.class);
         this.context.getBean(RecoveryManagerService.class);
         this.context.getBean(XARecoveryModule.class);
-    }
-
-    @Configuration
-    @EnableConfigurationProperties({
-            JtaProperties.class,
-            NarayanaProperties.class
-    })
-    private static class TestNarayanaConfiguration extends AbstractNarayanaConfiguration {
-
-        TestNarayanaConfiguration(JtaProperties jtaProperties,
-                ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers) {
-            super(jtaProperties, transactionManagerCustomizers);
-        }
-
-        @Override
-        protected File getLogDir() {
-            return new File("target");
-        }
     }
 
 }
