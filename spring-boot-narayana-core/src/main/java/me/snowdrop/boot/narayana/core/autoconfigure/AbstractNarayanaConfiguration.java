@@ -85,20 +85,20 @@ public abstract class AbstractNarayanaConfiguration {
     @Bean
     @DependsOn("narayanaPropertiesInitializer")
     @ConditionalOnMissingBean
-    public UserTransaction userTransaction() {
+    public UserTransaction narayanaUserTransaction() {
         return com.arjuna.ats.jta.UserTransaction.userTransaction();
     }
 
     @Bean
     @DependsOn("narayanaPropertiesInitializer")
     @ConditionalOnMissingBean
-    public TransactionManager transactionManager() {
+    public TransactionManager narayanaTransactionManager() {
         return com.arjuna.ats.jta.TransactionManager.transactionManager();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public JtaTransactionManager jtaTransactionManager(UserTransaction userTransaction,
+    public JtaTransactionManager transactionManager(UserTransaction userTransaction,
             TransactionManager transactionManager) {
         JtaTransactionManager jtaTransactionManager = new JtaTransactionManager(userTransaction, transactionManager);
         if (this.transactionManagerCustomizers != null) {

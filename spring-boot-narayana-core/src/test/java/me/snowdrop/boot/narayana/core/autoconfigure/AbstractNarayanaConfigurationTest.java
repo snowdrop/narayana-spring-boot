@@ -104,7 +104,7 @@ public class AbstractNarayanaConfigurationTest {
     @Test
     public void jtaTransactionManagerShouldBeCreated() {
         JtaTransactionManager jtaTransactionManager =
-                this.configuration.jtaTransactionManager(this.mockUserTransaction, this.mockTransactionManager);
+                this.configuration.transactionManager(this.mockUserTransaction, this.mockTransactionManager);
         assertThat(jtaTransactionManager.getUserTransaction()).isEqualTo(this.mockUserTransaction);
         assertThat(jtaTransactionManager.getTransactionManager()).isEqualTo(this.mockTransactionManager);
     }
@@ -116,7 +116,7 @@ public class AbstractNarayanaConfigurationTest {
         this.configuration = new TestNarayanaConfiguration(this.mockLogDir, this.mockJtaProperties,
                 this.mockTransactionManagerCustomizersProvider);
         JtaTransactionManager jtaTransactionManager =
-                this.configuration.jtaTransactionManager(this.mockUserTransaction, this.mockTransactionManager);
+                this.configuration.transactionManager(this.mockUserTransaction, this.mockTransactionManager);
         verify(this.mockTransactionManagerCustomizers).customize(jtaTransactionManager);
     }
 

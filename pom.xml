@@ -32,20 +32,16 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <artemis.version>1.5.5</artemis.version>
     <assertj.version>3.9.0</assertj.version>
-    <awaitility.version>3.0.0</awaitility.version>
-    <byteman.version>4.0.1</byteman.version>
     <checkstyle.version>8.5</checkstyle.version>
-    <h2.version>1.4.196</h2.version>
     <jboss-logging.version>3.2.1.Final</jboss-logging.version>
     <jboss-transaction-spi.version>7.6.0.Final</jboss-transaction-spi.version>
     <jms-api.version>2.0.1</jms-api.version>
     <junit.version>4.12</junit.version>
     <mockito.version>2.15.0</mockito.version>
     <narayana.version>5.7.2.Final</narayana.version>
-    <spring.version>4.3.14.RELEASE</spring.version>
-    <spring-boot.version>1.5.10.RELEASE</spring-boot.version>
+    <spring-boot.version>2.0.0.RELEASE</spring-boot.version>
+    <spring.version>5.0.4.RELEASE</spring.version>
     <transaction-api.version>1.2</transaction-api.version>
 
     <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
@@ -61,42 +57,12 @@
     <dependencies>
       <dependency>
         <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot</artifactId>
-        <version>${spring-boot.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-autoconfigure</artifactId>
-        <version>${spring-boot.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter</artifactId>
-        <version>${spring-boot.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-data-jpa</artifactId>
-        <version>${spring-boot.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-artemis</artifactId>
-        <version>${spring-boot.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-test</artifactId>
         <version>${spring-boot.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-tx</artifactId>
-        <version>${spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-test</artifactId>
         <version>${spring.version}</version>
       </dependency>
       <dependency>
@@ -130,24 +96,9 @@
         <version>${jboss-logging.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.activemq</groupId>
-        <artifactId>artemis-jms-server</artifactId>
-        <version>${artemis.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.h2database</groupId>
-        <artifactId>h2</artifactId>
-        <version>${h2.version}</version>
-      </dependency>
-      <dependency>
         <groupId>javax.jms</groupId>
         <artifactId>javax.jms-api</artifactId>
         <version>${jms-api.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.transaction</groupId>
-        <artifactId>javax.transaction-api</artifactId>
-        <version>${transaction-api.version}</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
@@ -163,31 +114,6 @@
         <groupId>org.assertj</groupId>
         <artifactId>assertj-core</artifactId>
         <version>${assertj.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.awaitility</groupId>
-        <artifactId>awaitility</artifactId>
-        <version>${awaitility.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.byteman</groupId>
-        <artifactId>byteman</artifactId>
-        <version>${byteman.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.byteman</groupId>
-        <artifactId>byteman-submit</artifactId>
-        <version>${byteman.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.byteman</groupId>
-        <artifactId>byteman-install</artifactId>
-        <version>${byteman.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.byteman</groupId>
-        <artifactId>byteman-bmunit</artifactId>
-        <version>${byteman.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -327,7 +253,7 @@
 
   <modules>
     <module>spring-boot-narayana-core</module>
-    <module>spring-boot-narayana-autoconfigure</module>
-    <module>spring-boot-narayana-starter</module>
+    <module>spring-boot-1-narayana-starter</module>
+    <module>spring-boot-narayana-starter-it</module>
   </modules>
 </project>
