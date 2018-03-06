@@ -52,7 +52,7 @@ public class NarayanaPropertiesInitializerTests {
         NarayanaProperties narayanaProperties = new NarayanaProperties();
         NarayanaPropertiesInitializer narayanaPropertiesInitializer =
                 new NarayanaPropertiesInitializer(narayanaProperties);
-        narayanaPropertiesInitializer.initialize();
+        narayanaPropertiesInitializer.afterPropertiesSet();
 
         assertThat(BeanPopulator.getDefaultInstance(CoreEnvironmentBean.class)
                 .getNodeIdentifier()).isEqualTo("1");
@@ -110,7 +110,7 @@ public class NarayanaPropertiesInitializerTests {
 
         NarayanaPropertiesInitializer narayanaPropertiesInitializer =
                 new NarayanaPropertiesInitializer(narayanaProperties);
-        narayanaPropertiesInitializer.initialize();
+        narayanaPropertiesInitializer.afterPropertiesSet();
 
         assertThat(BeanPopulator.getDefaultInstance(CoreEnvironmentBean.class)
                 .getNodeIdentifier()).isEqualTo("test-id");

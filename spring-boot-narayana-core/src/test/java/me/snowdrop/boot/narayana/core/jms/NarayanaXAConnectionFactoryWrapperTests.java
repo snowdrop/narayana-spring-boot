@@ -37,12 +37,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * Tests for {@link XAConnectionFactoryWrapper}.
+ * Tests for {@link NarayanaXAConnectionFactoryWrapper}.
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
 @RunWith(MockitoJUnitRunner.class)
-public class XAConnectionFactoryWrapperTests {
+public class NarayanaXAConnectionFactoryWrapperTests {
 
     @Mock
     private XAConnectionFactory mockXaConnectionFactory;
@@ -56,11 +56,11 @@ public class XAConnectionFactoryWrapperTests {
     @Mock
     private NarayanaProperties mockNarayanaProperties;
 
-    private XAConnectionFactoryWrapper wrapper;
+    private NarayanaXAConnectionFactoryWrapper wrapper;
 
     @Before
     public void before() {
-        this.wrapper = new XAConnectionFactoryWrapper(this.mockTransactionManager, this.mockXaRecoveryModule,
+        this.wrapper = new NarayanaXAConnectionFactoryWrapper(this.mockTransactionManager, this.mockXaRecoveryModule,
                 this.mockNarayanaProperties);
     }
 

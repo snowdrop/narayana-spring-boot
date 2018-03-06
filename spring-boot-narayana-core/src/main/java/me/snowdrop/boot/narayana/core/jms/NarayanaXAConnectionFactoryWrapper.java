@@ -32,7 +32,7 @@ import org.jboss.narayana.jta.jms.TransactionHelperImpl;
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-public class XAConnectionFactoryWrapper {
+public class NarayanaXAConnectionFactoryWrapper {
 
     private final TransactionManager transactionManager;
 
@@ -41,13 +41,13 @@ public class XAConnectionFactoryWrapper {
     private final NarayanaProperties properties;
 
     /**
-     * Create a new {@link XAConnectionFactoryWrapper} instance.
+     * Create a new {@link NarayanaXAConnectionFactoryWrapper} instance.
      *
      * @param transactionManager underlying transaction manager
      * @param xaRecoveryModule    recovery module to register data source with.
      * @param properties         Narayana properties
      */
-    public XAConnectionFactoryWrapper(TransactionManager transactionManager, XARecoveryModule xaRecoveryModule,
+    public NarayanaXAConnectionFactoryWrapper(TransactionManager transactionManager, XARecoveryModule xaRecoveryModule,
             NarayanaProperties properties) {
         this.transactionManager = transactionManager;
         this.xaRecoveryModule = xaRecoveryModule;

@@ -25,15 +25,14 @@ import com.arjuna.ats.arjuna.common.ObjectStoreEnvironmentBean;
 import com.arjuna.ats.arjuna.common.RecoveryEnvironmentBean;
 import com.arjuna.ats.jta.common.JTAEnvironmentBean;
 import com.arjuna.common.internal.util.propertyservice.BeanPopulator;
-import me.snowdrop.boot.narayana.core.Initializer;
-import me.snowdrop.boot.narayana.core.InitializerException;
+import org.springframework.beans.factory.InitializingBean;
 
 /**
  * Bean that configures Narayana transaction manager.
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-public class NarayanaPropertiesInitializer implements Initializer {
+public class NarayanaPropertiesInitializer implements InitializingBean {
 
     private static final String JBOSSTS_PROPERTIES_FILE_NAME = "jbossts-properties.xml";
 
@@ -43,8 +42,7 @@ public class NarayanaPropertiesInitializer implements Initializer {
         this.properties = narayanaProperties;
     }
 
-    @Override
-    public void initialize() {
+    public void afterPropertiesSet() {
         if (isPropertiesFileAvailable()) {
             return;
         }
@@ -69,7 +67,7 @@ public class NarayanaPropertiesInitializer implements Initializer {
         try {
             getPopulator(CoreEnvironmentBean.class).setNodeIdentifier(nodeIdentifier);
         } catch (CoreEnvironmentBeanException e) {
-            throw new InitializerException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 

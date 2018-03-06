@@ -28,19 +28,19 @@ import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-public class XADataSourceWrapper {
+public class NarayanaXADataSourceWrapper {
 
     private final NarayanaProperties properties;
 
     private final XARecoveryModule xaRecoveryModule;
 
     /**
-     * Create a new {@link XADataSourceWrapper} instance.
+     * Create a new {@link NarayanaXADataSourceWrapper} instance.
      *
      * @param properties       Narayana properties.
      * @param xaRecoveryModule recovery module to register data source with.
      */
-    public XADataSourceWrapper(NarayanaProperties properties, XARecoveryModule xaRecoveryModule) {
+    public NarayanaXADataSourceWrapper(NarayanaProperties properties, XARecoveryModule xaRecoveryModule) {
         this.properties = properties;
         this.xaRecoveryModule = xaRecoveryModule;
     }

@@ -34,7 +34,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * Tests for {@link XADataSourceWrapper}.
+ * Tests for {@link NarayanaXADataSourceWrapper}.
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
@@ -50,11 +50,11 @@ public class XaDataSourceWrapperTests {
     @Mock
     private NarayanaProperties mockNarayanaProperties;
 
-    private XADataSourceWrapper wrapper;
+    private NarayanaXADataSourceWrapper wrapper;
 
     @Before
     public void before() {
-        this.wrapper = new XADataSourceWrapper(this.mockNarayanaProperties, this.mockXaRecoveryModule);
+        this.wrapper = new NarayanaXADataSourceWrapper(this.mockNarayanaProperties, this.mockXaRecoveryModule);
     }
 
     @Test
