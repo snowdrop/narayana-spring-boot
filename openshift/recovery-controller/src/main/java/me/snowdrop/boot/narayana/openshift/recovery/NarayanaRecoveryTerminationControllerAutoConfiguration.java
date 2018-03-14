@@ -21,7 +21,6 @@ import java.util.List;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.transaction.jta.NarayanaJtaConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -32,7 +31,11 @@ import org.springframework.context.annotation.DependsOn;
  * @author <a href="mailto:nferraro@redhat.com">Nicola Ferraro</a>
  */
 @Configuration
-@AutoConfigureAfter({StatefulsetRecoveryControllerAutoConfiguration.class, NarayanaJtaConfiguration.class})
+@AutoConfigureAfter(name = {
+        "me.snowdrop.boot.narayana.openshift.recovery.StatefulsetRecoveryControllerAutoConfiguration",
+        "me.snowdrop.boot.narayana.SpringBoot1NarayanaConfiguration",
+        "me.snowdrop.boot.narayana.SpringBoot2NarayanaConfiguration"
+})
 @ConditionalOnBean({PodStatusManager.class})
 public class NarayanaRecoveryTerminationControllerAutoConfiguration {
 
