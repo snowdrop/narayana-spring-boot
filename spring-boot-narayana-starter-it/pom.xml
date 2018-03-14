@@ -19,7 +19,7 @@
   <parent>
     <groupId>me.snowdrop</groupId>
     <artifactId>spring-boot-narayana-parent</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3-SNAPSHOT</version>
   </parent>
 
   <artifactId>spring-boot-narayana-starter-it</artifactId>
