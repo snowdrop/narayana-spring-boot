@@ -23,6 +23,7 @@
 
   <name>Spring Boot Narayana :: parent</name>
   <description>Spring Boot Narayana integration parent</description>
+  <url>https://github.com/snowdrop/spring-boot-narayana</url>
 
   <developers>
     <developer>
