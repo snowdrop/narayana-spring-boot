@@ -33,6 +33,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <assertj.version>3.9.0</assertj.version>
+    <camel.version>2.20.2</camel.version>
     <checkstyle.version>8.5</checkstyle.version>
     <jboss-logging.version>3.2.1.Final</jboss-logging.version>
     <jboss-transaction-spi.version>7.6.0.Final</jboss-transaction-spi.version>
@@ -40,6 +41,7 @@
     <junit.version>4.12</junit.version>
     <mockito.version>2.15.0</mockito.version>
     <narayana.version>5.7.2.Final</narayana.version>
+    <openshift-client.version>3.1.8</openshift-client.version>
     <spring-boot.version>2.0.0.RELEASE</spring-boot.version>
     <spring.version>5.0.4.RELEASE</spring.version>
     <transaction-api.version>1.2</transaction-api.version>
@@ -58,6 +60,11 @@
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter</artifactId>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-configuration-processor</artifactId>
         <version>${spring-boot.version}</version>
       </dependency>
       <dependency>
@@ -114,6 +121,16 @@
         <groupId>org.assertj</groupId>
         <artifactId>assertj-core</artifactId>
         <version>${assertj.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>openshift-client</artifactId>
+        <version>${openshift-client.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-spring-boot</artifactId>
+        <version>${camel.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -256,5 +273,6 @@
     <module>spring-boot-1-narayana-starter</module>
     <module>spring-boot-2-narayana-starter</module>
     <module>spring-boot-narayana-starter-it</module>
+    <module>openshift/recovery-controller</module>
   </modules>
 </project>
