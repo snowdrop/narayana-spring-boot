@@ -33,8 +33,9 @@
   <dependencies>
 
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter</artifactId>
+      <groupId>me.snowdrop</groupId>
+      <artifactId>spring-boot-1-narayana-starter</artifactId>
+      <version>${project.version}</version>
       <optional>true</optional>
     </dependency>
 

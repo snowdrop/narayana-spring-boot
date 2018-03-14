@@ -37,7 +37,7 @@ import org.springframework.context.annotation.DependsOn;
 public class NarayanaRecoveryTerminationControllerAutoConfiguration {
 
     @Bean(initMethod = "start", destroyMethod = "stop")
-    @DependsOn("narayanaRecoveryManagerService")
+    @DependsOn("recoveryManagerService")
     @ConditionalOnMissingBean(NarayanaRecoveryTerminationController.class)
     public NarayanaRecoveryTerminationController narayanaRecoveryTerminationController(PodStatusManager podStatusManager, List<ServiceShutdownController> shutdownControllers) {
         return new NarayanaRecoveryTerminationController(podStatusManager, shutdownControllers);
