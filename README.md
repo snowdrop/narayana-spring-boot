@@ -19,3 +19,20 @@ Narayana project [documentation](http://narayana.io/docs/project/index.html).
 > To ensure that multiple transaction managers can safely coordinate the same resource managers, each Narayana instance
 must be configured with a unique ID. By default, this ID is set to 1. To ensure uniqueness in production, you should
 configure the `spring.jta.transaction-manager-id` property with a different value for each instance of your application.
+
+# Release
+
+Dry run:
+```
+mvn release:prepare -DdryRun
+```
+
+Tag:
+```
+mvn release:prepare
+```
+
+Deploy:
+```
+mvn release:perform -DskipTests
+```
