@@ -18,7 +18,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.snowdrop</groupId>
   <artifactId>spring-boot-narayana-parent</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.2</version>
   <packaging>pom</packaging>
 
   <name>Spring Boot Narayana :: parent</name>
@@ -80,7 +80,7 @@
     <url>https://github.com/snowdrop</url>
     <connection>scm:git:https://github.com/snowdrop/spring-boot-narayana.git</connection>
     <developerConnection>scm:git:git:@github.com:snowdrop/spring-boot-narayana.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>0.0.2</tag>
   </scm>
 
   <distributionManagement>
