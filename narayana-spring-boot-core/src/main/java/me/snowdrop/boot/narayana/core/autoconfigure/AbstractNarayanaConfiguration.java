@@ -55,12 +55,8 @@ public abstract class AbstractNarayanaConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public NarayanaPropertiesInitializer narayanaPropertiesInitializer(NarayanaProperties properties) {
-        if (StringUtils.isEmpty(properties.getLogDir())) {
-            properties.setLogDir(getLogDir().getAbsolutePath());
-        }
-        if (this.jtaProperties.getTransactionManagerId() != null) {
-            properties.setTransactionManagerId(this.jtaProperties.getTransactionManagerId());
-        }
+        initLogDir(properties);
+        initTransactionManagerId(properties);
         return new NarayanaPropertiesInitializer(properties);
     }
 
@@ -108,5 +104,27 @@ public abstract class AbstractNarayanaConfiguration {
     }
 
     protected abstract File getLogDir();
+
+    private void initLogDir(NarayanaProperties properties) {
+        if (!StringUtils.isEmpty(properties.getLogDir())) {
+            return;
+        }
+
+        if (!StringUtils.isEmpty(this.jtaProperties.getLogDir())) {
+            properties.setLogDir(this.jtaProperties.getLogDir());
+        } else {
+            properties.setLogDir(getLogDir().getAbsolutePath());
+        }
+    }
+
+    private void initTransactionManagerId(NarayanaProperties properties) {
+        if (!StringUtils.isEmpty(properties.getTransactionManagerId())) {
+            return;
+        }
+
+        if (!StringUtils.isEmpty(this.jtaProperties.getTransactionManagerId())) {
+            properties.setTransactionManagerId(this.jtaProperties.getTransactionManagerId());
+        }
+    }
 
 }

@@ -35,7 +35,7 @@ public class NarayanaProperties {
     /**
      * Prefix for Narayana specific properties.
      */
-    static final String PROPERTIES_PREFIX = "spring.jta.narayana";
+    static final String PROPERTIES_PREFIX = "narayana";
 
     /**
      * Transaction object store directory.
