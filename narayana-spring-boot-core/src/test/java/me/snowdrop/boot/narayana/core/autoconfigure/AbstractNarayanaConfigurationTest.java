@@ -74,31 +74,38 @@ public class AbstractNarayanaConfigurationTest {
     }
 
     @Test
-    public void narayanaPropertiesInitializerShouldSetLogDir() {
-        given(this.mockLogDir.getAbsolutePath()).willReturn("path");
-        this.configuration.narayanaPropertiesInitializer(this.mockNarayanaProperties);
-        verify(this.mockNarayanaProperties).setLogDir("path");
-    }
-
-    @Test
-    public void narayanaPropertiesInitializerShouldNotSetLogDirIfPropertyExists() {
-        given(this.mockNarayanaProperties.getLogDir()).willReturn("properties-path");
+    public void narayanaPropertiesInitializerShouldUseNarayanaLogDir() {
+        given(this.mockNarayanaProperties.getLogDir()).willReturn("narayana-log-dir");
         this.configuration.narayanaPropertiesInitializer(this.mockNarayanaProperties);
         verify(this.mockNarayanaProperties, times(0)).setLogDir(anyString());
     }
 
     @Test
-    public void narayanaPropertiesInitializerShouldSetTransactionManagerId() {
-        given(this.mockJtaProperties.getTransactionManagerId()).willReturn("id");
+    public void narayanaPropertiesInitializerShouldUseSpringJtaLogDir() {
+        given(this.mockJtaProperties.getLogDir()).willReturn("spring-jta-log-dir");
         this.configuration.narayanaPropertiesInitializer(this.mockNarayanaProperties);
-        verify(this.mockNarayanaProperties).setTransactionManagerId("id");
+        verify(this.mockNarayanaProperties).setLogDir("spring-jta-log-dir");
     }
 
     @Test
-    public void narayanaPropertiesInitializerShouldNotSetTransactionManagerIdIfPropertyExists() {
-        // given null transaction manager ID
+    public void narayanaPropertiesInitializerShouldUseDefaultLogDir() {
+        given(this.mockLogDir.getAbsolutePath()).willReturn("default-log-dir");
+        this.configuration.narayanaPropertiesInitializer(this.mockNarayanaProperties);
+        verify(this.mockNarayanaProperties).setLogDir("default-log-dir");
+    }
+
+    @Test
+    public void narayanaPropertiesInitializerShouldUseNarayanaTransactionManagerId() {
+        given(this.mockNarayanaProperties.getTransactionManagerId()).willReturn("narayana-manager-id");
         this.configuration.narayanaPropertiesInitializer(this.mockNarayanaProperties);
         verify(this.mockNarayanaProperties, times(0)).setTransactionManagerId(anyString());
+    }
+
+    @Test
+    public void narayanaPropertiesInitializerShouldUseSpringJtaTransactionManagerId() {
+        given(this.mockJtaProperties.getTransactionManagerId()).willReturn("spring-jta-manager-id");
+        this.configuration.narayanaPropertiesInitializer(this.mockNarayanaProperties);
+        verify(this.mockNarayanaProperties).setTransactionManagerId("spring-jta-manager-id");
     }
 
     @Test
