@@ -17,13 +17,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.snowdrop</groupId>
-  <artifactId>spring-boot-narayana-parent</artifactId>
+  <artifactId>narayana-spring-boot-parent</artifactId>
   <version>0.0.3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Spring Boot Narayana :: parent</name>
-  <description>Spring Boot Narayana integration parent</description>
-  <url>https://github.com/snowdrop/spring-boot-narayana</url>
+  <name>Narayana Spring Boot :: parent</name>
+  <description>Narayana Spring Boot integration parent</description>
+  <url>https://github.com/snowdrop/narayana-spring-boot</url>
 
   <developers>
     <developer>
@@ -78,8 +78,8 @@
 
   <scm>
     <url>https://github.com/snowdrop</url>
-    <connection>scm:git:https://github.com/snowdrop/spring-boot-narayana.git</connection>
-    <developerConnection>scm:git:git:@github.com:snowdrop/spring-boot-narayana.git</developerConnection>
+    <connection>scm:git:https://github.com/snowdrop/narayana-spring-boot.git</connection>
+    <developerConnection>scm:git:git:@github.com:snowdrop/narayana-spring-boot.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
@@ -369,10 +369,10 @@
   </profiles>
 
   <modules>
-    <module>spring-boot-narayana-core</module>
-    <module>spring-boot-1-narayana-starter</module>
-    <module>spring-boot-2-narayana-starter</module>
-    <module>spring-boot-narayana-starter-it</module>
+    <module>narayana-spring-boot-core</module>
+    <module>narayana-spring-boot-1-starter</module>
+    <module>narayana-spring-boot-2-starter</module>
+    <module>narayana-spring-boot-starter-it</module>
     <module>openshift/recovery-controller</module>
   </modules>
 </project>
