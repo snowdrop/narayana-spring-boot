@@ -18,15 +18,15 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>me.snowdrop</groupId>
-    <artifactId>spring-boot-narayana-parent</artifactId>
+    <artifactId>narayana-spring-boot-parent</artifactId>
     <version>0.0.3-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
-  <artifactId>spring-boot-narayana-recovery-controller</artifactId>
+  <artifactId>narayana-spring-boot-recovery-controller</artifactId>
 
-  <name>Spring Boot Narayana :: Openshift :: Recovery Controller</name>
-  <description>Spring Boot Narayana Recovery Controller for Openshift</description>
+  <name>Narayana Spring Boot :: Openshift :: Recovery Controller</name>
+  <description>Narayana Spring Boot Recovery Controller for Openshift</description>
 
   <dependencies>
 

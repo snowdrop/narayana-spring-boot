@@ -18,14 +18,14 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>me.snowdrop</groupId>
-    <artifactId>spring-boot-narayana-parent</artifactId>
+    <artifactId>narayana-spring-boot-parent</artifactId>
     <version>0.0.3-SNAPSHOT</version>
   </parent>
 
-  <artifactId>spring-boot-narayana-starter-it</artifactId>
+  <artifactId>narayana-spring-boot-starter-it</artifactId>
 
-  <name>Spring Boot Narayana :: starter integration tests</name>
-  <description>Spring Boot Narayana starter integration tests</description>
+  <name>Narayana Spring Boot :: starter integration tests</name>
+  <description>Narayana Spring Boot starter integration tests</description>
 
   <properties>
     <artemis.version>2.4.0</artemis.version>
@@ -38,12 +38,12 @@
     <dependencies>
       <dependency>
         <groupId>me.snowdrop</groupId>
-        <artifactId>spring-boot-1-narayana-starter</artifactId>
+        <artifactId>narayana-spring-boot-1-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>me.snowdrop</groupId>
-        <artifactId>spring-boot-2-narayana-starter</artifactId>
+        <artifactId>narayana-spring-boot-2-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -168,7 +168,7 @@
       <dependencies>
         <dependency>
           <groupId>me.snowdrop</groupId>
-          <artifactId>spring-boot-2-narayana-starter</artifactId>
+          <artifactId>narayana-spring-boot-2-starter</artifactId>
           <scope>test</scope>
         </dependency>
       </dependencies>
@@ -195,7 +195,7 @@
       <dependencies>
         <dependency>
           <groupId>me.snowdrop</groupId>
-          <artifactId>spring-boot-1-narayana-starter</artifactId>
+          <artifactId>narayana-spring-boot-1-starter</artifactId>
           <scope>test</scope>
         </dependency>
       </dependencies>

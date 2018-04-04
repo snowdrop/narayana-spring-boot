@@ -15,27 +15,22 @@
  limitations under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>me.snowdrop</groupId>
-    <artifactId>spring-boot-narayana-parent</artifactId>
+    <artifactId>narayana-spring-boot-parent</artifactId>
     <version>0.0.3-SNAPSHOT</version>
   </parent>
+  <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>spring-boot-1-narayana-starter</artifactId>
+  <artifactId>narayana-spring-boot-2-starter</artifactId>
 
-  <name>Spring Boot Narayana :: Spring Boot v1.x starter</name>
-  <description>Spring Boot Narayana integration starter for Spring Boot v1.x</description>
-
-  <properties>
-    <spring.version>4.3.14.RELEASE</spring.version>
-    <spring-boot.version>1.5.10.RELEASE</spring-boot.version>
-  </properties>
+  <name>Narayana Spring Boot :: Spring Boot v2.x starter</name>
+  <description>Narayana Spring Boot integration starter for Spring Boot v2.x</description>
 
   <dependencies>
     <dependency>
       <groupId>me.snowdrop</groupId>
-      <artifactId>spring-boot-narayana-core</artifactId>
+      <artifactId>narayana-spring-boot-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

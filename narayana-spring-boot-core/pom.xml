@@ -18,14 +18,14 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>me.snowdrop</groupId>
-    <artifactId>spring-boot-narayana-parent</artifactId>
+    <artifactId>narayana-spring-boot-parent</artifactId>
     <version>0.0.3-SNAPSHOT</version>
   </parent>
 
-  <artifactId>spring-boot-narayana-core</artifactId>
+  <artifactId>narayana-spring-boot-core</artifactId>
 
-  <name>Spring Boot Narayana :: core</name>
-  <description>Spring Boot Narayana integration core</description>
+  <name>Narayana Spring Boot :: core</name>
+  <description>Narayana Spring Boot integration core</description>
 
   <dependencies>
     <dependency>
