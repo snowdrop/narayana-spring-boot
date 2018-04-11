@@ -19,7 +19,7 @@
   <parent>
     <groupId>me.snowdrop</groupId>
     <artifactId>narayana-spring-boot-parent</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>narayana-spring-boot-core</artifactId>
@@ -59,12 +59,7 @@
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-tx</artifactId>
+      <artifactId>spring-boot</artifactId>
       <optional>true</optional>
     </dependency>
     <dependency>

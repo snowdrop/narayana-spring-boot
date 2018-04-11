@@ -23,7 +23,7 @@ import com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionManagerImpl
 import com.arjuna.ats.internal.jta.transaction.arjunacore.UserTransactionImple;
 import com.arjuna.ats.jbossatx.jta.RecoveryManagerService;
 import me.snowdrop.boot.narayana.app.TestApplication;
-import me.snowdrop.boot.narayana.core.autoconfigure.NarayanaBeanFactoryPostProcessor;
+import me.snowdrop.boot.narayana.autoconfigure.NarayanaBeanFactoryPostProcessor;
 import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
 import me.snowdrop.boot.narayana.core.properties.NarayanaPropertiesInitializer;
 import org.junit.ClassRule;
@@ -65,8 +65,6 @@ public class NarayanaIntegrationBeansLoadedIT {
     public static Iterable<Class<?>> expectedBeans() {
         return Arrays.asList(
                 NarayanaBeanFactoryPostProcessor.class,
-                DelegatingXADataSourceWrapper.class,
-                DelegatingXAConnectionFactoryWrapper.class,
                 NarayanaProperties.class,
                 NarayanaPropertiesInitializer.class,
                 UserTransactionImple.class,

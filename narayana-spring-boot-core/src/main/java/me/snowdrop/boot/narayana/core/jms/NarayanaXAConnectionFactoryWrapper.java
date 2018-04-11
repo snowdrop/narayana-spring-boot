@@ -26,13 +26,15 @@ import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
 import org.jboss.narayana.jta.jms.ConnectionFactoryProxy;
 import org.jboss.narayana.jta.jms.JmsXAResourceRecoveryHelper;
 import org.jboss.narayana.jta.jms.TransactionHelperImpl;
+import org.springframework.boot.jta.XAConnectionFactoryWrapper;
 
 /**
- * {@link XAConnectionFactory} wrapper that uses {@link ConnectionFactoryProxy} to wrap an {@link XAConnectionFactory}.
+ * {@link XAConnectionFactoryWrapper} implementation that uses {@link ConnectionFactoryProxy} to wrap an
+ * {@link XAConnectionFactory}.
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-public class NarayanaXAConnectionFactoryWrapper {
+public class NarayanaXAConnectionFactoryWrapper implements XAConnectionFactoryWrapper {
 
     private final TransactionManager transactionManager;
 
@@ -54,6 +56,7 @@ public class NarayanaXAConnectionFactoryWrapper {
         this.properties = properties;
     }
 
+    @Override
     public ConnectionFactory wrapConnectionFactory(XAConnectionFactory xaConnectionFactory) {
         XAResourceRecoveryHelper recoveryHelper = getRecoveryHelper(xaConnectionFactory);
         this.xaRecoveryModule.addXAResourceRecoveryHelper(recoveryHelper);

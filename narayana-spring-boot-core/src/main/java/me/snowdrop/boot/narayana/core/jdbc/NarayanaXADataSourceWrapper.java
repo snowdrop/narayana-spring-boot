@@ -22,13 +22,14 @@ import javax.sql.XADataSource;
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
 import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
+import org.springframework.boot.jta.XADataSourceWrapper;
 
 /**
- * XADataSource wrapper that uses {@link NarayanaDataSource} to wrap an {@link XADataSource}.
+ * {@link XADataSourceWrapper} implementation that uses {@link NarayanaDataSource} to wrap an {@link XADataSource}.
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-public class NarayanaXADataSourceWrapper {
+public class NarayanaXADataSourceWrapper implements XADataSourceWrapper {
 
     private final NarayanaProperties properties;
 
@@ -45,6 +46,7 @@ public class NarayanaXADataSourceWrapper {
         this.xaRecoveryModule = xaRecoveryModule;
     }
 
+    @Override
     public DataSource wrapDataSource(XADataSource dataSource) {
         XAResourceRecoveryHelper recoveryHelper = getRecoveryHelper(dataSource);
         this.xaRecoveryModule.addXAResourceRecoveryHelper(recoveryHelper);
