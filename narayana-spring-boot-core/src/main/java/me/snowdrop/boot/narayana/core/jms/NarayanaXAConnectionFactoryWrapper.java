@@ -26,7 +26,7 @@ import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
 import org.jboss.narayana.jta.jms.ConnectionFactoryProxy;
 import org.jboss.narayana.jta.jms.JmsXAResourceRecoveryHelper;
 import org.jboss.narayana.jta.jms.TransactionHelperImpl;
-import org.springframework.boot.jta.XAConnectionFactoryWrapper;
+import org.springframework.boot.jms.XAConnectionFactoryWrapper;
 
 /**
  * {@link XAConnectionFactoryWrapper} implementation that uses {@link ConnectionFactoryProxy} to wrap an

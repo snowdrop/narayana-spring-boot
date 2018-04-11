@@ -22,7 +22,7 @@ import javax.sql.XADataSource;
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
 import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
-import org.springframework.boot.jta.XADataSourceWrapper;
+import org.springframework.boot.jdbc.XADataSourceWrapper;
 
 /**
  * {@link XADataSourceWrapper} implementation that uses {@link NarayanaDataSource} to wrap an {@link XADataSource}.
