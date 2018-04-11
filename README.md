@@ -1,9 +1,9 @@
 # Narayana Spring Boot
 
 Narayana is a popular open source JTA transaction manager implementation supported by Red Hat.
-You can use the `narayana-spring-boot-1-starter` or `narayana-spring-boot-2-starter` starter to add the appropriate
-Narayana dependencies to your project depending on which Spring Boot version do you use. Spring Boot automatically
-configures Narayana and post-processes your beans to ensure that startup and shutdown ordering is correct.
+You can use the `narayana-spring-boot-starter` starter to add the appropriate Narayana dependencies to your project.
+Spring Boot automatically configures Narayana and post-processes your beans to ensure that startup and shutdown ordering
+is correct.
 
 By default, Narayana transaction logs are written to a `transaction-logs` directory in your application home directory
 (the directory in which your application jar file resides). You can customize the location of this directory by setting

@@ -19,7 +19,7 @@
   <parent>
     <groupId>me.snowdrop</groupId>
     <artifactId>narayana-spring-boot-parent</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>narayana-spring-boot-starter-it</artifactId>
@@ -28,7 +28,7 @@
   <description>Narayana Spring Boot starter integration tests</description>
 
   <properties>
-    <artemis.version>2.4.0</artemis.version>
+    <artemis.version>1.5.5</artemis.version>
     <awaitility.version>3.0.0</awaitility.version>
     <byteman.version>4.0.1</byteman.version>
     <h2.version>1.4.196</h2.version>
@@ -38,12 +38,7 @@
     <dependencies>
       <dependency>
         <groupId>me.snowdrop</groupId>
-        <artifactId>narayana-spring-boot-1-starter</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.snowdrop</groupId>
-        <artifactId>narayana-spring-boot-2-starter</artifactId>
+        <artifactId>narayana-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -101,6 +96,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>me.snowdrop</groupId>
+      <artifactId>narayana-spring-boot-starter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
       <scope>test</scope>
@@ -108,6 +108,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-artemis</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -156,57 +157,12 @@
     </dependency>
   </dependencies>
 
-  <profiles>
-    <profile>
-      <id>sb-2</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-        <property>
-          <name>it-sb-2</name>
-        </property>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>me.snowdrop</groupId>
-          <artifactId>narayana-spring-boot-2-starter</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-failsafe-plugin</artifactId>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>sb-1</id>
-      <activation>
-        <property>
-          <name>it-sb-1</name>
-        </property>
-      </activation>
-      <properties>
-        <artemis.version>1.5.5</artemis.version>
-        <spring-boot.version>1.5.10.RELEASE</spring-boot.version>
-      </properties>
-      <dependencies>
-        <dependency>
-          <groupId>me.snowdrop</groupId>
-          <artifactId>narayana-spring-boot-1-starter</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-failsafe-plugin</artifactId>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
 </project>

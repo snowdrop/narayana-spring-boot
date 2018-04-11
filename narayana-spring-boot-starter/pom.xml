@@ -20,39 +20,56 @@
     <groupId>me.snowdrop</groupId>
     <artifactId>narayana-spring-boot-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
   </parent>
 
-  <artifactId>narayana-spring-boot-recovery-controller</artifactId>
+  <artifactId>narayana-spring-boot-starter</artifactId>
 
-  <name>Narayana Spring Boot :: Openshift :: Recovery Controller</name>
-  <description>Narayana Spring Boot Recovery Controller for Openshift</description>
+  <name>Narayana Spring Boot :: starter</name>
+  <description>Narayana Spring Boot integration starter</description>
 
   <dependencies>
     <dependency>
-      <groupId>io.fabric8</groupId>
-      <artifactId>openshift-client</artifactId>
+      <groupId>me.snowdrop</groupId>
+      <artifactId>narayana-spring-boot-core</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-configuration-processor</artifactId>
+      <groupId>javax.jms</groupId>
+      <artifactId>javax.jms-api</artifactId>
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>org.jboss.narayana.jta</groupId>
-      <artifactId>jta</artifactId>
-      <optional>true</optional>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-spring-boot</artifactId>
-      <optional>true</optional>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
 </project>
