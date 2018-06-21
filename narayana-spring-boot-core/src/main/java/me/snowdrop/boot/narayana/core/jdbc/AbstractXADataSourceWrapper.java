@@ -25,32 +25,37 @@ import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
 import org.springframework.boot.jdbc.XADataSourceWrapper;
 
 /**
- * {@link XADataSourceWrapper} implementation that uses {@link NarayanaDataSource} to wrap an {@link XADataSource}.
+ * An abstract {@link XADataSourceWrapper} implementation which creates a {@link XAResourceRecoveryHelper} capable to
+ * recovery transactions of the provided {@link XADataSource} and then delegates the actual data source wrapper to its
+ * children classes.
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-public class NarayanaXADataSourceWrapper implements XADataSourceWrapper {
+public abstract class AbstractXADataSourceWrapper implements XADataSourceWrapper {
 
     private final NarayanaProperties properties;
 
     private final XARecoveryModule xaRecoveryModule;
 
-    /**
-     * Create a new {@link NarayanaXADataSourceWrapper} instance.
-     *
-     * @param properties       Narayana properties.
-     * @param xaRecoveryModule recovery module to register data source with.
-     */
-    public NarayanaXADataSourceWrapper(NarayanaProperties properties, XARecoveryModule xaRecoveryModule) {
+    protected AbstractXADataSourceWrapper(NarayanaProperties properties, XARecoveryModule xaRecoveryModule) {
         this.properties = properties;
         this.xaRecoveryModule = xaRecoveryModule;
     }
 
+    protected abstract DataSource internalWrapDataSource(XADataSource dataSource) throws Exception;
+
+    /**
+     * Register newly created recovery helper with the {@link XARecoveryModule} and delegate data source wrapping.
+     *
+     * @param dataSource {@link XADataSource} that needs to be wrapped.
+     * @return wrapped data source
+     * @throws Exception in case data source wrapping has failed
+     */
     @Override
-    public DataSource wrapDataSource(XADataSource dataSource) {
+    public DataSource wrapDataSource(XADataSource dataSource) throws Exception {
         XAResourceRecoveryHelper recoveryHelper = getRecoveryHelper(dataSource);
         this.xaRecoveryModule.addXAResourceRecoveryHelper(recoveryHelper);
-        return new NarayanaDataSource(dataSource);
+        return internalWrapDataSource(dataSource);
     }
 
     private XAResourceRecoveryHelper getRecoveryHelper(XADataSource dataSource) {

@@ -21,6 +21,26 @@ must be configured with a unique ID. By default, this ID is set to 1. To ensure 
 configure the `narayana.transaction-manager-id` or `spring.jta.transaction-manager-id` property with a different value
 for each instance of your application.
 
+# Using databases
+
+This Narayana starter supports two ways to enlist a relational database to a JTA transaction: Narayana Transactional
+Driver and DBCP2.
+
+By default Narayana Transactional driver is used which provides a basic XAResource enlistment and recovery.
+
+If you need a more sophisticated connection management, you can enable DBCP2 support which provides connection pooling
+and many other features. To enable DBCP2 add the following property to you application configuration:
+```
+narayana.dbcp.enabled=true
+```
+All DBCP2 configuration properties described in its
+[documentation](https://commons.apache.org/proper/commons-dbcp/configuration.html) are mapped with a prefix
+`narayana.dbcp`. So for example if you'd like to set an initial pool size to 10, you could do that by adding this entry
+to your application configuration:
+```
+narayana.dbcp.initialSize=10
+```  
+
 # Release
 
 Dry run:
