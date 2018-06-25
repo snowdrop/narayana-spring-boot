@@ -47,7 +47,7 @@ public class GenericXADataSourceWrapper extends AbstractXADataSourceWrapper {
      * @return wrapped data source.
      */
     @Override
-    protected DataSource internalWrapDataSource(XADataSource dataSource) {
+    protected DataSource wrapDataSourceInternal(XADataSource dataSource) {
         return new NarayanaDataSource(dataSource);
     }
 

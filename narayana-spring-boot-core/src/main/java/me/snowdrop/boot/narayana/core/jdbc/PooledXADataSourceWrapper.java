@@ -60,7 +60,7 @@ public class PooledXADataSourceWrapper extends AbstractXADataSourceWrapper {
      * @throws Exception if data source copy or connection pool initialization has failed.
      */
     @Override
-    protected DataSource internalWrapDataSource(XADataSource xaDataSource) throws Exception {
+    protected DataSource wrapDataSourceInternal(XADataSource xaDataSource) throws Exception {
         BasicManagedDataSource basicManagedDataSource = new BasicManagedDataSource();
         // Managed data source does't have a factory. Therefore we need to create an unmanaged data source and then copy
         // it's configuration to the managed one.

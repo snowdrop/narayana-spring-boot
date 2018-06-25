@@ -25,9 +25,8 @@ import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
 import org.springframework.boot.jdbc.XADataSourceWrapper;
 
 /**
- * An abstract {@link XADataSourceWrapper} implementation which creates a {@link XAResourceRecoveryHelper} capable to
- * recovery transactions of the provided {@link XADataSource} and then delegates the actual data source wrapper to its
- * children classes.
+ * An abstract {@link XADataSourceWrapper} implementation which handles {@link XAResourceRecoveryHelper} creation and
+ * registration. It delegates the actual {@link XADataSource} wrapping to its subclasses.
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
@@ -42,7 +41,7 @@ public abstract class AbstractXADataSourceWrapper implements XADataSourceWrapper
         this.xaRecoveryModule = xaRecoveryModule;
     }
 
-    protected abstract DataSource internalWrapDataSource(XADataSource dataSource) throws Exception;
+    protected abstract DataSource wrapDataSourceInternal(XADataSource dataSource) throws Exception;
 
     /**
      * Register newly created recovery helper with the {@link XARecoveryModule} and delegate data source wrapping.
@@ -55,7 +54,7 @@ public abstract class AbstractXADataSourceWrapper implements XADataSourceWrapper
     public DataSource wrapDataSource(XADataSource dataSource) throws Exception {
         XAResourceRecoveryHelper recoveryHelper = getRecoveryHelper(dataSource);
         this.xaRecoveryModule.addXAResourceRecoveryHelper(recoveryHelper);
-        return internalWrapDataSource(dataSource);
+        return wrapDataSourceInternal(dataSource);
     }
 
     private XAResourceRecoveryHelper getRecoveryHelper(XADataSource dataSource) {
