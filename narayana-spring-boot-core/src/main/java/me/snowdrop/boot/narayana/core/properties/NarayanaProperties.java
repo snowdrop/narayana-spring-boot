@@ -19,7 +19,9 @@ package me.snowdrop.boot.narayana.core.properties;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -106,6 +108,12 @@ public class NarayanaProperties {
      */
     private List<String> expiryScanners = new ArrayList<>(Collections.singletonList(
             "com.arjuna.ats.internal.arjuna.recovery.ExpiredTransactionStatusManagerScanner"));
+
+    /**
+     * Map of DBCP specific properties used if pooled data source wrapper is enabled.
+     * See https://commons.apache.org/proper/commons-dbcp/configuration.html for the list of supported properties.
+     */
+    private Map<String, String> dbcp = new HashMap<>();
 
     public String getLogDir() {
         return this.logDir;
@@ -211,4 +219,11 @@ public class NarayanaProperties {
         this.recoveryJmsPass = recoveryJmsPass;
     }
 
+    public Map<String, String> getDbcp() {
+        return this.dbcp;
+    }
+
+    public void setDbcp(Map<String, String> dbcp) {
+        this.dbcp = dbcp;
+    }
 }
