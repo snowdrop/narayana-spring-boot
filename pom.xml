@@ -53,6 +53,7 @@
     <assertj.version>3.9.0</assertj.version>
     <camel.version>2.20.2</camel.version>
     <checkstyle.version>8.5</checkstyle.version>
+    <commons-dbcp2.version>2.4.0</commons-dbcp2.version>
     <jboss-logging.version>3.2.1.Final</jboss-logging.version>
     <jboss-transaction-spi.version>7.6.0.Final</jboss-transaction-spi.version>
     <jms-api.version>2.0.1</jms-api.version>
@@ -152,6 +153,17 @@
         <groupId>javax.jms</groupId>
         <artifactId>javax.jms-api</artifactId>
         <version>${jms-api.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-dbcp2</artifactId>
+        <version>${commons-dbcp2.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>junit</groupId>

@@ -26,11 +26,11 @@ import javax.transaction.UserTransaction;
 import com.arjuna.ats.arjuna.recovery.RecoveryManager;
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import com.arjuna.ats.jbossatx.jta.RecoveryManagerService;
-import me.snowdrop.boot.narayana.core.jdbc.NarayanaXADataSourceWrapper;
+import me.snowdrop.boot.narayana.core.jdbc.GenericXADataSourceWrapper;
+import me.snowdrop.boot.narayana.core.jdbc.PooledXADataSourceWrapper;
 import me.snowdrop.boot.narayana.core.jms.NarayanaXAConnectionFactoryWrapper;
 import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
 import me.snowdrop.boot.narayana.core.properties.NarayanaPropertiesInitializer;
-import org.jboss.narayana.jta.jms.TransactionHelper;
 import org.jboss.tm.XAResourceRecoveryRegistry;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -139,13 +139,6 @@ public class NarayanaConfiguration {
         return XARecoveryModule.getRegisteredXARecoveryModule();
     }
 
-    @Bean
-    @ConditionalOnMissingBean(XADataSourceWrapper.class)
-    public XADataSourceWrapper xaDataSourceWrapper(NarayanaProperties narayanaProperties,
-            XARecoveryModule xaRecoveryModule) {
-        return new NarayanaXADataSourceWrapper(narayanaProperties, xaRecoveryModule);
-    }
-
     private void initLogDir(NarayanaProperties properties) {
         if (!StringUtils.isEmpty(properties.getLogDir())) {
             return;
@@ -177,13 +170,40 @@ public class NarayanaConfiguration {
     }
 
     /**
-     * JMS specific JTA configuration.
+     * Generic data source wrapper configuration.
+     */
+    @ConditionalOnProperty(name = "narayana.dbcp.enabled", havingValue = "false", matchIfMissing = true)
+    static class GenericJdbcConfiguration {
+
+        @Bean
+        @ConditionalOnMissingBean(XADataSourceWrapper.class)
+        public XADataSourceWrapper xaDataSourceWrapper(NarayanaProperties narayanaProperties,
+                XARecoveryModule xaRecoveryModule) {
+            return new GenericXADataSourceWrapper(narayanaProperties, xaRecoveryModule);
+        }
+
+    }
+
+    /**
+     * Pooled data source wrapper configuration.
+     */
+    @ConditionalOnProperty(name = "narayana.dbcp.enabled", havingValue = "true")
+    static class PooledJdbcConfiguration {
+
+        @Bean
+        @ConditionalOnMissingBean(XADataSourceWrapper.class)
+        public XADataSourceWrapper xaDataSourceWrapper(NarayanaProperties narayanaProperties,
+                XARecoveryModule xaRecoveryModule, TransactionManager transactionManager) {
+            return new PooledXADataSourceWrapper(narayanaProperties, xaRecoveryModule, transactionManager);
+        }
+
+    }
+
+    /**
+     * JMS connection factory wrapper configuration.
      */
     @Configuration
-    @ConditionalOnClass({
-            Message.class,
-            TransactionHelper.class
-    })
+    @ConditionalOnClass(Message.class)
     static class NarayanaJmsConfiguration {
 
         @Bean

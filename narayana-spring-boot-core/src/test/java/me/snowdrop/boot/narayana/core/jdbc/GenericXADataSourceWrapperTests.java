@@ -34,12 +34,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * Tests for {@link NarayanaXADataSourceWrapper}.
+ * Tests for {@link GenericXADataSourceWrapper}.
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
 @RunWith(MockitoJUnitRunner.class)
-public class XaDataSourceWrapperTests {
+public class GenericXADataSourceWrapperTests {
 
     @Mock
     private XADataSource mockXaDataSource;
@@ -50,15 +50,15 @@ public class XaDataSourceWrapperTests {
     @Mock
     private NarayanaProperties mockNarayanaProperties;
 
-    private NarayanaXADataSourceWrapper wrapper;
+    private GenericXADataSourceWrapper wrapper;
 
     @Before
     public void before() {
-        this.wrapper = new NarayanaXADataSourceWrapper(this.mockNarayanaProperties, this.mockXaRecoveryModule);
+        this.wrapper = new GenericXADataSourceWrapper(this.mockNarayanaProperties, this.mockXaRecoveryModule);
     }
 
     @Test
-    public void wrap() {
+    public void wrap() throws Exception {
         DataSource wrapped = this.wrapper.wrapDataSource(this.mockXaDataSource);
         assertThat(wrapped).isInstanceOf(NarayanaDataSource.class);
         verify(this.mockXaRecoveryModule).addXAResourceRecoveryHelper(any(DataSourceXAResourceRecoveryHelper.class));
@@ -67,7 +67,7 @@ public class XaDataSourceWrapperTests {
     }
 
     @Test
-    public void wrapWithCredentials() {
+    public void wrapWithCredentials() throws Exception {
         given(this.mockNarayanaProperties.getRecoveryDbUser()).willReturn("userName");
         given(this.mockNarayanaProperties.getRecoveryDbPass()).willReturn("password");
         DataSource wrapped = this.wrapper.wrapDataSource(this.mockXaDataSource);
