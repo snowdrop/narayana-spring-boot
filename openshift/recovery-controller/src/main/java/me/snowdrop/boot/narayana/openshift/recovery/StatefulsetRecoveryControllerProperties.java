@@ -57,6 +57,15 @@ public class StatefulsetRecoveryControllerProperties {
      */
     private String statusDir;
 
+    /**
+     * Enables log-scraping based error detection during recovery.
+     */
+    private boolean logScrapingErrorDetectionEnabled = true;
+
+    /**
+     * Configures the pattern used during log-scraping to detect errors.
+     */
+    private String logScrapingErrorDetectionPattern = "WARN|ERROR";
 
     public long getPeriod() {
         return this.period;
@@ -104,5 +113,21 @@ public class StatefulsetRecoveryControllerProperties {
 
     public void setStatusDir(String statusDir) {
         this.statusDir = statusDir;
+    }
+
+    public boolean isLogScrapingErrorDetectionEnabled() {
+        return this.logScrapingErrorDetectionEnabled;
+    }
+
+    public void setLogScrapingErrorDetectionEnabled(boolean logScrapingErrorDetectionEnabled) {
+        this.logScrapingErrorDetectionEnabled = logScrapingErrorDetectionEnabled;
+    }
+
+    public String getLogScrapingErrorDetectionPattern() {
+        return this.logScrapingErrorDetectionPattern;
+    }
+
+    public void setLogScrapingErrorDetectionPattern(String logScrapingErrorDetectionPattern) {
+        this.logScrapingErrorDetectionPattern = logScrapingErrorDetectionPattern;
     }
 }

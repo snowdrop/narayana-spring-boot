@@ -16,11 +16,14 @@
 
 package me.snowdrop.boot.narayana.openshift.recovery;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -31,19 +34,22 @@ import org.springframework.context.annotation.DependsOn;
  * @author <a href="mailto:nferraro@redhat.com">Nicola Ferraro</a>
  */
 @Configuration
-@AutoConfigureAfter(name = {
-        "me.snowdrop.boot.narayana.openshift.recovery.StatefulsetRecoveryControllerAutoConfiguration",
-        "me.snowdrop.boot.narayana.SpringBoot1NarayanaConfiguration",
-        "me.snowdrop.boot.narayana.SpringBoot2NarayanaConfiguration"
-})
+@AutoConfigureAfter(StatefulsetRecoveryControllerAutoConfiguration.class)
 @ConditionalOnBean({PodStatusManager.class})
 public class NarayanaRecoveryTerminationControllerAutoConfiguration {
 
     @Bean(initMethod = "start", destroyMethod = "stop")
     @DependsOn("recoveryManagerService")
     @ConditionalOnMissingBean(NarayanaRecoveryTerminationController.class)
-    public NarayanaRecoveryTerminationController narayanaRecoveryTerminationController(PodStatusManager podStatusManager, List<ServiceShutdownController> shutdownControllers) {
-        return new NarayanaRecoveryTerminationController(podStatusManager, shutdownControllers);
+    public NarayanaRecoveryTerminationController narayanaRecoveryTerminationController(PodStatusManager podStatusManager, Optional<List<ServiceShutdownController>> shutdownControllers, Optional<List<RecoveryErrorDetector>> recoveryErrorDetectors) {
+        return new NarayanaRecoveryTerminationController(podStatusManager, shutdownControllers.orElse(Collections.emptyList()), recoveryErrorDetectors.orElse(Collections.emptyList()));
+    }
+
+    @Bean
+    @ConditionalOnProperty(value = "snowdrop.narayana.openshift.recovery.log-scraping-error-detection-enabled", matchIfMissing = true)
+    @ConditionalOnMissingBean(LogScrapingRecoveryErrorDetector.class)
+    public LogScrapingRecoveryErrorDetector logScrapingRecoveryErrorDetector(StatefulsetRecoveryControllerProperties properties) {
+        return new LogScrapingRecoveryErrorDetector(properties.getCurrentPodName(), properties.getLogScrapingErrorDetectionPattern());
     }
 
 }
