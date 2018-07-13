@@ -41,9 +41,12 @@ public class NarayanaRecoveryTerminationController {
 
     private List<ServiceShutdownController> shutdownHooks;
 
-    public NarayanaRecoveryTerminationController(PodStatusManager podStatusManager, List<ServiceShutdownController> shutdownControllers) {
+    private List<RecoveryErrorDetector> recoveryErrorDetectors;
+
+    public NarayanaRecoveryTerminationController(PodStatusManager podStatusManager, List<ServiceShutdownController> shutdownControllers, List<RecoveryErrorDetector> recoveryErrorDetectors) {
         this.podStatusManager = Objects.requireNonNull(podStatusManager, "podStatusManager cannot be null");
         this.shutdownHooks = Objects.requireNonNull(shutdownControllers, "shutdownControllers cannot be null");
+        this.recoveryErrorDetectors = Objects.requireNonNull(recoveryErrorDetectors, "recoveryErrorDetectors cannot be null");
     }
 
     public void start() {
@@ -56,23 +59,39 @@ public class NarayanaRecoveryTerminationController {
             // Stop all services that may use transactions
             waitForShutdownControllersToStop();
 
+            // Start error detectors
+            startRecoveryErrorDetectors();
+
             LOG.info("Performing transaction recovery scan...");
             RecoveryManager.manager().scan();
             LOG.info("Performing second run of transaction recovery scan...");
             RecoveryManager.manager().scan();
 
-            List<Uid> pendingUids = getPendingUids();
-            if (pendingUids.isEmpty()) {
-                LOG.info("There are no pending transactions left");
-                this.podStatusManager.setStatus(PodStatus.STOPPED);
-            } else {
-                LOG.warn("There are pending transactions: {}", pendingUids);
-                this.podStatusManager.setStatus(PodStatus.PENDING);
-            }
-
         } catch (Exception ex) {
-            LOG.error("Error while cleaning transaction subsystem", ex);
+            LOG.error("Error while performing transaction scan", ex);
+        } finally {
+            stopRecoveryErrorDetectors();
         }
+
+        if (recoveryErrorsDetected()) {
+            LOG.error("Errors detected while performing the recovery manager scan. Scan result is invalid.");
+            this.podStatusManager.setStatus(PodStatus.PENDING);
+        } else {
+            try {
+                List<Uid> pendingUids = getPendingUids();
+                if (pendingUids.isEmpty()) {
+                    LOG.info("There are no pending transactions left");
+                    this.podStatusManager.setStatus(PodStatus.STOPPED);
+                } else {
+                    LOG.warn("There are pending transactions: {}", pendingUids);
+                    this.podStatusManager.setStatus(PodStatus.PENDING);
+                }
+
+            } catch (Exception ex) {
+                LOG.error("Error while trying to detect pending transactions", ex);
+            }
+        }
+
     }
 
     private void waitForShutdownControllersToStop() throws InterruptedException {
@@ -120,6 +139,27 @@ public class NarayanaRecoveryTerminationController {
         }
 
         return uidList;
+    }
+
+    private void startRecoveryErrorDetectors() {
+        for (RecoveryErrorDetector recoveryErrorDetector : this.recoveryErrorDetectors) {
+            recoveryErrorDetector.startDetection();
+        }
+    }
+
+    private void stopRecoveryErrorDetectors() {
+        for (RecoveryErrorDetector recoveryErrorDetector : this.recoveryErrorDetectors) {
+            recoveryErrorDetector.stopDetection();
+        }
+    }
+
+    private boolean recoveryErrorsDetected() {
+        for (RecoveryErrorDetector recoveryErrorDetector : this.recoveryErrorDetectors) {
+            if (recoveryErrorDetector.errorsDetected()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
