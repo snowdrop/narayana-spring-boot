@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.snowdrop.boot.narayana;
+package me.snowdrop.boot.narayana.generic;
 
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
@@ -40,7 +40,7 @@ import static org.awaitility.Duration.FIVE_SECONDS;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestApplication.class)
-public class TransactionalIT {
+public class GenericTransactionalIT {
 
     @Autowired
     private TransactionManager transactionManager;

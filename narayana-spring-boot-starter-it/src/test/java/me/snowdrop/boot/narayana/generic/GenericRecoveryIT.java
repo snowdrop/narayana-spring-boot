@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.snowdrop.boot.narayana;
+package me.snowdrop.boot.narayana.generic;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +29,7 @@ import me.snowdrop.boot.narayana.app.EntriesService;
 import me.snowdrop.boot.narayana.app.Entry;
 import me.snowdrop.boot.narayana.app.MessagesService;
 import me.snowdrop.boot.narayana.app.TestApplication;
+import me.snowdrop.boot.narayana.utils.BytemanHelper;
 import org.awaitility.Duration;
 import org.jboss.byteman.contrib.bmunit.BMRule;
 import org.jboss.byteman.contrib.bmunit.BMUnitRunner;
@@ -56,7 +57,7 @@ import static org.mockito.BDDMockito.when;
  */
 @RunWith(BMUnitRunner.class)
 @SpringBootTest(classes = TestApplication.class)
-public class RecoveryIT {
+public class GenericRecoveryIT {
 
     @ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
@@ -84,6 +85,7 @@ public class RecoveryIT {
         MockitoAnnotations.initMocks(this);
         this.messagesService.clearReceivedMessages();
         this.entriesService.clearEntries();
+        BytemanHelper.reset();
     }
 
     @Test
