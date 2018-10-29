@@ -61,7 +61,7 @@
     <mockito.version>2.15.0</mockito.version>
     <narayana.version>5.8.0.Final</narayana.version>
     <openshift-client.version>3.1.8</openshift-client.version>
-    <spring-boot.version>1.5.12.RELEASE</spring-boot.version>
+    <spring-boot.version>1.5.16.RELEASE</spring-boot.version>
     <spring.version>4.3.16.RELEASE</spring.version>
     <transaction-api.version>1.2</transaction-api.version>
 
