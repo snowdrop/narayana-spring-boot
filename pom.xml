@@ -50,30 +50,30 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <assertj.version>3.9.0</assertj.version>
+    <assertj.version>3.11.1</assertj.version>
     <camel.version>2.20.2</camel.version>
-    <checkstyle.version>8.5</checkstyle.version>
+    <checkstyle.version>8.14</checkstyle.version>
     <commons-dbcp2.version>2.4.0</commons-dbcp2.version>
     <jboss-logging.version>3.2.1.Final</jboss-logging.version>
     <jboss-transaction-spi.version>7.6.0.Final</jboss-transaction-spi.version>
     <jms-api.version>2.0.1</jms-api.version>
     <junit.version>4.12</junit.version>
-    <mockito.version>2.15.0</mockito.version>
-    <narayana.version>5.8.0.Final</narayana.version>
+    <mockito.version>2.23.4</mockito.version>
+    <narayana.version>5.9.0.Final</narayana.version>
     <openshift-client.version>3.1.8</openshift-client.version>
     <spring-boot.version>2.0.1.RELEASE</spring-boot.version>
     <spring.version>5.0.5.RELEASE</spring.version>
     <transaction-api.version>1.2</transaction-api.version>
 
     <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
-    <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+    <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
     <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
     <maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
-    <maven-failsafe-plugin.version>2.20.1</maven-failsafe-plugin.version>
-    <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
-    <maven-javadoc-plugin.version>3.0.0</maven-javadoc-plugin.version>
+    <maven-failsafe-plugin.version>2.22.1</maven-failsafe-plugin.version>
+    <maven-jar-plugin.version>3.1.0</maven-jar-plugin.version>
+    <maven-javadoc-plugin.version>3.0.1</maven-javadoc-plugin.version>
     <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-    <maven-surefire-plugin.version>2.20.1</maven-surefire-plugin.version>
+    <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
     <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
   </properties>
 
