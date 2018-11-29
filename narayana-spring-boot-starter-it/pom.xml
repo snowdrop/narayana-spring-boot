@@ -28,7 +28,7 @@
   <description>Narayana Spring Boot starter integration tests</description>
 
   <properties>
-    <artemis.version>2.4.0</artemis.version>
+    <artemis.version>2.6.3</artemis.version>
     <awaitility.version>3.0.0</awaitility.version>
     <byteman.version>4.0.1</byteman.version>
     <h2.version>1.4.196</h2.version>
