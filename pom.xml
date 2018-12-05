@@ -61,9 +61,8 @@
     <mockito.version>2.23.4</mockito.version>
     <narayana.version>5.9.1.Final</narayana.version>
     <openshift-client.version>3.1.8</openshift-client.version>
-    <spring-boot.version>1.5.17.RELEASE</spring-boot.version>
-    <spring.version>4.3.20.RELEASE</spring.version>
-    <transaction-api.version>1.2</transaction-api.version>
+    <spring-boot.version>1.5.18.RELEASE</spring-boot.version>
+    <spring.version>4.3.21.RELEASE</spring.version>
 
     <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
     <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
