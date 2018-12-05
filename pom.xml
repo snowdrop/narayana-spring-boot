@@ -54,7 +54,7 @@
     <byteman.version>4.0.1</byteman.version>
     <camel.version>2.20.2</camel.version>
     <checkstyle.version>8.14</checkstyle.version>
-    <narayana.version>5.9.0.Final</narayana.version>
+    <narayana.version>5.9.1.Final</narayana.version>
     <openshift-client.version>3.1.8</openshift-client.version>
     <spring-boot.version>2.1.1.RELEASE</spring-boot.version>
 
