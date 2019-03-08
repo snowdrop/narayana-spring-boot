@@ -60,7 +60,7 @@ public class StatefulsetRecoveryControllerProperties {
     /**
      * Enables log-scraping based error detection during recovery.
      */
-    private boolean logScrapingErrorDetectionEnabled = true;
+    private boolean logScrapingErrorDetectionEnabled = false;
 
     /**
      * Configures the pattern used during log-scraping to detect errors.
