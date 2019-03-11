@@ -46,10 +46,15 @@ public class NarayanaRecoveryTerminationControllerAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(value = "snowdrop.narayana.openshift.recovery.log-scraping-error-detection-enabled", matchIfMissing = true)
+    @ConditionalOnProperty("snowdrop.narayana.openshift.recovery.log-scraping-error-detection-enabled")
     @ConditionalOnMissingBean(LogScrapingRecoveryErrorDetector.class)
     public LogScrapingRecoveryErrorDetector logScrapingRecoveryErrorDetector(StatefulsetRecoveryControllerProperties properties) {
         return new LogScrapingRecoveryErrorDetector(properties.getCurrentPodName(), properties.getLogScrapingErrorDetectionPattern());
     }
 
+    @Bean
+    @ConditionalOnMissingBean(NarayanaInternalRecoveryErrorDetector.class)
+    public NarayanaInternalRecoveryErrorDetector narayanaInternalRecoveryErrorDetector() {
+        return new NarayanaInternalRecoveryErrorDetector();
+    }
 }
