@@ -47,6 +47,7 @@ public class NarayanaPropertiesInitializer implements InitializingBean {
             return;
         }
         setNodeIdentifier(this.properties.getTransactionManagerId());
+        setXARecoveryNodes(this.properties.getXaRecoveryNodes());
         setObjectStoreDir(this.properties.getLogDir());
         setCommitOnePhase(this.properties.isOnePhaseCommit());
         setDefaultTimeout(this.properties.getDefaultTimeout());
@@ -69,6 +70,10 @@ public class NarayanaPropertiesInitializer implements InitializingBean {
         } catch (CoreEnvironmentBeanException e) {
             throw new IllegalArgumentException(e);
         }
+    }
+
+    private void setXARecoveryNodes(List<String> xaRecoveryNodes) {
+        getPopulator(JTAEnvironmentBean.class).setXaRecoveryNodes(xaRecoveryNodes);
     }
 
     private void setObjectStoreDir(String objectStoreDir) {
