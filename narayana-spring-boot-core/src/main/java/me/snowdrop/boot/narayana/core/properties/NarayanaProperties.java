@@ -115,6 +115,11 @@ public class NarayanaProperties {
      */
     private Map<String, String> dbcp = new HashMap<>();
 
+    /**
+     * XA recovery nodes.
+     */
+    private List<String> xaRecoveryNodes = new ArrayList<>(Arrays.asList("1"));
+
     public String getLogDir() {
         return this.logDir;
     }
@@ -225,5 +230,13 @@ public class NarayanaProperties {
 
     public void setDbcp(Map<String, String> dbcp) {
         this.dbcp = dbcp;
+    }
+
+    public List<String> getXaRecoveryNodes() {
+        return this.xaRecoveryNodes;
+    }
+
+    public void setXaRecoveryNodes(List<String> xaRecoveryNodes) {
+        this.xaRecoveryNodes = xaRecoveryNodes;
     }
 }
