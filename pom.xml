@@ -51,17 +51,17 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <awaitility.version>3.0.0</awaitility.version>
-    <byteman.version>4.0.1</byteman.version>
+    <byteman.version>4.0.6</byteman.version>
     <camel.version>2.20.2</camel.version>
-    <checkstyle.version>8.14</checkstyle.version>
-    <narayana.version>5.9.1.Final</narayana.version>
+    <checkstyle.version>8.20</checkstyle.version>
+    <narayana.version>5.9.5.Final</narayana.version>
     <openshift-client.version>3.1.8</openshift-client.version>
     <spring-boot.version>2.1.4.RELEASE</spring-boot.version>
 
     <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
     <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
     <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
-    <maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
+    <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
     <maven-failsafe-plugin.version>2.22.1</maven-failsafe-plugin.version>
     <maven-jar-plugin.version>3.1.0</maven-jar-plugin.version>
     <maven-javadoc-plugin.version>3.0.1</maven-javadoc-plugin.version>
