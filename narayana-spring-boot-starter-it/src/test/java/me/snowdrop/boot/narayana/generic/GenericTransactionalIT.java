@@ -16,6 +16,8 @@
 
 package me.snowdrop.boot.narayana.generic;
 
+import java.time.Duration;
+
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
@@ -33,7 +35,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.awaitility.Duration.FIVE_SECONDS;
 
 /**
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
@@ -82,7 +83,7 @@ public class GenericTransactionalIT {
         this.transactionManager.resume(transaction);
         this.transactionManager.commit();
         await("Wait until the test message is received")
-                .atMost(FIVE_SECONDS)
+                .atMost(Duration.ofSeconds(5))
                 .untilAsserted(() -> assertThat(this.messagesService.getReceivedMessages())
                         .as("Test message should have been received after transaction was committed")
                         .containsOnly("test-message")

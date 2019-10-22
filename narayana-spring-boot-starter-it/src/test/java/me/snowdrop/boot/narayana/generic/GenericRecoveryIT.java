@@ -16,9 +16,9 @@
 
 package me.snowdrop.boot.narayana.generic;
 
+import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.transaction.TransactionManager;
 import javax.transaction.xa.XAResource;
@@ -30,7 +30,6 @@ import me.snowdrop.boot.narayana.app.Entry;
 import me.snowdrop.boot.narayana.app.MessagesService;
 import me.snowdrop.boot.narayana.app.TestApplication;
 import me.snowdrop.boot.narayana.utils.BytemanHelper;
-import org.awaitility.Duration;
 import org.jboss.byteman.contrib.bmunit.BMRule;
 import org.jboss.byteman.contrib.bmunit.BMUnitRunner;
 import org.junit.Before;
@@ -118,7 +117,7 @@ public class GenericRecoveryIT {
                 .isEmpty();
 
         await("Wait for the recovery to happen")
-                .atMost(new Duration(30, TimeUnit.SECONDS))
+                .atMost(Duration.ofSeconds(30))
                 .untilAsserted(() -> {
                     assertThat(this.messagesService.getReceivedMessages())
                             .as("Test message should have been received after transaction was committed")
