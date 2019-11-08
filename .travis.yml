@@ -1,5 +1,7 @@
 language: java
-jdk: oraclejdk9
+jdk:
+  - openjdk9
+  - openjdk12
 script:
   - ./mvnw test
   - ./mvnw clean install
