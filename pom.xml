@@ -50,12 +50,12 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <awaitility.version>4.0.1</awaitility.version>
-    <byteman.version>4.0.8</byteman.version>
-    <camel.version>2.24.2</camel.version>
+    <awaitility.version>4.0.2</awaitility.version>
+    <byteman.version>4.0.10</byteman.version>
+    <camel-spring-boot.version>3.1.0</camel-spring-boot.version>
     <narayana.version>5.9.8.Final</narayana.version>
-    <openshift-client.version>3.1.8</openshift-client.version>
-    <spring-boot.version>2.2.0.RELEASE</spring-boot.version>
+    <openshift-client.version>4.9.0</openshift-client.version>
+    <spring-boot.version>2.2.5.RELEASE</spring-boot.version>
 
     <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
     <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
@@ -124,9 +124,9 @@
         <version>${openshift-client.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.camel</groupId>
+        <groupId>org.apache.camel.springboot</groupId>
         <artifactId>camel-spring-boot</artifactId>
-        <version>${camel.version}</version>
+        <version>${camel-spring-boot.version}</version>
       </dependency>
       <dependency>
         <groupId>org.awaitility</groupId>
