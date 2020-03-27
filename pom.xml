@@ -346,5 +346,6 @@
     <module>narayana-spring-boot-starter</module>
     <module>narayana-spring-boot-starter-it</module>
     <module>openshift/recovery-controller</module>
+    <module>narayana-spring-boot-samples</module>
   </modules>
 </project>

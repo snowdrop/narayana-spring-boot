@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>me.snowdrop</groupId>
+    <artifactId>narayana-spring-boot-parent</artifactId>
+    <version>2.3.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>narayana-spring-boot-samples</artifactId>
+  <packaging>pom</packaging>
+  <name>Narayana Spring Boot :: samples</name>
+  <description>A collection of Narayana Spring Boot example applications</description>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <modules>
+    <module>narayana-spring-boot-sample-2pc</module>
+  </modules>
+</project>
