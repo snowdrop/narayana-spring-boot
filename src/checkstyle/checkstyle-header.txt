@@ -1,5 +1,5 @@
 ^\Q/*\E$
-^\Q * Copyright \E2018\Q Red Hat, Inc, and individual contributors.\E$
+^\Q * Copyright \E2020\Q Red Hat, Inc, and individual contributors.\E$
 ^\Q *\E$
 ^\Q * Licensed under the Apache License, Version 2.0 (the "License");\E$
 ^\Q * you may not use this file except in compliance with the License.\E$
