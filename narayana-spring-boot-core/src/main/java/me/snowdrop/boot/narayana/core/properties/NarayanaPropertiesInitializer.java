@@ -64,7 +64,8 @@ public class NarayanaPropertiesInitializer implements InitializingBean {
     private boolean isPropertiesFileAvailable() {
         // If the Narayana default properties are equal to the System properties,
         // it means that either the Narayana properties file is missing or it is empty.
-        return !PropertiesFactory.getDefaultProperties().keySet().equals(System.getProperties().keySet());
+        return !PropertiesFactory.getDefaultProperties().stringPropertyNames()
+                .equals(System.getProperties().stringPropertyNames());
     }
 
     private void setNodeIdentifier(String nodeIdentifier) {
