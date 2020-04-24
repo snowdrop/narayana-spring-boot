@@ -45,7 +45,7 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.narayana.jta</groupId>
-      <artifactId>jta</artifactId>
+      <artifactId>narayana-jta</artifactId>
       <optional>true</optional>
     </dependency>
     <dependency>

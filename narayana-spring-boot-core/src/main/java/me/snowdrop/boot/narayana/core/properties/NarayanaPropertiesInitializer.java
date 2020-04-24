@@ -25,6 +25,8 @@ import com.arjuna.ats.arjuna.common.ObjectStoreEnvironmentBean;
 import com.arjuna.ats.arjuna.common.RecoveryEnvironmentBean;
 import com.arjuna.ats.jta.common.JTAEnvironmentBean;
 import com.arjuna.common.internal.util.propertyservice.BeanPopulator;
+import com.arjuna.common.util.propertyservice.PropertiesFactory;
+import org.jboss.logging.Logger;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
@@ -34,7 +36,7 @@ import org.springframework.beans.factory.InitializingBean;
  */
 public class NarayanaPropertiesInitializer implements InitializingBean {
 
-    private static final String JBOSSTS_PROPERTIES_FILE_NAME = "jbossts-properties.xml";
+    private static final Logger logger = Logger.getLogger(NarayanaPropertiesInitializer.class);
 
     private final NarayanaProperties properties;
 
@@ -44,6 +46,7 @@ public class NarayanaPropertiesInitializer implements InitializingBean {
 
     public void afterPropertiesSet() {
         if (isPropertiesFileAvailable()) {
+            logger.info("Non-empty Narayana properties file found, ignoring Narayana application properties");
             return;
         }
         setNodeIdentifier(this.properties.getTransactionManagerId());
@@ -59,9 +62,9 @@ public class NarayanaPropertiesInitializer implements InitializingBean {
     }
 
     private boolean isPropertiesFileAvailable() {
-        return Thread.currentThread()
-                .getContextClassLoader()
-                .getResource(JBOSSTS_PROPERTIES_FILE_NAME) != null;
+        // If the Narayana default properties are equal to the System properties,
+        // it means that either the Narayana properties file is missing or it is empty.
+        return !PropertiesFactory.getDefaultProperties().keySet().equals(System.getProperties().keySet());
     }
 
     private void setNodeIdentifier(String nodeIdentifier) {
