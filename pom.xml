@@ -296,10 +296,7 @@
         <configuration>
           <autoVersionSubmodules>true</autoVersionSubmodules>
           <tagNameFormat>@{project.version}</tagNameFormat>
-          <preparationGoals>clean install</preparationGoals>
-          <useReleaseProfile>false</useReleaseProfile>
           <releaseProfiles>release</releaseProfiles>
-          <goals>deploy</goals>
         </configuration>
       </plugin>
     </plugins>
