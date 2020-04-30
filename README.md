@@ -43,17 +43,28 @@ narayana.dbcp.initialSize=10
 
 # Release
 
-Dry run:
+## With GitHub action
+
+GitHub release action is activates with a tag.
+For example, to release a version 1.2.3 create and push the following tag. 
+```bash
+git tag release-1.2.3
+git push origin release-1.2.3
 ```
+
+## Manually
+
+Dry run:
+```bash
 mvn release:prepare -DdryRun
 ```
 
 Tag:
-```
+```bash
 mvn release:prepare
 ```
 
 Deploy:
-```
-mvn release:perform -DskipTests
+```bash
+mvn release:perform
 ```
