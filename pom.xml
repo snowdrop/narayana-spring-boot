@@ -56,7 +56,7 @@
     <checkstyle.version>8.20</checkstyle.version>
     <narayana.version>5.9.8.Final</narayana.version>
     <openshift-client.version>3.1.8</openshift-client.version>
-    <spring-boot.version>2.1.13.RELEASE</spring-boot.version>
+    <spring-boot.version>2.1.15.RELEASE</spring-boot.version>
 
     <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
     <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
