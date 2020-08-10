@@ -51,7 +51,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <awaitility.version>4.0.3</awaitility.version>
-    <byteman.version>4.0.10</byteman.version>
+    <byteman.version>4.0.12</byteman.version>
     <camel-spring-boot.version>3.1.0</camel-spring-boot.version>
     <narayana.version>5.9.8.Final</narayana.version>
     <openshift-client.version>4.9.0</openshift-client.version>
