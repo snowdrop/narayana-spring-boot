@@ -50,7 +50,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <awaitility.version>4.0.2</awaitility.version>
+    <awaitility.version>4.0.3</awaitility.version>
     <byteman.version>4.0.10</byteman.version>
     <camel-spring-boot.version>3.1.0</camel-spring-boot.version>
     <narayana.version>5.9.8.Final</narayana.version>
