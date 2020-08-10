@@ -52,7 +52,7 @@
 
     <awaitility.version>4.0.3</awaitility.version>
     <byteman.version>4.0.12</byteman.version>
-    <camel-spring-boot.version>3.1.0</camel-spring-boot.version>
+    <camel-spring-boot.version>3.4.2</camel-spring-boot.version>
     <narayana.version>5.9.8.Final</narayana.version>
     <openshift-client.version>4.9.0</openshift-client.version>
     <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
