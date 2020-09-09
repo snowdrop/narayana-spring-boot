@@ -19,6 +19,7 @@ package me.snowdrop.boot.narayana.autoconfigure;
 import java.io.File;
 
 import javax.transaction.TransactionManager;
+import javax.transaction.TransactionSynchronizationRegistry;
 import javax.transaction.UserTransaction;
 
 import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
@@ -62,6 +63,9 @@ public class NarayanaConfigurationTest {
 
     @Mock
     private TransactionManager mockTransactionManager;
+
+    @Mock
+    private TransactionSynchronizationRegistry mockTransactionSynchronizationRegistry;
 
     private NarayanaConfiguration configuration;
 
@@ -109,10 +113,12 @@ public class NarayanaConfigurationTest {
 
     @Test
     public void jtaTransactionManagerShouldBeCreated() {
-        JtaTransactionManager jtaTransactionManager =
-                this.configuration.transactionManager(this.mockUserTransaction, this.mockTransactionManager);
+        JtaTransactionManager jtaTransactionManager = this.configuration.transactionManager(
+                this.mockUserTransaction, this.mockTransactionManager, this.mockTransactionSynchronizationRegistry);
         assertThat(jtaTransactionManager.getUserTransaction()).isEqualTo(this.mockUserTransaction);
         assertThat(jtaTransactionManager.getTransactionManager()).isEqualTo(this.mockTransactionManager);
+        assertThat(jtaTransactionManager.getTransactionSynchronizationRegistry())
+                .isEqualTo(this.mockTransactionSynchronizationRegistry);
     }
 
     @Test
@@ -121,8 +127,8 @@ public class NarayanaConfigurationTest {
                 this.mockTransactionManagerCustomizers);
         this.configuration = new NarayanaConfiguration(this.mockJtaProperties,
                 this.mockTransactionManagerCustomizersProvider);
-        JtaTransactionManager jtaTransactionManager =
-                this.configuration.transactionManager(this.mockUserTransaction, this.mockTransactionManager);
+        JtaTransactionManager jtaTransactionManager = this.configuration.transactionManager(
+                this.mockUserTransaction, this.mockTransactionManager, this.mockTransactionSynchronizationRegistry);
         verify(this.mockTransactionManagerCustomizers).customize(jtaTransactionManager);
     }
 
