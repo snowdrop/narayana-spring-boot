@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.Properties;
 
 import javax.transaction.TransactionManager;
+import javax.transaction.TransactionSynchronizationRegistry;
 import javax.transaction.UserTransaction;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
@@ -62,6 +63,7 @@ public class NarayanaConfigurationIT {
         this.context.getBean(NarayanaPropertiesInitializer.class);
         this.context.getBean(UserTransaction.class);
         this.context.getBean(TransactionManager.class);
+        this.context.getBean(TransactionSynchronizationRegistry.class);
         this.context.getBean(JtaTransactionManager.class);
         this.context.getBean(RecoveryManagerService.class);
         this.context.getBean(XARecoveryModule.class);

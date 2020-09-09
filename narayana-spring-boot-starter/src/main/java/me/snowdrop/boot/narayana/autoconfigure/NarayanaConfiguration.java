@@ -21,11 +21,13 @@ import java.io.File;
 import javax.jms.Message;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
+import javax.transaction.TransactionSynchronizationRegistry;
 import javax.transaction.UserTransaction;
 
 import com.arjuna.ats.arjuna.recovery.RecoveryManager;
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import com.arjuna.ats.jbossatx.jta.RecoveryManagerService;
+import com.arjuna.ats.jta.common.jtaPropertyManager;
 import me.snowdrop.boot.narayana.core.jdbc.GenericXADataSourceWrapper;
 import me.snowdrop.boot.narayana.core.jdbc.PooledXADataSourceWrapper;
 import me.snowdrop.boot.narayana.core.jms.NarayanaXAConnectionFactoryWrapper;
@@ -111,10 +113,19 @@ public class NarayanaConfiguration {
     }
 
     @Bean
+    @DependsOn("narayanaPropertiesInitializer")
+    @ConditionalOnMissingBean
+    public TransactionSynchronizationRegistry narayanaTransactionSynchronizationRegistry() {
+        return jtaPropertyManager.getJTAEnvironmentBean().getTransactionSynchronizationRegistry();
+    }
+
+    @Bean
     @ConditionalOnMissingBean
     public JtaTransactionManager transactionManager(UserTransaction userTransaction,
-            TransactionManager transactionManager) {
+            TransactionManager transactionManager,
+            TransactionSynchronizationRegistry transactionSynchronizationRegistry) {
         JtaTransactionManager jtaTransactionManager = new JtaTransactionManager(userTransaction, transactionManager);
+        jtaTransactionManager.setTransactionSynchronizationRegistry(transactionSynchronizationRegistry);
         if (this.transactionManagerCustomizers != null) {
             this.transactionManagerCustomizers.customize(jtaTransactionManager);
         }
