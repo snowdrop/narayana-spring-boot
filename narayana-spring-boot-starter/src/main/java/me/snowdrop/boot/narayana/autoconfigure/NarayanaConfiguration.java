@@ -30,7 +30,8 @@ import com.arjuna.ats.jbossatx.jta.RecoveryManagerService;
 import com.arjuna.ats.jta.common.jtaPropertyManager;
 import me.snowdrop.boot.narayana.core.jdbc.GenericXADataSourceWrapper;
 import me.snowdrop.boot.narayana.core.jdbc.PooledXADataSourceWrapper;
-import me.snowdrop.boot.narayana.core.jms.NarayanaXAConnectionFactoryWrapper;
+import me.snowdrop.boot.narayana.core.jms.GenericXAConnectionFactoryWrapper;
+import me.snowdrop.boot.narayana.core.jms.PooledXAConnectionFactoryWrapper;
 import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
 import me.snowdrop.boot.narayana.core.properties.NarayanaPropertiesInitializer;
 import org.jboss.tm.XAResourceRecoveryRegistry;
@@ -213,17 +214,29 @@ public class NarayanaConfiguration {
     /**
      * JMS connection factory wrapper configuration.
      */
-    @Configuration
+    @ConditionalOnProperty(name = "narayana.messaginghub.enabled", havingValue = "false", matchIfMissing = true)
     @ConditionalOnClass(Message.class)
-    static class NarayanaJmsConfiguration {
+    static class GenericJmsConfiguration {
 
         @Bean
         @ConditionalOnMissingBean(XAConnectionFactoryWrapper.class)
         public XAConnectionFactoryWrapper xaConnectionFactoryWrapper(TransactionManager transactionManager,
                 XARecoveryModule xaRecoveryModule, NarayanaProperties narayanaProperties) {
-            return new NarayanaXAConnectionFactoryWrapper(transactionManager, xaRecoveryModule, narayanaProperties);
+            return new GenericXAConnectionFactoryWrapper(transactionManager, xaRecoveryModule, narayanaProperties);
         }
 
     }
 
+    @ConditionalOnProperty(name = "narayana.messaginghub.enabled", havingValue = "true")
+    @ConditionalOnClass(Message.class)
+    static class PooledJmsConfiguration {
+
+        @Bean
+        @ConditionalOnMissingBean(XAConnectionFactoryWrapper.class)
+        public XAConnectionFactoryWrapper xaConnectionFactoryWrapper(TransactionManager transactionManager,
+                XARecoveryModule xaRecoveryModule, NarayanaProperties narayanaProperties) {
+            return new PooledXAConnectionFactoryWrapper(transactionManager, xaRecoveryModule, narayanaProperties);
+        }
+
+    }
 }
