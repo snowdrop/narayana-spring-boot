@@ -37,12 +37,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * Tests for {@link NarayanaXAConnectionFactoryWrapper}.
+ * Tests for {@link GenericXAConnectionFactoryWrapper}.
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
 @RunWith(MockitoJUnitRunner.class)
-public class NarayanaXAConnectionFactoryWrapperTests {
+public class GenericXAConnectionFactoryWrapperTests {
 
     @Mock
     private XAConnectionFactory mockXaConnectionFactory;
@@ -56,16 +56,16 @@ public class NarayanaXAConnectionFactoryWrapperTests {
     @Mock
     private NarayanaProperties mockNarayanaProperties;
 
-    private NarayanaXAConnectionFactoryWrapper wrapper;
+    private GenericXAConnectionFactoryWrapper wrapper;
 
     @Before
     public void before() {
-        this.wrapper = new NarayanaXAConnectionFactoryWrapper(this.mockTransactionManager, this.mockXaRecoveryModule,
+        this.wrapper = new GenericXAConnectionFactoryWrapper(this.mockTransactionManager, this.mockXaRecoveryModule,
                 this.mockNarayanaProperties);
     }
 
     @Test
-    public void wrap() {
+    public void wrap() throws Exception {
         ConnectionFactory wrapped = this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory);
         assertThat(wrapped).isInstanceOf(ConnectionFactoryProxy.class);
         verify(this.mockXaRecoveryModule).addXAResourceRecoveryHelper(any(JmsXAResourceRecoveryHelper.class));
@@ -74,7 +74,7 @@ public class NarayanaXAConnectionFactoryWrapperTests {
     }
 
     @Test
-    public void wrapWithCredentials() {
+    public void wrapWithCredentials() throws Exception {
         given(this.mockNarayanaProperties.getRecoveryJmsUser()).willReturn("userName");
         given(this.mockNarayanaProperties.getRecoveryJmsPass()).willReturn("password");
         ConnectionFactory wrapped = this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory);

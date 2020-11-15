@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * Subset of Narayana properties which can be configured via Spring configuration. Use
@@ -114,6 +115,13 @@ public class NarayanaProperties {
      * See https://commons.apache.org/proper/commons-dbcp/configuration.html for the list of supported properties.
      */
     private Map<String, String> dbcp = new HashMap<>();
+
+    /**
+     * MessagingHub specific properties used if pooled connection factory wrapper is enabled.
+     * See https://github.com/messaginghub/pooled-jms/blob/master/pooled-jms-docs/Configuration.md for the list of supported properties.
+     */
+    @NestedConfigurationProperty
+    private final MessagingHubConnectionFactoryProperties messaginghub = new MessagingHubConnectionFactoryProperties();
 
     /**
      * XA recovery nodes.
@@ -230,6 +238,10 @@ public class NarayanaProperties {
 
     public void setDbcp(Map<String, String> dbcp) {
         this.dbcp = dbcp;
+    }
+
+    public MessagingHubConnectionFactoryProperties getMessaginghub() {
+        return this.messaginghub;
     }
 
     public List<String> getXaRecoveryNodes() {
