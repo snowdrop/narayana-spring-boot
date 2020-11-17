@@ -13,7 +13,7 @@ a `narayana.log-dir` or `spring.jta.log-dir` property in your application.proper
 Javadoc for complete details.
 
 > Only a limited number of Narayana configuration options are exposed via `application.properties`. For a more
-more complex configuration you can provide a `jbossts-proeprties.xml` file. To get more details, please, consult
+more complex configuration you can provide a `jbossts-properties.xml` file. To get more details, please, consult
 Narayana project [documentation](http://narayana.io/docs/project/index.html).
 
 > To ensure that multiple transaction managers can safely coordinate the same resource managers, each Narayana instance
@@ -40,6 +40,23 @@ to your application configuration:
 ```
 narayana.dbcp.initialSize=10
 ```  
+
+# Using messaging brokers
+
+This Narayana starter supports two ways to enlist a messaging broker to a JTA transaction: plain connection
+factory and MessagingHub pooled connection factory.
+
+By default Narayana Connection Proxy around the JMS connection factory is used which provides a basic XAResource enlistment and recovery.
+
+If you need a more sophisticated connection management, you can enable MessagingHub support which provides connection pooling
+and many other features. To enable MessagingHub add the following property to you application configuration:
+```
+narayana.messaginghub.enabled=true
+```
+All MessagingHub configuration properties described in its [documentation](https://github.com/messaginghub/pooled-jms/blob/master/pooled-jms-docs/Configuration.md) are mapped with a prefix `narayana.messaginghub`. So for example if you'd like to set an max connections pool size to 10, you could do that by adding this entry to your application configuration:
+```
+narayana.messaginghub.maxConnections=10
+```
 
 # Release
 
