@@ -95,13 +95,16 @@ public class NarayanaProperties {
      */
     private List<String> xaResourceOrphanFilters = new ArrayList<>(Arrays.asList(
             "com.arjuna.ats.internal.jta.recovery.arjunacore.JTATransactionLogXAResourceOrphanFilter",
-            "com.arjuna.ats.internal.jta.recovery.arjunacore.JTANodeNameXAResourceOrphanFilter"));
+            "com.arjuna.ats.internal.jta.recovery.arjunacore.JTANodeNameXAResourceOrphanFilter",
+            "com.arjuna.ats.internal.jta.recovery.arjunacore.JTAActionStatusServiceXAResourceOrphanFilter"));
 
     /**
      * Comma-separated list of recovery modules.
      */
     private List<String> recoveryModules = new ArrayList<>(Arrays.asList(
+            "com.arjuna.ats.internal.jta.recovery.arjunacore.CommitMarkableResourceRecordRecoveryModule",
             "com.arjuna.ats.internal.arjuna.recovery.AtomicActionRecoveryModule",
+            "com.arjuna.ats.internal.txoj.recovery.TORecoveryModule",
             "com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule"));
 
     /**

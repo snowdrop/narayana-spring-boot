@@ -75,13 +75,16 @@ public class NarayanaPropertiesInitializerTests {
 
         List<String> xaResourceOrphanFilters = Arrays.asList(
                 "com.arjuna.ats.internal.jta.recovery.arjunacore.JTATransactionLogXAResourceOrphanFilter",
-                "com.arjuna.ats.internal.jta.recovery.arjunacore.JTANodeNameXAResourceOrphanFilter");
+                "com.arjuna.ats.internal.jta.recovery.arjunacore.JTANodeNameXAResourceOrphanFilter",
+                "com.arjuna.ats.internal.jta.recovery.arjunacore.JTAActionStatusServiceXAResourceOrphanFilter");
         assertThat(BeanPopulator.getDefaultInstance(JTAEnvironmentBean.class)
                 .getXaResourceOrphanFilterClassNames())
                 .isEqualTo(xaResourceOrphanFilters);
 
         List<String> recoveryModules = Arrays.asList(
+                "com.arjuna.ats.internal.jta.recovery.arjunacore.CommitMarkableResourceRecordRecoveryModule",
                 "com.arjuna.ats.internal.arjuna.recovery.AtomicActionRecoveryModule",
+                "com.arjuna.ats.internal.txoj.recovery.TORecoveryModule",
                 "com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule");
         assertThat(BeanPopulator.getDefaultInstance(RecoveryEnvironmentBean.class)
                 .getRecoveryModuleClassNames()).isEqualTo(recoveryModules);
