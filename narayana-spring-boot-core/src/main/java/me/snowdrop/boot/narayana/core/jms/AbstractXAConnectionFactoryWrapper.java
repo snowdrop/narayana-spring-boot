@@ -18,14 +18,12 @@ package me.snowdrop.boot.narayana.core.jms;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.XAConnectionFactory;
-import javax.transaction.TransactionManager;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
 import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
 import org.jboss.narayana.jta.jms.ConnectionFactoryProxy;
 import org.jboss.narayana.jta.jms.JmsXAResourceRecoveryHelper;
-import org.jboss.narayana.jta.jms.TransactionHelperImpl;
 import org.springframework.boot.jms.XAConnectionFactoryWrapper;
 
 /**
@@ -36,25 +34,21 @@ import org.springframework.boot.jms.XAConnectionFactoryWrapper;
  */
 public abstract class AbstractXAConnectionFactoryWrapper implements XAConnectionFactoryWrapper {
 
-    private final TransactionManager transactionManager;
     private final XARecoveryModule xaRecoveryModule;
     private final NarayanaProperties properties;
 
-    protected AbstractXAConnectionFactoryWrapper(TransactionManager transactionManager, XARecoveryModule xaRecoveryModule, NarayanaProperties properties) {
-        this.transactionManager = transactionManager;
+    protected AbstractXAConnectionFactoryWrapper(XARecoveryModule xaRecoveryModule, NarayanaProperties properties) {
         this.xaRecoveryModule = xaRecoveryModule;
         this.properties = properties;
     }
 
-    protected abstract XAConnectionFactory wrapConnectionFactoryInternal(XAConnectionFactory connectionFactory) throws Exception;
+    protected abstract ConnectionFactory wrapConnectionFactoryInternal(XAConnectionFactory xaConnectionFactory) throws Exception;
 
     @Override
     public ConnectionFactory wrapConnectionFactory(XAConnectionFactory xaConnectionFactory) throws Exception {
         XAResourceRecoveryHelper recoveryHelper = getRecoveryHelper(xaConnectionFactory);
         this.xaRecoveryModule.addXAResourceRecoveryHelper(recoveryHelper);
-        return new ConnectionFactoryProxy(
-                wrapConnectionFactoryInternal(xaConnectionFactory),
-                        new TransactionHelperImpl(this.transactionManager));
+        return wrapConnectionFactoryInternal(xaConnectionFactory);
     }
 
     private XAResourceRecoveryHelper getRecoveryHelper(XAConnectionFactory xaConnectionFactory) {

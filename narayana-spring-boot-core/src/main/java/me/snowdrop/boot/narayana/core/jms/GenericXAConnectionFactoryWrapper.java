@@ -16,13 +16,18 @@
 
 package me.snowdrop.boot.narayana.core.jms;
 
+import javax.jms.ConnectionFactory;
 import javax.jms.XAConnectionFactory;
 import javax.transaction.TransactionManager;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
+import org.jboss.narayana.jta.jms.ConnectionFactoryProxy;
+import org.jboss.narayana.jta.jms.TransactionHelperImpl;
 
 public class GenericXAConnectionFactoryWrapper extends AbstractXAConnectionFactoryWrapper {
+
+    private final TransactionManager transactionManager;
 
     /**
      * Create a new {@link GenericXAConnectionFactoryWrapper} instance.
@@ -33,11 +38,12 @@ public class GenericXAConnectionFactoryWrapper extends AbstractXAConnectionFacto
      */
     public GenericXAConnectionFactoryWrapper(TransactionManager transactionManager, XARecoveryModule xaRecoveryModule,
             NarayanaProperties properties) {
-        super(transactionManager, xaRecoveryModule, properties);
+        super(xaRecoveryModule, properties);
+        this.transactionManager = transactionManager;
     }
 
     @Override
-    protected XAConnectionFactory wrapConnectionFactoryInternal(XAConnectionFactory connectionFactory) throws Exception {
-        return connectionFactory;
+    protected ConnectionFactory wrapConnectionFactoryInternal(XAConnectionFactory xaConnectionFactory) throws Exception {
+        return new ConnectionFactoryProxy(xaConnectionFactory, new TransactionHelperImpl(this.transactionManager));
     }
 }

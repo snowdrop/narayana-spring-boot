@@ -16,6 +16,7 @@
 
 package me.snowdrop.boot.narayana.core.jms;
 
+import javax.jms.ConnectionFactory;
 import javax.jms.XAConnectionFactory;
 import javax.transaction.TransactionManager;
 
@@ -29,16 +30,16 @@ public class PooledXAConnectionFactoryWrapper extends AbstractXAConnectionFactor
     private final TransactionManager transactionManager;
 
     public PooledXAConnectionFactoryWrapper(TransactionManager transactionManager, XARecoveryModule xaRecoveryModule, NarayanaProperties properties) {
-        super(transactionManager, xaRecoveryModule, properties);
+        super(xaRecoveryModule, properties);
         this.properties = properties;
         this.transactionManager = transactionManager;
     }
 
     @Override
-    protected XAConnectionFactory wrapConnectionFactoryInternal(XAConnectionFactory connectionFactory) throws Exception {
+    protected ConnectionFactory wrapConnectionFactoryInternal(XAConnectionFactory xaConnectionFactory) throws Exception {
         JmsPoolXAConnectionFactory pooledConnectionFactory = new JmsPoolXAConnectionFactory();
         pooledConnectionFactory.setTransactionManager(this.transactionManager);
-        pooledConnectionFactory.setConnectionFactory(connectionFactory);
+        pooledConnectionFactory.setConnectionFactory(xaConnectionFactory);
 
         pooledConnectionFactory.setMaxConnections(this.properties.getMessaginghub().getMaxConnections());
         pooledConnectionFactory.setConnectionIdleTimeout((int) this.properties.getMessaginghub().getConnectionIdleTimeout().toMillis());

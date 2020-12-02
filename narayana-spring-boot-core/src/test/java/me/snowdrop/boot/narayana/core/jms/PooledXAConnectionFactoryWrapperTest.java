@@ -23,7 +23,6 @@ import javax.transaction.TransactionManager;
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import me.snowdrop.boot.narayana.core.properties.MessagingHubConnectionFactoryProperties;
 import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
-import org.jboss.narayana.jta.jms.ConnectionFactoryProxy;
 import org.jboss.narayana.jta.jms.JmsXAResourceRecoveryHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +30,6 @@ import org.junit.runner.RunWith;
 import org.messaginghub.pooled.jms.JmsPoolXAConnectionFactory;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -61,8 +59,8 @@ public class PooledXAConnectionFactoryWrapperTest {
     public void wrap() throws Exception {
         given(this.mockNarayanaProperties.getMessaginghub()).willReturn(new MessagingHubConnectionFactoryProperties());
         ConnectionFactory connectionFactory = this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory);
-        assertThat(connectionFactory).isInstanceOf(ConnectionFactoryProxy.class);
-        JmsPoolXAConnectionFactory pooledConnectionFactory = (JmsPoolXAConnectionFactory) ReflectionTestUtils.getField(connectionFactory, "xaConnectionFactory");
+        assertThat(connectionFactory).isInstanceOf(JmsPoolXAConnectionFactory.class);
+        JmsPoolXAConnectionFactory pooledConnectionFactory = (JmsPoolXAConnectionFactory) connectionFactory;
         assertThat(pooledConnectionFactory.getTransactionManager()).isEqualTo(this.mockTransactionManager);
         assertThat(pooledConnectionFactory.getConnectionFactory()).isEqualTo(this.mockXaConnectionFactory);
         verify(this.mockXaRecoveryModule).addXAResourceRecoveryHelper(any(JmsXAResourceRecoveryHelper.class));
