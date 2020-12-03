@@ -20,7 +20,7 @@ import javax.sql.DataSource;
 import javax.sql.XADataSource;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
-import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
+import me.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
 
 /**
  * {@link AbstractXADataSourceWrapper} implementation that uses {@link NarayanaDataSource} to wrap an
@@ -33,11 +33,20 @@ public class GenericXADataSourceWrapper extends AbstractXADataSourceWrapper {
     /**
      * Create a new {@link GenericXADataSourceWrapper} instance.
      *
-     * @param properties       Narayana properties.
-     * @param xaRecoveryModule recovery module to register data source with.
+     * @param xaRecoveryModule    recovery module to register data source with.
      */
-    public GenericXADataSourceWrapper(NarayanaProperties properties, XARecoveryModule xaRecoveryModule) {
-        super(properties, xaRecoveryModule);
+    public GenericXADataSourceWrapper(XARecoveryModule xaRecoveryModule) {
+        this(xaRecoveryModule, RecoveryCredentialsProperties.DEFAULT);
+    }
+
+    /**
+     * Create a new {@link GenericXADataSourceWrapper} instance.
+     *
+     * @param xaRecoveryModule    recovery module to register data source with.
+     * @param recoveryCredentials credentials for recovery helper
+     */
+    public GenericXADataSourceWrapper(XARecoveryModule xaRecoveryModule, RecoveryCredentialsProperties recoveryCredentials) {
+        super(xaRecoveryModule, recoveryCredentials);
     }
 
     /**

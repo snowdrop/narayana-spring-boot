@@ -39,6 +39,7 @@
   </build>
 
   <modules>
+    <module>narayana-spring-boot-sample-2ds</module>
     <module>narayana-spring-boot-sample-2pc</module>
   </modules>
 </project>

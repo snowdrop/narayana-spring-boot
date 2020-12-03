@@ -24,7 +24,7 @@ import javax.sql.XADataSource;
 import javax.transaction.TransactionManager;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
-import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
+import me.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
 import org.apache.commons.dbcp2.managed.BasicManagedDataSource;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +35,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -50,8 +49,10 @@ public class PooledXADataSourceWrapperTests {
     @Mock
     private XARecoveryModule mockXaRecoveryModule;
 
+    private Map<String, String> dbcpProperties;
+
     @Mock
-    private NarayanaProperties mockNarayanaProperties;
+    private RecoveryCredentialsProperties mockRecoveryCredentialsProperties;
 
     @Mock
     private TransactionManager mockTransactionManager;
@@ -60,14 +61,14 @@ public class PooledXADataSourceWrapperTests {
 
     @Before
     public void before() {
-        this.wrapper = new PooledXADataSourceWrapper(this.mockNarayanaProperties, this.mockXaRecoveryModule,
-                this.mockTransactionManager);
+        this.dbcpProperties = Collections.singletonMap("username", "test-user");
+        this.wrapper = new PooledXADataSourceWrapper(this.mockTransactionManager, this.mockXaRecoveryModule,
+               this.dbcpProperties, this.mockRecoveryCredentialsProperties);
     }
 
     @Test
     public void wrap() throws Exception {
-        Map<String, String> dbcpProperties = Collections.singletonMap("username", "test-user");
-        given(this.mockNarayanaProperties.getDbcp()).willReturn(dbcpProperties);
+        given(this.mockRecoveryCredentialsProperties.isValid()).willReturn(false);
 
         DataSource dataSource = this.wrapper.wrapDataSource(this.mockXaDataSource);
         assertThat(dataSource).isInstanceOf(BasicManagedDataSource.class);
@@ -78,14 +79,14 @@ public class PooledXADataSourceWrapperTests {
         assertThat(basicManagedDataSource.getUsername()).isEqualTo("test-user");
 
         verify(this.mockXaRecoveryModule).addXAResourceRecoveryHelper(any(DataSourceXAResourceRecoveryHelper.class));
-        verify(this.mockNarayanaProperties).getRecoveryDbUser();
-        verify(this.mockNarayanaProperties).getRecoveryDbPass();
+        verify(this.mockRecoveryCredentialsProperties).isValid();
     }
 
     @Test
     public void wrapWithCredentials() throws Exception {
-        given(this.mockNarayanaProperties.getRecoveryDbUser()).willReturn("userName");
-        given(this.mockNarayanaProperties.getRecoveryDbPass()).willReturn("password");
+        given(this.mockRecoveryCredentialsProperties.isValid()).willReturn(true);
+        given(this.mockRecoveryCredentialsProperties.getUser()).willReturn("userName");
+        given(this.mockRecoveryCredentialsProperties.getPassword()).willReturn("password");
 
         DataSource dataSource = this.wrapper.wrapDataSource(this.mockXaDataSource);
         assertThat(dataSource).isInstanceOf(BasicManagedDataSource.class);
@@ -95,8 +96,8 @@ public class PooledXADataSourceWrapperTests {
         assertThat(basicManagedDataSource.getXaDataSourceInstance()).isEqualTo(this.mockXaDataSource);
 
         verify(this.mockXaRecoveryModule).addXAResourceRecoveryHelper(any(DataSourceXAResourceRecoveryHelper.class));
-        verify(this.mockNarayanaProperties, times(2)).getRecoveryDbUser();
-        verify(this.mockNarayanaProperties).getRecoveryDbPass();
+        verify(this.mockRecoveryCredentialsProperties).getUser();
+        verify(this.mockRecoveryCredentialsProperties).getPassword();
     }
 
 }

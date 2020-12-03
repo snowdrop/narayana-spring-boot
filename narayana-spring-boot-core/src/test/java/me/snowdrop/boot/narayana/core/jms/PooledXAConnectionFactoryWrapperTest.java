@@ -22,7 +22,7 @@ import javax.transaction.TransactionManager;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import me.snowdrop.boot.narayana.core.properties.MessagingHubConnectionFactoryProperties;
-import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
+import me.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
 import org.jboss.narayana.jta.jms.JmsXAResourceRecoveryHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,26 +45,42 @@ public class PooledXAConnectionFactoryWrapperTest {
     private TransactionManager mockTransactionManager;
     @Mock
     private XARecoveryModule mockXaRecoveryModule;
+    private MessagingHubConnectionFactoryProperties messagingHubConnectionFactoryProperties;
     @Mock
-    private NarayanaProperties mockNarayanaProperties;
+    private RecoveryCredentialsProperties mockRecoveryCredentialsProperties;
     private PooledXAConnectionFactoryWrapper wrapper;
 
     @Before
     public void before() {
+        this.messagingHubConnectionFactoryProperties = new MessagingHubConnectionFactoryProperties();
         this.wrapper = new PooledXAConnectionFactoryWrapper(this.mockTransactionManager, this.mockXaRecoveryModule,
-                this.mockNarayanaProperties);
+                this.messagingHubConnectionFactoryProperties, this.mockRecoveryCredentialsProperties);
     }
 
     @Test
     public void wrap() throws Exception {
-        given(this.mockNarayanaProperties.getMessaginghub()).willReturn(new MessagingHubConnectionFactoryProperties());
+        given(this.mockRecoveryCredentialsProperties.isValid()).willReturn(false);
         ConnectionFactory connectionFactory = this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory);
         assertThat(connectionFactory).isInstanceOf(JmsPoolXAConnectionFactory.class);
         JmsPoolXAConnectionFactory pooledConnectionFactory = (JmsPoolXAConnectionFactory) connectionFactory;
         assertThat(pooledConnectionFactory.getTransactionManager()).isEqualTo(this.mockTransactionManager);
         assertThat(pooledConnectionFactory.getConnectionFactory()).isEqualTo(this.mockXaConnectionFactory);
         verify(this.mockXaRecoveryModule).addXAResourceRecoveryHelper(any(JmsXAResourceRecoveryHelper.class));
-        verify(this.mockNarayanaProperties).getRecoveryJmsUser();
-        verify(this.mockNarayanaProperties).getRecoveryJmsPass();
+        verify(this.mockRecoveryCredentialsProperties).isValid();
+    }
+
+    @Test
+    public void wrapWithCredentials() throws Exception {
+        given(this.mockRecoveryCredentialsProperties.isValid()).willReturn(true);
+        given(this.mockRecoveryCredentialsProperties.getUser()).willReturn("userName");
+        given(this.mockRecoveryCredentialsProperties.getPassword()).willReturn("password");
+        ConnectionFactory connectionFactory = this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory);
+        assertThat(connectionFactory).isInstanceOf(JmsPoolXAConnectionFactory.class);
+        JmsPoolXAConnectionFactory pooledConnectionFactory = (JmsPoolXAConnectionFactory) connectionFactory;
+        assertThat(pooledConnectionFactory.getTransactionManager()).isEqualTo(this.mockTransactionManager);
+        assertThat(pooledConnectionFactory.getConnectionFactory()).isEqualTo(this.mockXaConnectionFactory);
+        verify(this.mockXaRecoveryModule).addXAResourceRecoveryHelper(any(JmsXAResourceRecoveryHelper.class));
+        verify(this.mockRecoveryCredentialsProperties).getUser();
+        verify(this.mockRecoveryCredentialsProperties).getPassword();
     }
 }

@@ -191,7 +191,8 @@ public class NarayanaConfiguration {
         @ConditionalOnMissingBean(XADataSourceWrapper.class)
         public XADataSourceWrapper xaDataSourceWrapper(NarayanaProperties narayanaProperties,
                 XARecoveryModule xaRecoveryModule) {
-            return new GenericXADataSourceWrapper(narayanaProperties, xaRecoveryModule);
+            return new GenericXADataSourceWrapper(xaRecoveryModule,
+                    narayanaProperties.getRecoveryDbCredentials());
         }
 
     }
@@ -206,7 +207,9 @@ public class NarayanaConfiguration {
         @ConditionalOnMissingBean(XADataSourceWrapper.class)
         public XADataSourceWrapper xaDataSourceWrapper(NarayanaProperties narayanaProperties,
                 XARecoveryModule xaRecoveryModule, TransactionManager transactionManager) {
-            return new PooledXADataSourceWrapper(narayanaProperties, xaRecoveryModule, transactionManager);
+            return new PooledXADataSourceWrapper(transactionManager, xaRecoveryModule,
+                    narayanaProperties.getDbcp(),
+                    narayanaProperties.getRecoveryDbCredentials());
         }
 
     }
@@ -222,7 +225,8 @@ public class NarayanaConfiguration {
         @ConditionalOnMissingBean(XAConnectionFactoryWrapper.class)
         public XAConnectionFactoryWrapper xaConnectionFactoryWrapper(TransactionManager transactionManager,
                 XARecoveryModule xaRecoveryModule, NarayanaProperties narayanaProperties) {
-            return new GenericXAConnectionFactoryWrapper(transactionManager, xaRecoveryModule, narayanaProperties);
+            return new GenericXAConnectionFactoryWrapper(transactionManager, xaRecoveryModule,
+                    narayanaProperties.getRecoveryJmsCredentials());
         }
 
     }
@@ -235,7 +239,9 @@ public class NarayanaConfiguration {
         @ConditionalOnMissingBean(XAConnectionFactoryWrapper.class)
         public XAConnectionFactoryWrapper xaConnectionFactoryWrapper(TransactionManager transactionManager,
                 XARecoveryModule xaRecoveryModule, NarayanaProperties narayanaProperties) {
-            return new PooledXAConnectionFactoryWrapper(transactionManager, xaRecoveryModule, narayanaProperties);
+            return new PooledXAConnectionFactoryWrapper(transactionManager, xaRecoveryModule,
+                    narayanaProperties.getMessaginghub(),
+                    narayanaProperties.getRecoveryJmsCredentials());
         }
 
     }

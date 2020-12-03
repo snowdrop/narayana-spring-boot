@@ -27,6 +27,9 @@ import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import com.arjuna.ats.jbossatx.jta.RecoveryManagerService;
 import me.snowdrop.boot.narayana.core.jdbc.GenericXADataSourceWrapper;
 import me.snowdrop.boot.narayana.core.jdbc.PooledXADataSourceWrapper;
+import me.snowdrop.boot.narayana.core.jms.GenericXAConnectionFactoryWrapper;
+import me.snowdrop.boot.narayana.core.jms.PooledXAConnectionFactoryWrapper;
+import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
 import me.snowdrop.boot.narayana.core.properties.NarayanaPropertiesInitializer;
 import org.junit.After;
 import org.junit.Test;
@@ -70,6 +73,74 @@ public class NarayanaConfigurationIT {
     }
 
     @Test
+    public void recoveryDbCredentialsShouldBeLoaded() {
+        Properties properties = new Properties();
+        properties.put("narayana.recoveryDbCredentials.user", "userName");
+        properties.put("narayana.recoveryDbCredentials.password", "password");
+        PropertiesPropertySource propertySource = new PropertiesPropertySource("test", properties);
+
+        this.context = new AnnotationConfigApplicationContext();
+        this.context.register(NarayanaConfiguration.class);
+        this.context.getEnvironment().getPropertySources().addFirst(propertySource);
+        this.context.refresh();
+
+        NarayanaProperties narayanaProperties = this.context.getBean(NarayanaProperties.class);
+        assertThat(narayanaProperties.getRecoveryDbCredentials().getUser()).isEqualTo("userName");
+        assertThat(narayanaProperties.getRecoveryDbCredentials().getPassword()).isEqualTo("password");
+    }
+
+    @Test
+    public void recoveryDbCredentialsShouldBeLoadedForDeprecatedMethods() {
+        Properties properties = new Properties();
+        properties.put("narayana.recoveryDbUser", "userName");
+        properties.put("narayana.recoveryDbPass", "password");
+        PropertiesPropertySource propertySource = new PropertiesPropertySource("test", properties);
+
+        this.context = new AnnotationConfigApplicationContext();
+        this.context.register(NarayanaConfiguration.class);
+        this.context.getEnvironment().getPropertySources().addFirst(propertySource);
+        this.context.refresh();
+
+        NarayanaProperties narayanaProperties = this.context.getBean(NarayanaProperties.class);
+        assertThat(narayanaProperties.getRecoveryDbCredentials().getUser()).isEqualTo("userName");
+        assertThat(narayanaProperties.getRecoveryDbCredentials().getPassword()).isEqualTo("password");
+    }
+
+    @Test
+    public void recoveryJmsCredentialsShouldBeLoaded() {
+        Properties properties = new Properties();
+        properties.put("narayana.recoveryJmsCredentials.user", "userName");
+        properties.put("narayana.recoveryJmsCredentials.password", "password");
+        PropertiesPropertySource propertySource = new PropertiesPropertySource("test", properties);
+
+        this.context = new AnnotationConfigApplicationContext();
+        this.context.register(NarayanaConfiguration.class);
+        this.context.getEnvironment().getPropertySources().addFirst(propertySource);
+        this.context.refresh();
+
+        NarayanaProperties narayanaProperties = this.context.getBean(NarayanaProperties.class);
+        assertThat(narayanaProperties.getRecoveryJmsCredentials().getUser()).isEqualTo("userName");
+        assertThat(narayanaProperties.getRecoveryJmsCredentials().getPassword()).isEqualTo("password");
+    }
+
+    @Test
+    public void recoveryJmsCredentialsShouldBeLoadedForDeprecatedMethods() {
+        Properties properties = new Properties();
+        properties.put("narayana.recoveryJmsUser", "userName");
+        properties.put("narayana.recoveryJmsPass", "password");
+        PropertiesPropertySource propertySource = new PropertiesPropertySource("test", properties);
+
+        this.context = new AnnotationConfigApplicationContext();
+        this.context.register(NarayanaConfiguration.class);
+        this.context.getEnvironment().getPropertySources().addFirst(propertySource);
+        this.context.refresh();
+
+        NarayanaProperties narayanaProperties = this.context.getBean(NarayanaProperties.class);
+        assertThat(narayanaProperties.getRecoveryJmsCredentials().getUser()).isEqualTo("userName");
+        assertThat(narayanaProperties.getRecoveryJmsCredentials().getPassword()).isEqualTo("password");
+    }
+
+    @Test
     public void genericXaDataSourceWrapperShouldBeLoaded() {
         Properties properties = new Properties();
         properties.put("narayana.dbcp.enabled", "false");
@@ -99,4 +170,33 @@ public class NarayanaConfigurationIT {
         assertThat(xaDataSourceWrapper).isInstanceOf(PooledXADataSourceWrapper.class);
     }
 
+    @Test
+    public void genericXaConnectionFactoryWrapperShouldBeLoaded() {
+        Properties properties = new Properties();
+        properties.put("narayana.messaginghub.enabled", "false");
+        PropertiesPropertySource propertySource = new PropertiesPropertySource("test", properties);
+
+        this.context = new AnnotationConfigApplicationContext();
+        this.context.register(NarayanaConfiguration.class);
+        this.context.getEnvironment().getPropertySources().addFirst(propertySource);
+        this.context.refresh();
+
+        XAConnectionFactoryWrapper xaConnectionFactoryWrapper = this.context.getBean(XAConnectionFactoryWrapper.class);
+        assertThat(xaConnectionFactoryWrapper).isInstanceOf(GenericXAConnectionFactoryWrapper.class);
+    }
+
+    @Test
+    public void pooledXaConnectionFactoryWrapperShouldBeLoaded() {
+        Properties properties = new Properties();
+        properties.put("narayana.messaginghub.enabled", "true");
+        PropertiesPropertySource propertySource = new PropertiesPropertySource("test", properties);
+
+        this.context = new AnnotationConfigApplicationContext();
+        this.context.register(NarayanaConfiguration.class);
+        this.context.getEnvironment().getPropertySources().addFirst(propertySource);
+        this.context.refresh();
+
+        XAConnectionFactoryWrapper xaConnectionFactoryWrapper = this.context.getBean(XAConnectionFactoryWrapper.class);
+        assertThat(xaConnectionFactoryWrapper).isInstanceOf(PooledXAConnectionFactoryWrapper.class);
+    }
 }

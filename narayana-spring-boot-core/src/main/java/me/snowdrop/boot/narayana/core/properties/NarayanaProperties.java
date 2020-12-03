@@ -71,24 +71,14 @@ public class NarayanaProperties {
     private int recoveryBackoffPeriod = 10;
 
     /**
-     * Database username to be used by recovery manager.
+     * Database credentials to be used by recovery manager.
      */
-    private String recoveryDbUser = null;
+    private RecoveryCredentialsProperties recoveryDbCredentials = new RecoveryCredentialsProperties();
 
     /**
-     * Database password to be used by recovery manager.
+     * JMS credentials to be used by recovery manager.
      */
-    private String recoveryDbPass = null;
-
-    /**
-     * JMS username to be used by recovery manager.
-     */
-    private String recoveryJmsUser = null;
-
-    /**
-     * JMS password to be used by recovery manager.
-     */
-    private String recoveryJmsPass = null;
+    private RecoveryCredentialsProperties recoveryJmsCredentials = new RecoveryCredentialsProperties();
 
     /**
      * Comma-separated list of orphan filters.
@@ -203,36 +193,60 @@ public class NarayanaProperties {
         this.expiryScanners = expiryScanners;
     }
 
+    public RecoveryCredentialsProperties getRecoveryDbCredentials() {
+        return this.recoveryDbCredentials;
+    }
+
+    public void setRecoveryDbCredentials(RecoveryCredentialsProperties recoveryDbCredentials) {
+        this.recoveryDbCredentials = recoveryDbCredentials;
+    }
+
+    @Deprecated
     public String getRecoveryDbUser() {
-        return this.recoveryDbUser;
+        return this.recoveryDbCredentials.getUser();
     }
 
+    @Deprecated
     public void setRecoveryDbUser(String recoveryDbUser) {
-        this.recoveryDbUser = recoveryDbUser;
+        this.recoveryDbCredentials.setUser(recoveryDbUser);
     }
 
+    @Deprecated
     public String getRecoveryDbPass() {
-        return this.recoveryDbPass;
+        return this.recoveryDbCredentials.getPassword();
     }
 
+    @Deprecated
     public void setRecoveryDbPass(String recoveryDbPass) {
-        this.recoveryDbPass = recoveryDbPass;
+        this.recoveryDbCredentials.setPassword(recoveryDbPass);
     }
 
+    public RecoveryCredentialsProperties getRecoveryJmsCredentials() {
+        return this.recoveryJmsCredentials;
+    }
+
+    public void setRecoveryJmsCredentials(RecoveryCredentialsProperties recoveryJmsCredentials) {
+        this.recoveryJmsCredentials = recoveryJmsCredentials;
+    }
+
+    @Deprecated
     public String getRecoveryJmsUser() {
-        return this.recoveryJmsUser;
+        return this.recoveryJmsCredentials.getUser();
     }
 
+    @Deprecated
     public void setRecoveryJmsUser(String recoveryJmsUser) {
-        this.recoveryJmsUser = recoveryJmsUser;
+        this.recoveryJmsCredentials.setUser(recoveryJmsUser);
     }
 
+    @Deprecated
     public String getRecoveryJmsPass() {
-        return this.recoveryJmsPass;
+        return this.recoveryJmsCredentials.getUser();
     }
 
+    @Deprecated
     public void setRecoveryJmsPass(String recoveryJmsPass) {
-        this.recoveryJmsPass = recoveryJmsPass;
+        this.recoveryJmsCredentials.setPassword(recoveryJmsPass);
     }
 
     public Map<String, String> getDbcp() {
