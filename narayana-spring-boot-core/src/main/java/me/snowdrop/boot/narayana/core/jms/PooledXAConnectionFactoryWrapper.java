@@ -21,34 +21,55 @@ import javax.jms.XAConnectionFactory;
 import javax.transaction.TransactionManager;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
-import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
+import me.snowdrop.boot.narayana.core.properties.MessagingHubConnectionFactoryProperties;
+import me.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
 import org.messaginghub.pooled.jms.JmsPoolXAConnectionFactory;
 
 public class PooledXAConnectionFactoryWrapper extends AbstractXAConnectionFactoryWrapper {
 
-    private final NarayanaProperties properties;
+    private final MessagingHubConnectionFactoryProperties properties;
     private final TransactionManager transactionManager;
 
-    public PooledXAConnectionFactoryWrapper(TransactionManager transactionManager, XARecoveryModule xaRecoveryModule, NarayanaProperties properties) {
-        super(xaRecoveryModule, properties);
+    /**
+     * Create a new {@link PooledXAConnectionFactoryWrapper} instance.
+     *
+     * @param transactionManager  underlying transaction manager
+     * @param xaRecoveryModule    recovery module to register data source with.
+     * @param properties          MessagingHub properties
+     */
+    public PooledXAConnectionFactoryWrapper(TransactionManager transactionManager, XARecoveryModule xaRecoveryModule,
+            MessagingHubConnectionFactoryProperties properties) {
+        this(transactionManager, xaRecoveryModule, properties, RecoveryCredentialsProperties.DEFAULT);
+    }
+
+    /**
+     * Create a new {@link PooledXAConnectionFactoryWrapper} instance.
+     *
+     * @param transactionManager  underlying transaction manager
+     * @param xaRecoveryModule    recovery module to register data source with.
+     * @param properties          MessagingHub properties
+     * @param recoveryCredentials Credentials for recovery helper
+     */
+    public PooledXAConnectionFactoryWrapper(TransactionManager transactionManager, XARecoveryModule xaRecoveryModule,
+            MessagingHubConnectionFactoryProperties properties, RecoveryCredentialsProperties recoveryCredentials) {
+        super(xaRecoveryModule, recoveryCredentials);
         this.properties = properties;
         this.transactionManager = transactionManager;
     }
 
     @Override
-    protected ConnectionFactory wrapConnectionFactoryInternal(XAConnectionFactory xaConnectionFactory) throws Exception {
+    protected ConnectionFactory wrapConnectionFactoryInternal(XAConnectionFactory xaConnectionFactory) {
         JmsPoolXAConnectionFactory pooledConnectionFactory = new JmsPoolXAConnectionFactory();
         pooledConnectionFactory.setTransactionManager(this.transactionManager);
         pooledConnectionFactory.setConnectionFactory(xaConnectionFactory);
-
-        pooledConnectionFactory.setMaxConnections(this.properties.getMessaginghub().getMaxConnections());
-        pooledConnectionFactory.setConnectionIdleTimeout((int) this.properties.getMessaginghub().getConnectionIdleTimeout().toMillis());
-        pooledConnectionFactory.setConnectionCheckInterval(this.properties.getMessaginghub().getConnectionCheckInterval().toMillis());
-        pooledConnectionFactory.setUseProviderJMSContext(this.properties.getMessaginghub().isUseProviderJMSContext());
-        pooledConnectionFactory.setMaxSessionsPerConnection(this.properties.getMessaginghub().getMaxSessionsPerConnection());
-        pooledConnectionFactory.setBlockIfSessionPoolIsFull(this.properties.getMessaginghub().isBlockIfSessionPoolIsFull());
-        pooledConnectionFactory.setBlockIfSessionPoolIsFullTimeout(this.properties.getMessaginghub().getBlockIfSessionPoolIsFullTimeout().toMillis());
-        pooledConnectionFactory.setUseAnonymousProducers(this.properties.getMessaginghub().isUseAnonymousProducers());
+        pooledConnectionFactory.setMaxConnections(this.properties.getMaxConnections());
+        pooledConnectionFactory.setConnectionIdleTimeout((int) this.properties.getConnectionIdleTimeout().toMillis());
+        pooledConnectionFactory.setConnectionCheckInterval(this.properties.getConnectionCheckInterval().toMillis());
+        pooledConnectionFactory.setUseProviderJMSContext(this.properties.isUseProviderJMSContext());
+        pooledConnectionFactory.setMaxSessionsPerConnection(this.properties.getMaxSessionsPerConnection());
+        pooledConnectionFactory.setBlockIfSessionPoolIsFull(this.properties.isBlockIfSessionPoolIsFull());
+        pooledConnectionFactory.setBlockIfSessionPoolIsFullTimeout(this.properties.getBlockIfSessionPoolIsFullTimeout().toMillis());
+        pooledConnectionFactory.setUseAnonymousProducers(this.properties.isUseAnonymousProducers());
         return pooledConnectionFactory;
     }
 }

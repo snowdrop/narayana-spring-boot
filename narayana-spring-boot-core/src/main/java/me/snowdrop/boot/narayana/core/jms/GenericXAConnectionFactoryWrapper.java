@@ -21,7 +21,7 @@ import javax.jms.XAConnectionFactory;
 import javax.transaction.TransactionManager;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
-import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
+import me.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
 import org.jboss.narayana.jta.jms.ConnectionFactoryProxy;
 import org.jboss.narayana.jta.jms.TransactionHelperImpl;
 
@@ -32,18 +32,28 @@ public class GenericXAConnectionFactoryWrapper extends AbstractXAConnectionFacto
     /**
      * Create a new {@link GenericXAConnectionFactoryWrapper} instance.
      *
-     * @param transactionManager underlying transaction manager
-     * @param xaRecoveryModule   recovery module to register data source with.
-     * @param properties         Narayana properties
+     * @param transactionManager  underlying transaction manager
+     * @param xaRecoveryModule    recovery module to register data source with.
+     */
+    public GenericXAConnectionFactoryWrapper(TransactionManager transactionManager, XARecoveryModule xaRecoveryModule) {
+        this(transactionManager, xaRecoveryModule, RecoveryCredentialsProperties.DEFAULT);
+    }
+
+    /**
+     * Create a new {@link GenericXAConnectionFactoryWrapper} instance.
+     *
+     * @param transactionManager  underlying transaction manager
+     * @param xaRecoveryModule    recovery module to register data source with.
+     * @param recoveryCredentials Credentials for recovery helper
      */
     public GenericXAConnectionFactoryWrapper(TransactionManager transactionManager, XARecoveryModule xaRecoveryModule,
-            NarayanaProperties properties) {
-        super(xaRecoveryModule, properties);
+            RecoveryCredentialsProperties recoveryCredentials) {
+        super(xaRecoveryModule, recoveryCredentials);
         this.transactionManager = transactionManager;
     }
 
     @Override
-    protected ConnectionFactory wrapConnectionFactoryInternal(XAConnectionFactory xaConnectionFactory) throws Exception {
+    protected ConnectionFactory wrapConnectionFactoryInternal(XAConnectionFactory xaConnectionFactory) {
         return new ConnectionFactoryProxy(xaConnectionFactory, new TransactionHelperImpl(this.transactionManager));
     }
 }

@@ -21,7 +21,7 @@ import javax.sql.XADataSource;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
-import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
+import me.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
 import org.springframework.boot.jdbc.XADataSourceWrapper;
 
 /**
@@ -32,13 +32,12 @@ import org.springframework.boot.jdbc.XADataSourceWrapper;
  */
 public abstract class AbstractXADataSourceWrapper implements XADataSourceWrapper {
 
-    private final NarayanaProperties properties;
-
     private final XARecoveryModule xaRecoveryModule;
+    private final RecoveryCredentialsProperties recoveryCredentials;
 
-    protected AbstractXADataSourceWrapper(NarayanaProperties properties, XARecoveryModule xaRecoveryModule) {
-        this.properties = properties;
+    protected AbstractXADataSourceWrapper(XARecoveryModule xaRecoveryModule, RecoveryCredentialsProperties recoveryCredentials) {
         this.xaRecoveryModule = xaRecoveryModule;
+        this.recoveryCredentials = recoveryCredentials;
     }
 
     protected abstract DataSource wrapDataSourceInternal(XADataSource dataSource) throws Exception;
@@ -58,11 +57,11 @@ public abstract class AbstractXADataSourceWrapper implements XADataSourceWrapper
     }
 
     private XAResourceRecoveryHelper getRecoveryHelper(XADataSource dataSource) {
-        if (this.properties.getRecoveryDbUser() == null && this.properties.getRecoveryDbPass() == null) {
-            return new DataSourceXAResourceRecoveryHelper(dataSource);
+        if (this.recoveryCredentials.isValid()) {
+            return new DataSourceXAResourceRecoveryHelper(dataSource, this.recoveryCredentials.getUser(),
+                this.recoveryCredentials.getPassword());
         }
-        return new DataSourceXAResourceRecoveryHelper(dataSource, this.properties.getRecoveryDbUser(),
-                this.properties.getRecoveryDbPass());
+        return new DataSourceXAResourceRecoveryHelper(dataSource);
     }
 
 }

@@ -20,7 +20,7 @@ import javax.sql.DataSource;
 import javax.sql.XADataSource;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
-import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
+import me.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +30,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -48,33 +47,34 @@ public class GenericXADataSourceWrapperTests {
     private XARecoveryModule mockXaRecoveryModule;
 
     @Mock
-    private NarayanaProperties mockNarayanaProperties;
+    private RecoveryCredentialsProperties mockRecoveryCredentialsProperties;
 
     private GenericXADataSourceWrapper wrapper;
 
     @Before
     public void before() {
-        this.wrapper = new GenericXADataSourceWrapper(this.mockNarayanaProperties, this.mockXaRecoveryModule);
+        this.wrapper = new GenericXADataSourceWrapper(this.mockXaRecoveryModule, this.mockRecoveryCredentialsProperties);
     }
 
     @Test
     public void wrap() throws Exception {
+        given(this.mockRecoveryCredentialsProperties.isValid()).willReturn(false);
         DataSource wrapped = this.wrapper.wrapDataSource(this.mockXaDataSource);
         assertThat(wrapped).isInstanceOf(NarayanaDataSource.class);
         verify(this.mockXaRecoveryModule).addXAResourceRecoveryHelper(any(DataSourceXAResourceRecoveryHelper.class));
-        verify(this.mockNarayanaProperties).getRecoveryDbUser();
-        verify(this.mockNarayanaProperties).getRecoveryDbPass();
+        verify(this.mockRecoveryCredentialsProperties).isValid();
     }
 
     @Test
     public void wrapWithCredentials() throws Exception {
-        given(this.mockNarayanaProperties.getRecoveryDbUser()).willReturn("userName");
-        given(this.mockNarayanaProperties.getRecoveryDbPass()).willReturn("password");
+        given(this.mockRecoveryCredentialsProperties.isValid()).willReturn(true);
+        given(this.mockRecoveryCredentialsProperties.getUser()).willReturn("userName");
+        given(this.mockRecoveryCredentialsProperties.getPassword()).willReturn("password");
         DataSource wrapped = this.wrapper.wrapDataSource(this.mockXaDataSource);
         assertThat(wrapped).isInstanceOf(NarayanaDataSource.class);
         verify(this.mockXaRecoveryModule).addXAResourceRecoveryHelper(any(DataSourceXAResourceRecoveryHelper.class));
-        verify(this.mockNarayanaProperties, times(2)).getRecoveryDbUser();
-        verify(this.mockNarayanaProperties).getRecoveryDbPass();
+        verify(this.mockRecoveryCredentialsProperties).getUser();
+        verify(this.mockRecoveryCredentialsProperties).getPassword();
     }
 
 }

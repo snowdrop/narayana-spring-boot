@@ -18,6 +18,7 @@ package me.snowdrop.boot.narayana.core.jdbc;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -25,7 +26,7 @@ import javax.sql.XADataSource;
 import javax.transaction.TransactionManager;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
-import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
+import me.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.BasicDataSourceFactory;
 import org.apache.commons.dbcp2.managed.BasicManagedDataSource;
@@ -41,13 +42,32 @@ import org.apache.commons.dbcp2.managed.BasicManagedDataSource;
  */
 public class PooledXADataSourceWrapper extends AbstractXADataSourceWrapper {
 
-    private final NarayanaProperties properties;
-
+    private final Map<String, String> properties;
     private final TransactionManager transactionManager;
 
-    public PooledXADataSourceWrapper(NarayanaProperties properties, XARecoveryModule xaRecoveryModule,
-            TransactionManager transactionManager) {
-        super(properties, xaRecoveryModule);
+    /**
+     * Create a new {@link PooledXADataSourceWrapper} instance.
+     *
+     * @param transactionManager  underlying transaction manager
+     * @param xaRecoveryModule    recovery module to register data source with.
+     * @param properties          DBCP properties
+     */
+    public PooledXADataSourceWrapper(TransactionManager transactionManager, XARecoveryModule xaRecoveryModule,
+            Map<String, String> properties) {
+        this(transactionManager, xaRecoveryModule, properties, RecoveryCredentialsProperties.DEFAULT);
+    }
+
+    /**
+     * Create a new {@link PooledXADataSourceWrapper} instance.
+     *
+     * @param transactionManager  underlying transaction manager
+     * @param xaRecoveryModule    recovery module to register data source with.
+     * @param properties          DBCP properties
+     * @param recoveryCredentials credentials for recovery helper
+     */
+    public PooledXADataSourceWrapper(TransactionManager transactionManager, XARecoveryModule xaRecoveryModule,
+            Map<String, String> properties, RecoveryCredentialsProperties recoveryCredentials) {
+        super(xaRecoveryModule, recoveryCredentials);
         this.properties = properties;
         this.transactionManager = transactionManager;
     }
@@ -70,7 +90,7 @@ public class PooledXADataSourceWrapper extends AbstractXADataSourceWrapper {
         basicManagedDataSource.setXaDataSourceInstance(xaDataSource);
 
         // Initialize the connections pool
-        int initialSize = Integer.valueOf(this.properties.getDbcp().getOrDefault("initialSize", "0"));
+        int initialSize = Integer.valueOf(this.properties.getOrDefault("initialSize", "0"));
         if (initialSize > 0) {
             basicManagedDataSource.setInitialSize(initialSize);
             basicManagedDataSource.getLogWriter(); // A trick to trigger pool initialization
@@ -81,7 +101,7 @@ public class PooledXADataSourceWrapper extends AbstractXADataSourceWrapper {
 
     private BasicDataSource getBasicDataSource() throws Exception {
         Properties dbcpProperties = new Properties();
-        dbcpProperties.putAll(this.properties.getDbcp());
+        dbcpProperties.putAll(this.properties);
         // BasicDataSource is only used to load correct properties. Thus no connections should be created.
         dbcpProperties.put("initialSize", "0");
 

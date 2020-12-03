@@ -21,7 +21,7 @@ import javax.jms.XAConnectionFactory;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
-import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
+import me.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
 import org.jboss.narayana.jta.jms.ConnectionFactoryProxy;
 import org.jboss.narayana.jta.jms.JmsXAResourceRecoveryHelper;
 import org.springframework.boot.jms.XAConnectionFactoryWrapper;
@@ -35,14 +35,14 @@ import org.springframework.boot.jms.XAConnectionFactoryWrapper;
 public abstract class AbstractXAConnectionFactoryWrapper implements XAConnectionFactoryWrapper {
 
     private final XARecoveryModule xaRecoveryModule;
-    private final NarayanaProperties properties;
+    private final RecoveryCredentialsProperties recoveryCredentials;
 
-    protected AbstractXAConnectionFactoryWrapper(XARecoveryModule xaRecoveryModule, NarayanaProperties properties) {
+    protected AbstractXAConnectionFactoryWrapper(XARecoveryModule xaRecoveryModule, RecoveryCredentialsProperties recoveryCredentials) {
         this.xaRecoveryModule = xaRecoveryModule;
-        this.properties = properties;
+        this.recoveryCredentials = recoveryCredentials;
     }
 
-    protected abstract ConnectionFactory wrapConnectionFactoryInternal(XAConnectionFactory xaConnectionFactory) throws Exception;
+    protected abstract ConnectionFactory wrapConnectionFactoryInternal(XAConnectionFactory xaConnectionFactory);
 
     @Override
     public ConnectionFactory wrapConnectionFactory(XAConnectionFactory xaConnectionFactory) throws Exception {
@@ -52,10 +52,10 @@ public abstract class AbstractXAConnectionFactoryWrapper implements XAConnection
     }
 
     private XAResourceRecoveryHelper getRecoveryHelper(XAConnectionFactory xaConnectionFactory) {
-        if (this.properties.getRecoveryJmsUser() == null && this.properties.getRecoveryJmsPass() == null) {
-            return new JmsXAResourceRecoveryHelper(xaConnectionFactory);
+        if (this.recoveryCredentials.isValid()) {
+            return new JmsXAResourceRecoveryHelper(xaConnectionFactory, this.recoveryCredentials.getUser(),
+                this.recoveryCredentials.getPassword());
         }
-        return new JmsXAResourceRecoveryHelper(xaConnectionFactory, this.properties.getRecoveryJmsUser(),
-                this.properties.getRecoveryJmsPass());
+        return new JmsXAResourceRecoveryHelper(xaConnectionFactory);
     }
 }
