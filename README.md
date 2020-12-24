@@ -28,6 +28,8 @@ Driver and DBCP2.
 
 By default Narayana Transactional driver is used which provides a basic XAResource enlistment and recovery.
 
+## Add pooling
+
 If you need a more sophisticated connection management, you can enable DBCP2 support which provides connection pooling
 and many other features. To enable DBCP2 add the following property to you application configuration:
 ```
@@ -39,7 +41,16 @@ All DBCP2 configuration properties described in its
 to your application configuration:
 ```
 narayana.dbcp.initialSize=10
-```  
+```
+
+## Add last resource commit optimization
+
+If you are forced to use a non-xa DataSource to connect to your database you can auto wrap a JDBC Driver instance in a
+special XADataSource instance with last resource commit optimization enabled by adding this entry to your application
+configuration:
+```
+narayana.lrco.enabled=true
+```
 
 # Using messaging brokers
 
@@ -47,6 +58,8 @@ This Narayana starter supports two ways to enlist a messaging broker to a JTA tr
 factory and MessagingHub pooled connection factory.
 
 By default Narayana Connection Proxy around the JMS connection factory is used which provides a basic XAResource enlistment and recovery.
+
+## Add pooling
 
 If you need a more sophisticated connection management, you can enable MessagingHub support which provides connection pooling
 and many other features. To enable MessagingHub add the following property to you application configuration:
