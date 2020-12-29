@@ -31,8 +31,8 @@ import me.snowdrop.boot.narayana.core.jms.GenericXAConnectionFactoryWrapper;
 import me.snowdrop.boot.narayana.core.jms.PooledXAConnectionFactoryWrapper;
 import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
 import me.snowdrop.boot.narayana.core.properties.NarayanaPropertiesInitializer;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.jdbc.XADataSourceWrapper;
 import org.springframework.boot.jms.XAConnectionFactoryWrapper;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -45,12 +45,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-public class NarayanaConfigurationIT {
+class NarayanaConfigurationIT {
 
     private AnnotationConfigApplicationContext context;
 
-    @After
-    public void closeContext() {
+    @AfterEach
+    void closeContext() {
         if (this.context != null) {
             this.context.close();
         }
@@ -58,7 +58,7 @@ public class NarayanaConfigurationIT {
     }
 
     @Test
-    public void allDefaultBeansShouldBeLoaded() {
+    void allDefaultBeansShouldBeLoaded() {
         this.context = new AnnotationConfigApplicationContext(NarayanaConfiguration.class);
         this.context.getBean(NarayanaBeanFactoryPostProcessor.class);
         this.context.getBean(XADataSourceWrapper.class);
@@ -73,7 +73,7 @@ public class NarayanaConfigurationIT {
     }
 
     @Test
-    public void recoveryDbCredentialsShouldBeLoaded() {
+    void recoveryDbCredentialsShouldBeLoaded() {
         Properties properties = new Properties();
         properties.put("narayana.recoveryDbCredentials.user", "userName");
         properties.put("narayana.recoveryDbCredentials.password", "password");
@@ -90,7 +90,7 @@ public class NarayanaConfigurationIT {
     }
 
     @Test
-    public void recoveryDbCredentialsShouldBeLoadedForDeprecatedMethods() {
+    void recoveryDbCredentialsShouldBeLoadedForDeprecatedMethods() {
         Properties properties = new Properties();
         properties.put("narayana.recoveryDbUser", "userName");
         properties.put("narayana.recoveryDbPass", "password");
@@ -107,7 +107,7 @@ public class NarayanaConfigurationIT {
     }
 
     @Test
-    public void recoveryJmsCredentialsShouldBeLoaded() {
+    void recoveryJmsCredentialsShouldBeLoaded() {
         Properties properties = new Properties();
         properties.put("narayana.recoveryJmsCredentials.user", "userName");
         properties.put("narayana.recoveryJmsCredentials.password", "password");
@@ -124,7 +124,7 @@ public class NarayanaConfigurationIT {
     }
 
     @Test
-    public void recoveryJmsCredentialsShouldBeLoadedForDeprecatedMethods() {
+    void recoveryJmsCredentialsShouldBeLoadedForDeprecatedMethods() {
         Properties properties = new Properties();
         properties.put("narayana.recoveryJmsUser", "userName");
         properties.put("narayana.recoveryJmsPass", "password");
@@ -141,7 +141,7 @@ public class NarayanaConfigurationIT {
     }
 
     @Test
-    public void genericXaDataSourceWrapperShouldBeLoaded() {
+    void genericXaDataSourceWrapperShouldBeLoaded() {
         Properties properties = new Properties();
         properties.put("narayana.dbcp.enabled", "false");
         PropertiesPropertySource propertySource = new PropertiesPropertySource("test", properties);
@@ -156,7 +156,7 @@ public class NarayanaConfigurationIT {
     }
 
     @Test
-    public void pooledXaDataSourceWrapperShouldBeLoaded() {
+    void pooledXaDataSourceWrapperShouldBeLoaded() {
         Properties properties = new Properties();
         properties.put("narayana.dbcp.enabled", "true");
         PropertiesPropertySource propertySource = new PropertiesPropertySource("test", properties);
@@ -171,7 +171,7 @@ public class NarayanaConfigurationIT {
     }
 
     @Test
-    public void genericXaConnectionFactoryWrapperShouldBeLoaded() {
+    void genericXaConnectionFactoryWrapperShouldBeLoaded() {
         Properties properties = new Properties();
         properties.put("narayana.messaginghub.enabled", "false");
         PropertiesPropertySource propertySource = new PropertiesPropertySource("test", properties);
@@ -186,7 +186,7 @@ public class NarayanaConfigurationIT {
     }
 
     @Test
-    public void pooledXaConnectionFactoryWrapperShouldBeLoaded() {
+    void pooledXaConnectionFactoryWrapperShouldBeLoaded() {
         Properties properties = new Properties();
         properties.put("narayana.messaginghub.enabled", "true");
         PropertiesPropertySource propertySource = new PropertiesPropertySource("test", properties);

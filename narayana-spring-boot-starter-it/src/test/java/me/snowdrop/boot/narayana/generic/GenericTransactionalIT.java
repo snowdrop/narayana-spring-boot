@@ -25,13 +25,11 @@ import me.snowdrop.boot.narayana.app.EntriesService;
 import me.snowdrop.boot.narayana.app.Entry;
 import me.snowdrop.boot.narayana.app.MessagesService;
 import me.snowdrop.boot.narayana.app.TestApplication;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -39,7 +37,6 @@ import static org.awaitility.Awaitility.await;
 /**
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestApplication.class)
 public class GenericTransactionalIT {
 
@@ -52,14 +49,14 @@ public class GenericTransactionalIT {
     @Autowired
     private EntriesService entriesService;
 
-    @Before
-    public void before() {
+    @BeforeEach
+    void before() {
         this.messagesService.clearReceivedMessages();
         this.entriesService.clearEntries();
     }
 
-    @After
-    public void after() {
+    @AfterEach
+    void after() {
         try {
             this.transactionManager.rollback();
         } catch (Throwable ignored) {
@@ -67,7 +64,7 @@ public class GenericTransactionalIT {
     }
 
     @Test
-    public void shouldCommitTransaction() throws Exception {
+    void shouldCommitTransaction() throws Exception {
         this.transactionManager.begin();
         this.messagesService.sendMessage("test-message");
         Entry entry = this.entriesService.createEntry("test-value");
@@ -94,7 +91,7 @@ public class GenericTransactionalIT {
     }
 
     @Test
-    public void shouldRollbackTransaction() throws Exception {
+    void shouldRollbackTransaction() throws Exception {
         this.transactionManager.begin();
         this.messagesService.sendMessage("test-message");
         this.entriesService.createEntry("test-value");
@@ -116,5 +113,4 @@ public class GenericTransactionalIT {
                 .as("Entries should be empty after transaction rollback")
                 .isEmpty();
     }
-
 }

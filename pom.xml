@@ -51,7 +51,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <awaitility.version>4.0.3</awaitility.version>
-    <byteman.version>4.0.12</byteman.version>
+    <byteman.version>4.0.13</byteman.version>
     <camel-spring-boot.version>3.4.5</camel-spring-boot.version>
     <narayana.version>5.10.6.Final</narayana.version>
     <openshift-client.version>4.9.0</openshift-client.version>
@@ -61,11 +61,11 @@
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
     <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
-    <maven-failsafe-plugin.version>2.22.1</maven-failsafe-plugin.version>
+    <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
     <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
     <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
     <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-    <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
+    <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
   </properties>
 
@@ -140,7 +140,7 @@
       </dependency>
       <dependency>
         <groupId>org.jboss.byteman</groupId>
-        <artifactId>byteman-bmunit</artifactId>
+        <artifactId>byteman-bmunit5</artifactId>
         <version>${byteman.version}</version>
       </dependency>
     </dependencies>

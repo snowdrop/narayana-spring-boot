@@ -23,11 +23,11 @@ import javax.sql.XADataSource;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -41,13 +41,13 @@ import static org.mockito.Mockito.verify;
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-@RunWith(MockitoJUnitRunner.class)
-public class DataSourceXAResourceRecoveryHelperTests {
+@ExtendWith(MockitoExtension.class)
+class DataSourceXAResourceRecoveryHelperTests {
 
-    @Mock
+    @Mock(lenient = true)
     private XADataSource mockXaDataSource;
 
-    @Mock
+    @Mock(lenient = true)
     private XAConnection mockXaConnection;
 
     @Mock
@@ -55,8 +55,8 @@ public class DataSourceXAResourceRecoveryHelperTests {
 
     private DataSourceXAResourceRecoveryHelper recoveryHelper;
 
-    @Before
-    public void before() throws SQLException {
+    @BeforeEach
+    void before() throws SQLException {
         this.recoveryHelper = new DataSourceXAResourceRecoveryHelper(this.mockXaDataSource);
 
         given(this.mockXaDataSource.getXAConnection()).willReturn(this.mockXaConnection);
@@ -64,7 +64,7 @@ public class DataSourceXAResourceRecoveryHelperTests {
     }
 
     @Test
-    public void shouldCreateConnectionAndGetXAResource() throws SQLException {
+    void shouldCreateConnectionAndGetXAResource() throws SQLException {
         XAResource[] xaResources = this.recoveryHelper.getXAResources();
         assertThat(xaResources.length).isEqualTo(1);
         assertThat(xaResources[0]).isSameAs(this.recoveryHelper);
@@ -73,7 +73,7 @@ public class DataSourceXAResourceRecoveryHelperTests {
     }
 
     @Test
-    public void shouldCreateConnectionWithCredentialsAndGetXAResource() throws SQLException {
+    void shouldCreateConnectionWithCredentialsAndGetXAResource() throws SQLException {
         given(this.mockXaDataSource.getXAConnection(anyString(), anyString())).willReturn(this.mockXaConnection);
         this.recoveryHelper = new DataSourceXAResourceRecoveryHelper(this.mockXaDataSource, "username", "password");
         XAResource[] xaResources = this.recoveryHelper.getXAResources();
@@ -84,7 +84,7 @@ public class DataSourceXAResourceRecoveryHelperTests {
     }
 
     @Test
-    public void shouldFailToCreateConnectionAndNotGetXAResource() throws SQLException {
+    void shouldFailToCreateConnectionAndNotGetXAResource() throws SQLException {
         given(this.mockXaDataSource.getXAConnection()).willThrow(new SQLException("Test exception"));
         XAResource[] xaResources = this.recoveryHelper.getXAResources();
         assertThat(xaResources.length).isEqualTo(0);
@@ -93,14 +93,14 @@ public class DataSourceXAResourceRecoveryHelperTests {
     }
 
     @Test
-    public void shouldDelegateRecoverCall() throws XAException {
+    void shouldDelegateRecoverCall() throws XAException {
         this.recoveryHelper.getXAResources();
         this.recoveryHelper.recover(XAResource.TMSTARTRSCAN);
         verify(this.mockXaResource).recover(XAResource.TMSTARTRSCAN);
     }
 
     @Test
-    public void shouldDelegateRecoverCallAndCloseConnection() throws XAException, SQLException {
+    void shouldDelegateRecoverCallAndCloseConnection() throws XAException, SQLException {
         this.recoveryHelper.getXAResources();
         this.recoveryHelper.recover(XAResource.TMENDRSCAN);
         verify(this.mockXaResource).recover(XAResource.TMENDRSCAN);
@@ -108,14 +108,14 @@ public class DataSourceXAResourceRecoveryHelperTests {
     }
 
     @Test
-    public void shouldDelegateStartCall() throws XAException {
+    void shouldDelegateStartCall() throws XAException {
         this.recoveryHelper.getXAResources();
         this.recoveryHelper.start(null, 0);
         verify(this.mockXaResource).start(null, 0);
     }
 
     @Test
-    public void shouldFailStartCallWithoutDelegate() throws XAException {
+    void shouldFailStartCallWithoutDelegate() throws XAException {
         try {
             this.recoveryHelper.start(null, 0);
             fail("IllegalStateException was expected");
@@ -125,14 +125,14 @@ public class DataSourceXAResourceRecoveryHelperTests {
     }
 
     @Test
-    public void shouldDelegateEndCall() throws XAException {
+    void shouldDelegateEndCall() throws XAException {
         this.recoveryHelper.getXAResources();
         this.recoveryHelper.end(null, 0);
         verify(this.mockXaResource).end(null, 0);
     }
 
     @Test
-    public void shouldFailEndCallWithoutDelegate() throws XAException {
+    void shouldFailEndCallWithoutDelegate() throws XAException {
         try {
             this.recoveryHelper.end(null, 0);
             fail("IllegalStateException was expected");
@@ -142,14 +142,14 @@ public class DataSourceXAResourceRecoveryHelperTests {
     }
 
     @Test
-    public void shouldDelegatePrepareCall() throws XAException {
+    void shouldDelegatePrepareCall() throws XAException {
         this.recoveryHelper.getXAResources();
         this.recoveryHelper.prepare(null);
         verify(this.mockXaResource).prepare(null);
     }
 
     @Test
-    public void shouldFailPrepareCallWithoutDelegate() throws XAException {
+    void shouldFailPrepareCallWithoutDelegate() throws XAException {
         try {
             this.recoveryHelper.prepare(null);
             fail("IllegalStateException was expected");
@@ -159,14 +159,14 @@ public class DataSourceXAResourceRecoveryHelperTests {
     }
 
     @Test
-    public void shouldDelegateCommitCall() throws XAException {
+    void shouldDelegateCommitCall() throws XAException {
         this.recoveryHelper.getXAResources();
         this.recoveryHelper.commit(null, true);
         verify(this.mockXaResource).commit(null, true);
     }
 
     @Test
-    public void shouldFailCommitCallWithoutDelegate() throws XAException {
+    void shouldFailCommitCallWithoutDelegate() throws XAException {
         try {
             this.recoveryHelper.commit(null, true);
             fail("IllegalStateException was expected");
@@ -176,14 +176,14 @@ public class DataSourceXAResourceRecoveryHelperTests {
     }
 
     @Test
-    public void shouldDelegateRollbackCall() throws XAException {
+    void shouldDelegateRollbackCall() throws XAException {
         this.recoveryHelper.getXAResources();
         this.recoveryHelper.rollback(null);
         verify(this.mockXaResource).rollback(null);
     }
 
     @Test
-    public void shouldFailRollbackCallWithoutDelegate() throws XAException {
+    void shouldFailRollbackCallWithoutDelegate() throws XAException {
         try {
             this.recoveryHelper.rollback(null);
             fail("IllegalStateException was expected");
@@ -193,14 +193,14 @@ public class DataSourceXAResourceRecoveryHelperTests {
     }
 
     @Test
-    public void shouldDelegateIsSameRMCall() throws XAException {
+    void shouldDelegateIsSameRMCall() throws XAException {
         this.recoveryHelper.getXAResources();
         this.recoveryHelper.isSameRM(null);
         verify(this.mockXaResource).isSameRM(null);
     }
 
     @Test
-    public void shouldFailIsSameRMCallWithoutDelegate() throws XAException {
+    void shouldFailIsSameRMCallWithoutDelegate() throws XAException {
         try {
             this.recoveryHelper.isSameRM(null);
             fail("IllegalStateException was expected");
@@ -210,14 +210,14 @@ public class DataSourceXAResourceRecoveryHelperTests {
     }
 
     @Test
-    public void shouldDelegateForgetCall() throws XAException {
+    void shouldDelegateForgetCall() throws XAException {
         this.recoveryHelper.getXAResources();
         this.recoveryHelper.forget(null);
         verify(this.mockXaResource).forget(null);
     }
 
     @Test
-    public void shouldFailForgetCallWithoutDelegate() throws XAException {
+    void shouldFailForgetCallWithoutDelegate() throws XAException {
         try {
             this.recoveryHelper.forget(null);
             fail("IllegalStateException was expected");
@@ -227,14 +227,14 @@ public class DataSourceXAResourceRecoveryHelperTests {
     }
 
     @Test
-    public void shouldDelegateGetTransactionTimeoutCall() throws XAException {
+    void shouldDelegateGetTransactionTimeoutCall() throws XAException {
         this.recoveryHelper.getXAResources();
         this.recoveryHelper.getTransactionTimeout();
         verify(this.mockXaResource).getTransactionTimeout();
     }
 
     @Test
-    public void shouldFailGetTransactionTimeoutCallWithoutDelegate() throws XAException {
+    void shouldFailGetTransactionTimeoutCallWithoutDelegate() throws XAException {
         try {
             this.recoveryHelper.getTransactionTimeout();
             fail("IllegalStateException was expected");
@@ -244,14 +244,14 @@ public class DataSourceXAResourceRecoveryHelperTests {
     }
 
     @Test
-    public void shouldDelegateSetTransactionTimeoutCall() throws XAException {
+    void shouldDelegateSetTransactionTimeoutCall() throws XAException {
         this.recoveryHelper.getXAResources();
         this.recoveryHelper.setTransactionTimeout(0);
         verify(this.mockXaResource).setTransactionTimeout(0);
     }
 
     @Test
-    public void shouldFailSetTransactionTimeoutCallWithoutDelegate() throws XAException {
+    void shouldFailSetTransactionTimeoutCallWithoutDelegate() throws XAException {
         try {
             this.recoveryHelper.setTransactionTimeout(0);
             fail("IllegalStateException was expected");
@@ -259,5 +259,4 @@ public class DataSourceXAResourceRecoveryHelperTests {
             assertThat(e).hasMessage("Connection has not been opened");
         }
     }
-
 }
