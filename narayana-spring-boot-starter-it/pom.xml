@@ -60,11 +60,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.awaitility</groupId>
       <artifactId>awaitility</artifactId>
       <scope>test</scope>
@@ -86,7 +81,7 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.byteman</groupId>
-      <artifactId>byteman-bmunit</artifactId>
+      <artifactId>byteman-bmunit5</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -96,6 +91,15 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
+        <executions>
+          <execution>
+            <configuration>
+              <reuseForks>false</reuseForks>
+              <parallel>false</parallel>
+              <argLine>-Djdk.attach.allowAttachSelf=true</argLine>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

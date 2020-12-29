@@ -31,18 +31,14 @@ import me.snowdrop.boot.narayana.app.MessagesService;
 import me.snowdrop.boot.narayana.app.TestApplication;
 import me.snowdrop.boot.narayana.utils.BytemanHelper;
 import org.jboss.byteman.contrib.bmunit.BMRule;
-import org.jboss.byteman.contrib.bmunit.BMUnitRunner;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.jboss.byteman.contrib.bmunit.BMUnitConfig;
+import org.jboss.byteman.contrib.bmunit.WithByteman;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.rules.SpringClassRule;
-import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -54,15 +50,10 @@ import static org.mockito.BDDMockito.when;
 /**
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-@RunWith(BMUnitRunner.class)
+@WithByteman
+@BMUnitConfig
 @SpringBootTest(classes = TestApplication.class)
 public class GenericRecoveryIT {
-
-    @ClassRule
-    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
-
-    @Rule
-    public final SpringMethodRule springMethodRule = new SpringMethodRule();
 
     @Mock
     private XAResource xaResource;
@@ -79,8 +70,8 @@ public class GenericRecoveryIT {
     @Autowired
     private TransactionManager transactionManager;
 
-    @Before
-    public void before() {
+    @BeforeEach
+    void before() {
         MockitoAnnotations.initMocks(this);
         this.messagesService.clearReceivedMessages();
         this.entriesService.clearEntries();
@@ -94,7 +85,7 @@ public class GenericRecoveryIT {
             targetLocation = "ENTRY",
             helper = "me.snowdrop.boot.narayana.utils.BytemanHelper",
             action = "incrementCommitsCounter(); failFirstCommit($0.get_uid());")
-    public void testCrashBeforeCommit() throws Exception {
+    void testCrashBeforeCommit() throws Exception {
         // Setup dummy XAResource and its recovery helper
         setupXaMocks();
 

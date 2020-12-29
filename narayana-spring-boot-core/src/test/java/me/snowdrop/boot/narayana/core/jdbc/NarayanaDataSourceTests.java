@@ -26,11 +26,11 @@ import javax.sql.XADataSource;
 
 import com.arjuna.ats.internal.jdbc.ConnectionImple;
 import com.arjuna.ats.jdbc.TransactionalDriver;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -43,43 +43,43 @@ import static org.mockito.Mockito.verify;
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-@RunWith(MockitoJUnitRunner.class)
-public class NarayanaDataSourceTests {
+@ExtendWith(MockitoExtension.class)
+class NarayanaDataSourceTests {
 
     @Mock
     private XADataSource mockXaDataSource;
 
     private NarayanaDataSource dataSourceBean;
 
-    @Before
-    public void before() {
+    @BeforeEach
+    void before() {
         this.dataSourceBean = new NarayanaDataSource(this.mockXaDataSource);
     }
 
     @Test
-    public void shouldBeAWrapper() {
+    void shouldBeAWrapper() {
         assertThat(this.dataSourceBean.isWrapperFor(DataSource.class)).isTrue();
     }
 
     @Test
-    public void shouldNotBeAWrapper() {
+    void shouldNotBeAWrapper() {
         assertThat(this.dataSourceBean.isWrapperFor(XADataSource.class)).isFalse();
     }
 
     @Test
-    public void shouldUnwrapDataSource() throws SQLException {
+    void shouldUnwrapDataSource() throws SQLException {
         assertThat(this.dataSourceBean.unwrap(DataSource.class)).isInstanceOf(DataSource.class);
         assertThat(this.dataSourceBean.unwrap(DataSource.class)).isSameAs(this.dataSourceBean);
     }
 
     @Test
-    public void shouldUnwrapXaDataSource() throws SQLException {
+    void shouldUnwrapXaDataSource() throws SQLException {
         assertThat(this.dataSourceBean.unwrap(XADataSource.class)).isInstanceOf(XADataSource.class);
         assertThat(this.dataSourceBean.unwrap(XADataSource.class)).isSameAs(this.mockXaDataSource);
     }
 
     @Test
-    public void shouldGetConnectionAndCommit() throws SQLException {
+    void shouldGetConnectionAndCommit() throws SQLException {
         Connection mockConnection = mock(Connection.class);
         XAConnection mockXaConnection = mock(XAConnection.class);
         given(mockXaConnection.getConnection()).willReturn(mockConnection);
@@ -100,7 +100,7 @@ public class NarayanaDataSourceTests {
     }
 
     @Test
-    public void shouldGetConnectionAndCommitWithCredentials() throws SQLException {
+    void shouldGetConnectionAndCommitWithCredentials() throws SQLException {
         String username = "testUsername";
         String password = "testPassword";
         Connection mockConnection = mock(Connection.class);
@@ -123,5 +123,4 @@ public class NarayanaDataSourceTests {
         verify(mockXaConnection, times(1)).getConnection();
         verify(mockConnection, times(1)).commit();
     }
-
 }

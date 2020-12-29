@@ -24,11 +24,11 @@ import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import me.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
 import org.jboss.narayana.jta.jms.ConnectionFactoryProxy;
 import org.jboss.narayana.jta.jms.JmsXAResourceRecoveryHelper;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,8 +40,8 @@ import static org.mockito.Mockito.verify;
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-@RunWith(MockitoJUnitRunner.class)
-public class GenericXAConnectionFactoryWrapperTests {
+@ExtendWith(MockitoExtension.class)
+class GenericXAConnectionFactoryWrapperTests {
 
     @Mock
     private XAConnectionFactory mockXaConnectionFactory;
@@ -57,14 +57,14 @@ public class GenericXAConnectionFactoryWrapperTests {
 
     private GenericXAConnectionFactoryWrapper wrapper;
 
-    @Before
-    public void before() {
+    @BeforeEach
+    void before() {
         this.wrapper = new GenericXAConnectionFactoryWrapper(this.mockTransactionManager, this.mockXaRecoveryModule,
                 this.mockRecoveryCredentialsProperties);
     }
 
     @Test
-    public void wrap() throws Exception {
+    void wrap() throws Exception {
         given(this.mockRecoveryCredentialsProperties.isValid()).willReturn(false);
         ConnectionFactory wrapped = this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory);
         assertThat(wrapped).isInstanceOf(ConnectionFactoryProxy.class);
@@ -73,7 +73,7 @@ public class GenericXAConnectionFactoryWrapperTests {
     }
 
     @Test
-    public void wrapWithCredentials() throws Exception {
+    void wrapWithCredentials() throws Exception {
         given(this.mockRecoveryCredentialsProperties.isValid()).willReturn(true);
         given(this.mockRecoveryCredentialsProperties.getUser()).willReturn("userName");
         given(this.mockRecoveryCredentialsProperties.getPassword()).willReturn("password");
@@ -83,5 +83,4 @@ public class GenericXAConnectionFactoryWrapperTests {
         verify(this.mockRecoveryCredentialsProperties).getUser();
         verify(this.mockRecoveryCredentialsProperties).getPassword();
     }
-
 }

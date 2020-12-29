@@ -16,31 +16,28 @@
 
 package me.snowdrop.narayana.sample;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 @SpringBootTest
-@RunWith(SpringRunner.class)
-public class UserServiceTest {
+class UserServiceTest {
 
     @Autowired
     private UserService userService;
 
     @Test
-    public void shouldCreateAndListUser() throws InterruptedException {
+    void shouldCreateAndListUser() throws InterruptedException {
         String name = "Little Finger";
         this.userService.create(name);
         assertThat(this.userService.getAll()).containsOnlyOnce(name);
     }
 
     @Test
-    public void shouldNotCreateDuplicateUsers() {
+    void shouldNotCreateDuplicateUsers() {
         String name = "King Slayer";
         this.userService.create(name);
         try {

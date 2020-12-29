@@ -21,7 +21,7 @@ import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 
 import com.arjuna.ats.jbossatx.jta.RecoveryManagerService;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -36,12 +36,12 @@ import static org.mockito.Mockito.verify;
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-public class NarayanaBeanFactoryPostProcessorTests {
+class NarayanaBeanFactoryPostProcessorTests {
 
     private AnnotationConfigApplicationContext context;
 
     @Test
-    public void setsDependsOn() {
+    void setsDependsOn() {
         DefaultListableBeanFactory beanFactory = Mockito.spy(new DefaultListableBeanFactory());
         this.context = new AnnotationConfigApplicationContext(beanFactory);
         this.context.register(Config.class);
@@ -80,7 +80,5 @@ public class NarayanaBeanFactoryPostProcessorTests {
         public static NarayanaBeanFactoryPostProcessor narayanaBeanFactoryPostProcessor() {
             return new NarayanaBeanFactoryPostProcessor();
         }
-
     }
-
 }

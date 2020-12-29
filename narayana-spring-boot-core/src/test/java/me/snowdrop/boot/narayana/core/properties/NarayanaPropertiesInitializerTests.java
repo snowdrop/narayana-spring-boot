@@ -27,8 +27,8 @@ import com.arjuna.ats.arjuna.common.ObjectStoreEnvironmentBean;
 import com.arjuna.ats.arjuna.common.RecoveryEnvironmentBean;
 import com.arjuna.ats.jta.common.JTAEnvironmentBean;
 import com.arjuna.common.internal.util.propertyservice.BeanPopulator;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,10 +37,10 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-public class NarayanaPropertiesInitializerTests {
+class NarayanaPropertiesInitializerTests {
 
-    @After
-    public void after() throws NoSuchFieldException, IllegalAccessException {
+    @AfterEach
+    void after() throws NoSuchFieldException, IllegalAccessException {
         // BeanPopulator holds instances in a static private map, so in order to reset it we need reflection
         Field beanInstancesField = BeanPopulator.class.getDeclaredField("beanInstances");
         beanInstancesField.setAccessible(true);
@@ -48,7 +48,7 @@ public class NarayanaPropertiesInitializerTests {
     }
 
     @Test
-    public void shouldSetDefaultProperties() throws Exception {
+    void shouldSetDefaultProperties() throws Exception {
         NarayanaProperties narayanaProperties = new NarayanaProperties();
         NarayanaPropertiesInitializer narayanaPropertiesInitializer =
                 new NarayanaPropertiesInitializer(narayanaProperties);
@@ -99,7 +99,7 @@ public class NarayanaPropertiesInitializerTests {
     }
 
     @Test
-    public void shouldSetModifiedProperties() throws Exception {
+    void shouldSetModifiedProperties() throws Exception {
         NarayanaProperties narayanaProperties = new NarayanaProperties();
         narayanaProperties.setTransactionManagerId("test-id");
         narayanaProperties.setLogDir("test-dir");
@@ -143,5 +143,4 @@ public class NarayanaPropertiesInitializerTests {
                 .getExpiryScannerClassNames())
                 .isEqualTo(Arrays.asList("test-scanner-1", "test-scanner-2"));
     }
-
 }
