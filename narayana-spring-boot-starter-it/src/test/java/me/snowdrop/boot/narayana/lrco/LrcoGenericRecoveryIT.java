@@ -16,10 +16,23 @@
 
 package me.snowdrop.boot.narayana.lrco;
 
+import java.util.List;
+
+import me.snowdrop.boot.narayana.app.Entry;
 import me.snowdrop.boot.narayana.app.TestApplication;
 import me.snowdrop.boot.narayana.generic.GenericRecoveryIT;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest(classes = TestApplication.class, properties = "narayana.lrco.enabled=true")
 public class LrcoGenericRecoveryIT extends GenericRecoveryIT {
+
+    @Override
+    protected void assertEntries(List<Entry> entries) {
+        // LRCO resource is committed last (and is not prepared), therefore there is nothing to recover.
+        assertThat(entries)
+                .as("No entries should be received")
+                .hasSize(0);
+    }
 }
