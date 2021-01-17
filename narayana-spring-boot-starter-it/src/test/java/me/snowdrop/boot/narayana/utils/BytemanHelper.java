@@ -19,12 +19,15 @@ package me.snowdrop.boot.narayana.utils;
 import com.arjuna.ats.arjuna.common.Uid;
 import com.arjuna.ats.arjuna.coordinator.ActionManager;
 import com.arjuna.ats.internal.arjuna.thread.ThreadActionData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
 public class BytemanHelper {
 
+    private static final Logger logger = LoggerFactory.getLogger(BytemanHelper.class);
     private static int commitsCounter;
 
     public static void reset() {
@@ -34,7 +37,7 @@ public class BytemanHelper {
     public void failFirstCommit(Uid uid) {
         // Increment is called first, so counter should be 1
         if (commitsCounter == 1) {
-            System.out.println(BytemanHelper.class.getName() + " fail first commit");
+            logger.info(BytemanHelper.class.getName() + " fail first commit");
             ActionManager.manager().remove(uid);
             ThreadActionData.popAction();
             throw new RuntimeException("Failing first commit");
@@ -43,7 +46,7 @@ public class BytemanHelper {
 
     public void incrementCommitsCounter() {
         commitsCounter++;
-        System.out.println(BytemanHelper.class.getName() + " increment commits counter: " + commitsCounter);
+        logger.info(BytemanHelper.class.getName() + " increment commits counter: " + commitsCounter);
     }
 
 }
