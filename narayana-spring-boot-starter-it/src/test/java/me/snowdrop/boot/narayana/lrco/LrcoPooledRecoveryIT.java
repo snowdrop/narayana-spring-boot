@@ -25,14 +25,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = TestApplication.class, properties = "narayana.lrco.enabled=true")
-public class LrcoGenericRecoveryIT extends GenericRecoveryIT {
+@SpringBootTest(classes = TestApplication.class, properties = {"narayana.dbcp.enabled=true", "narayana.messaginghub.enabled=true", "narayana.lrco.enabled=true"})
+public class LrcoPooledRecoveryIT extends GenericRecoveryIT {
 
     @Override
-    protected void assertEntriesAfterRecovery(List<Entry> entries) {
-        // Fake XAResource is committed during 2PC commit, therefore there is nothing to recover after crash in early prepare phase.
+    protected void assertEntriesAfterCrash(List<Entry> entries) {
+        // LRCO resource is committed last, while others get prepared only.
         assertThat(entries)
-                .as("No entries should be received")
-                .hasSize(0);
+                .as("Test entry should exist because resource was committed before crash")
+                .hasSize(1);
     }
 }
