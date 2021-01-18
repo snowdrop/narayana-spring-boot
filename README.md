@@ -49,8 +49,11 @@ If you are forced to use a non-xa DataSource to connect to your database you can
 special XADataSource instance with last resource commit optimization enabled by adding this entry to your application
 configuration:
 ```
+narayana.dbcp.enabled=true
 narayana.lrco.enabled=true
 ```
+
+> Due to Narayana internal design restrictions, last resource commit optimization is supported for pooled DataSources only.
 
 # Using messaging brokers
 

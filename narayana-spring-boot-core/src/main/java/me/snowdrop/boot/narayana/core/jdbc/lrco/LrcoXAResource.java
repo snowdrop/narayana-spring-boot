@@ -62,12 +62,6 @@ public class LrcoXAResource implements LastResourceCommitOptimisation {
                             + ", but was " + xid);
                 }
                 break;
-            case XAResource.TMJOIN:
-                if (!xid.equals(this.currentXid)) {
-                    throw new XAException("Attempting to join in different transaction: expected " + this.currentXid
-                            + ", but was " + xid);
-                }
-                break;
             default:
                 throw new XAException("unknown state: " + flags);
         }
@@ -75,17 +69,14 @@ public class LrcoXAResource implements LastResourceCommitOptimisation {
 
     @Override
     public synchronized void end(Xid xid, int flags) throws XAException {
-        if (!this.currentXid.equals(xid)) {
-            throw new XAException("Invalid Xid: expected " + this.currentXid + ", but was " + xid);
-        }
+        // Should not be called
+        throw new XAException(XAException.XAER_PROTO);
     }
 
     @Override
     public synchronized int prepare(Xid xid) throws XAException {
-        if (!this.currentXid.equals(xid)) {
-            throw new XAException("Invalid Xid: expected " + this.currentXid + ", but was " + xid);
-        }
-        return XAResource.XA_OK;
+        // Should not be called
+        throw new XAException(XAException.XAER_PROTO);
     }
 
     @Override

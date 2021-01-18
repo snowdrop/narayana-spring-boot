@@ -39,7 +39,7 @@ import org.springframework.util.ClassUtils;
 @AutoConfigureBefore(XADataSourceAutoConfiguration.class)
 @AutoConfigureAfter(NarayanaConfiguration.class)
 @EnableConfigurationProperties(DataSourceProperties.class)
-@ConditionalOnProperty(name = "narayana.lrco.enabled")
+@ConditionalOnProperty(name = {"narayana.dbcp.enabled", "narayana.lrco.enabled"})
 @ConditionalOnBean(XADataSourceWrapper.class)
 @ConditionalOnMissingBean(XADataSource.class)
 public class NarayanaLrcoXADataSourceAutoConfiguration {

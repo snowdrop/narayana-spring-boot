@@ -42,6 +42,7 @@ class NarayanaLrcoXADataSourceAutoConfigurationIT {
     @Test
     void lrcoXADataSourceShouldBeLoaded() {
         Properties properties = new Properties();
+        properties.put("narayana.dbcp.enabled", "true");
         properties.put("narayana.lrco.enabled", "true");
         PropertiesPropertySource propertySource = new PropertiesPropertySource("test", properties);
 
