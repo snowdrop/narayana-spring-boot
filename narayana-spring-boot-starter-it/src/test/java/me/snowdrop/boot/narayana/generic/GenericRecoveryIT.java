@@ -102,21 +102,39 @@ public class GenericRecoveryIT {
         }
 
         // Just after crash message and entry shouldn't be available
-        assertThat(this.messagesService.getReceivedMessages())
-                .isEmpty();
-        assertThat(this.entriesService.getEntries())
-                .isEmpty();
+        assertMessagesAfterCrash(this.messagesService.getReceivedMessages());
+        assertEntriesAfterCrash(this.entriesService.getEntries());
 
         await("Wait for the recovery to happen")
                 .atMost(Duration.ofSeconds(30))
                 .untilAsserted(() -> {
-                    assertThat(this.messagesService.getReceivedMessages())
-                            .as("Test message should have been received after transaction was committed")
-                            .containsOnly("test-message");
-                    assertThat(this.entriesService.getEntries())
-                            .as("Test entry should exist after transaction was committed")
-                            .containsOnly(entry);
+                    assertMessagesAfterRecovery(this.messagesService.getReceivedMessages());
+                    assertEntriesAfterRecovery(this.entriesService.getEntries());
                 });
+    }
+
+    protected void assertEntriesAfterCrash(List<Entry> entries) {
+        assertThat(entries)
+                .as("No entry should exist")
+                .hasSize(0);
+    }
+
+    protected void assertMessagesAfterCrash(List<String> messages) {
+        assertThat(messages)
+                .as("No message should exist")
+                .hasSize(0);
+    }
+
+    protected void assertEntriesAfterRecovery(List<Entry> entries) {
+        assertThat(entries)
+                .as("Test entry should exist after transaction was committed")
+                .hasSize(1);
+    }
+
+    protected void assertMessagesAfterRecovery(List<String> messages) {
+        assertThat(messages)
+                .as("Test message should have been received after transaction was committed")
+                .hasSize(1);
     }
 
     private void setupXaMocks() throws Exception {

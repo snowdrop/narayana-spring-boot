@@ -9,6 +9,8 @@ buildNumber.properties
 .mvn/timing.properties
 *.iml
 .idea
+**/nbactions.xml
+**/nb-configuration.xml
 
 transaction-logs
 

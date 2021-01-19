@@ -35,7 +35,7 @@ public class MessagesService {
 
     public final static String QUEUE_NAME = "test-messages";
 
-    private final Logger logger = LoggerFactory.getLogger(EntriesService.class);
+    private final Logger logger = LoggerFactory.getLogger(MessagesService.class);
 
     private final List<String> receivedMessages = new LinkedList<>();
 
