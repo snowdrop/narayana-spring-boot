@@ -65,7 +65,6 @@ public class LrcoXAConnection implements XAConnection {
         if (lastHandleConnection != null) {
             lastHandleConnection.close();
         }
-        this.physicalConnection.rollback();
         this.handleConnection = new PooledJdbcConnection();
         return this.handleConnection;
     }
@@ -120,7 +119,9 @@ public class LrcoXAConnection implements XAConnection {
         public void close() throws SQLException {
             if (!this.closed) {
                 try {
-                    LrcoXAConnection.this.physicalConnection.rollback();
+                    if (!LrcoXAConnection.this.physicalConnection.getAutoCommit()) {
+                        LrcoXAConnection.this.physicalConnection.rollback();
+                    }
                     LrcoXAConnection.this.physicalConnection.setAutoCommit(true);
                 } catch (SQLException e) {
                     // ignore
