@@ -11,6 +11,7 @@ buildNumber.properties
 .idea
 **/nbactions.xml
 **/nb-configuration.xml
+.vscode
 .project
 .settings
 .classpath
