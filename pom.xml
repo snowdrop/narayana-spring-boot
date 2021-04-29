@@ -52,10 +52,10 @@
 
     <awaitility.version>4.0.3</awaitility.version>
     <byteman.version>4.0.13</byteman.version>
-    <camel-spring-boot.version>3.7.3</camel-spring-boot.version>
+    <camel-spring-boot.version>3.4.5</camel-spring-boot.version>
     <narayana.version>5.10.6.Final</narayana.version>
     <openshift-client.version>4.9.0</openshift-client.version>
-    <spring-boot.version>2.4.3</spring-boot.version>
+    <spring-boot.version>2.3.8.RELEASE</spring-boot.version>
 
     <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
