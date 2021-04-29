@@ -11,6 +11,10 @@ buildNumber.properties
 .idea
 **/nbactions.xml
 **/nb-configuration.xml
+.project
+.settings
+.classpath
+.factorypath
 
 transaction-logs
 
