@@ -56,7 +56,7 @@ public abstract class AbstractXADataSourceWrapper implements XADataSourceWrapper
         return wrapDataSourceInternal(dataSource);
     }
 
-    private XAResourceRecoveryHelper getRecoveryHelper(XADataSource dataSource) {
+    XAResourceRecoveryHelper getRecoveryHelper(XADataSource dataSource) {
         if (this.recoveryCredentials.isValid()) {
             return new DataSourceXAResourceRecoveryHelper(dataSource, this.recoveryCredentials.getUser(),
                 this.recoveryCredentials.getPassword());

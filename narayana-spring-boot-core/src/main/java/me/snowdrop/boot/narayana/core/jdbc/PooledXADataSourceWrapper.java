@@ -26,7 +26,10 @@ import javax.sql.XADataSource;
 import javax.transaction.TransactionManager;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
+import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
 import me.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
+import me.snowdrop.boot.narayana.core.tx.DataSourceXAResourceWrapperRecoveryHelper;
+import me.snowdrop.boot.narayana.core.tx.TransactionManagerWrapper;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.BasicDataSourceFactory;
 import org.apache.commons.dbcp2.managed.BasicManagedDataSource;
@@ -44,6 +47,7 @@ public class PooledXADataSourceWrapper extends AbstractXADataSourceWrapper {
 
     private final Map<String, String> properties;
     private final TransactionManager transactionManager;
+    private final RecoveryCredentialsProperties recoveryCredentials;
 
     /**
      * Create a new {@link PooledXADataSourceWrapper} instance.
@@ -70,6 +74,7 @@ public class PooledXADataSourceWrapper extends AbstractXADataSourceWrapper {
         super(xaRecoveryModule, recoveryCredentials);
         this.properties = properties;
         this.transactionManager = transactionManager;
+        this.recoveryCredentials = recoveryCredentials;
     }
 
     /**
@@ -86,7 +91,7 @@ public class PooledXADataSourceWrapper extends AbstractXADataSourceWrapper {
         // it's configuration to the managed one.
         BasicDataSource basicDataSource = getBasicDataSource();
         copyFields(basicDataSource, basicManagedDataSource);
-        basicManagedDataSource.setTransactionManager(this.transactionManager);
+        basicManagedDataSource.setTransactionManager(new TransactionManagerWrapper(this.transactionManager, this.recoveryCredentials.getName()));
         basicManagedDataSource.setXaDataSourceInstance(xaDataSource);
 
         // Initialize the connections pool
@@ -118,4 +123,12 @@ public class PooledXADataSourceWrapper extends AbstractXADataSourceWrapper {
         }
     }
 
+    @Override
+    XAResourceRecoveryHelper getRecoveryHelper(XADataSource dataSource) {
+        if (this.recoveryCredentials.isValid()) {
+            return new DataSourceXAResourceWrapperRecoveryHelper(dataSource, this.recoveryCredentials.getName(),
+                this.recoveryCredentials.getUser(), this.recoveryCredentials.getPassword());
+        }
+        return new DataSourceXAResourceWrapperRecoveryHelper(dataSource, this.recoveryCredentials.getName());
+    }
 }

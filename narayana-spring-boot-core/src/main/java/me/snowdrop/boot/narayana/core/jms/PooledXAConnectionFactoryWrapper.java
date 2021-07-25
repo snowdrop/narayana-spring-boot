@@ -21,14 +21,18 @@ import javax.jms.XAConnectionFactory;
 import javax.transaction.TransactionManager;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
+import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
 import me.snowdrop.boot.narayana.core.properties.MessagingHubConnectionFactoryProperties;
 import me.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
+import me.snowdrop.boot.narayana.core.tx.JmsXAResourceWrapperRecoveryHelper;
+import me.snowdrop.boot.narayana.core.tx.TransactionManagerWrapper;
 import org.messaginghub.pooled.jms.JmsPoolXAConnectionFactory;
 
 public class PooledXAConnectionFactoryWrapper extends AbstractXAConnectionFactoryWrapper {
 
     private final MessagingHubConnectionFactoryProperties properties;
     private final TransactionManager transactionManager;
+    private final RecoveryCredentialsProperties recoveryCredentials;
 
     /**
      * Create a new {@link PooledXAConnectionFactoryWrapper} instance.
@@ -55,12 +59,13 @@ public class PooledXAConnectionFactoryWrapper extends AbstractXAConnectionFactor
         super(xaRecoveryModule, recoveryCredentials);
         this.properties = properties;
         this.transactionManager = transactionManager;
+        this.recoveryCredentials = recoveryCredentials;
     }
 
     @Override
     protected ConnectionFactory wrapConnectionFactoryInternal(XAConnectionFactory xaConnectionFactory) {
         JmsPoolXAConnectionFactory pooledConnectionFactory = new JmsPoolXAConnectionFactory();
-        pooledConnectionFactory.setTransactionManager(this.transactionManager);
+        pooledConnectionFactory.setTransactionManager(new TransactionManagerWrapper(this.transactionManager, this.recoveryCredentials.getName()));
         pooledConnectionFactory.setConnectionFactory(xaConnectionFactory);
         pooledConnectionFactory.setMaxConnections(this.properties.getMaxConnections());
         pooledConnectionFactory.setConnectionIdleTimeout((int) this.properties.getConnectionIdleTimeout().toMillis());
@@ -71,5 +76,14 @@ public class PooledXAConnectionFactoryWrapper extends AbstractXAConnectionFactor
         pooledConnectionFactory.setBlockIfSessionPoolIsFullTimeout(this.properties.getBlockIfSessionPoolIsFullTimeout().toMillis());
         pooledConnectionFactory.setUseAnonymousProducers(this.properties.isUseAnonymousProducers());
         return pooledConnectionFactory;
+    }
+
+    @Override
+    XAResourceRecoveryHelper getRecoveryHelper(XAConnectionFactory xaConnectionFactory) {
+        if (this.recoveryCredentials.isValid()) {
+            return new JmsXAResourceWrapperRecoveryHelper(xaConnectionFactory, this.recoveryCredentials.getName(),
+                this.recoveryCredentials.getUser(), this.recoveryCredentials.getPassword());
+        }
+        return new JmsXAResourceWrapperRecoveryHelper(xaConnectionFactory, this.recoveryCredentials.getName());
     }
 }

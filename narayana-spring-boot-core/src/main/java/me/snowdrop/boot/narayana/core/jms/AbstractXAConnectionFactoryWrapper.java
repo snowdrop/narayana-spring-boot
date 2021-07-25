@@ -51,7 +51,7 @@ public abstract class AbstractXAConnectionFactoryWrapper implements XAConnection
         return wrapConnectionFactoryInternal(xaConnectionFactory);
     }
 
-    private XAResourceRecoveryHelper getRecoveryHelper(XAConnectionFactory xaConnectionFactory) {
+    XAResourceRecoveryHelper getRecoveryHelper(XAConnectionFactory xaConnectionFactory) {
         if (this.recoveryCredentials.isValid()) {
             return new JmsXAResourceRecoveryHelper(xaConnectionFactory, this.recoveryCredentials.getUser(),
                 this.recoveryCredentials.getPassword());

@@ -25,6 +25,7 @@ import javax.transaction.TransactionManager;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import me.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
+import me.snowdrop.boot.narayana.core.tx.TransactionManagerWrapper;
 import org.apache.commons.dbcp2.managed.BasicManagedDataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -74,7 +75,8 @@ class PooledXADataSourceWrapperTests {
         assertThat(dataSource).isInstanceOf(BasicManagedDataSource.class);
 
         BasicManagedDataSource basicManagedDataSource = (BasicManagedDataSource) dataSource;
-        assertThat(basicManagedDataSource.getTransactionManager()).isEqualTo(this.mockTransactionManager);
+        TransactionManagerWrapper transactionManagerWrapper = (TransactionManagerWrapper) basicManagedDataSource.getTransactionManager();
+        assertThat(transactionManagerWrapper.getDelegate()).isEqualTo(this.mockTransactionManager);
         assertThat(basicManagedDataSource.getXaDataSourceInstance()).isEqualTo(this.mockXaDataSource);
         assertThat(basicManagedDataSource.getUsername()).isEqualTo("test-user");
 
@@ -92,7 +94,8 @@ class PooledXADataSourceWrapperTests {
         assertThat(dataSource).isInstanceOf(BasicManagedDataSource.class);
 
         BasicManagedDataSource basicManagedDataSource = (BasicManagedDataSource) dataSource;
-        assertThat(basicManagedDataSource.getTransactionManager()).isEqualTo(this.mockTransactionManager);
+        TransactionManagerWrapper transactionManagerWrapper = (TransactionManagerWrapper) basicManagedDataSource.getTransactionManager();
+        assertThat(transactionManagerWrapper.getDelegate()).isEqualTo(this.mockTransactionManager);
         assertThat(basicManagedDataSource.getXaDataSourceInstance()).isEqualTo(this.mockXaDataSource);
 
         verify(this.mockXaRecoveryModule).addXAResourceRecoveryHelper(any(DataSourceXAResourceRecoveryHelper.class));

@@ -23,6 +23,7 @@ public class RecoveryCredentialsProperties {
      */
     public static final RecoveryCredentialsProperties DEFAULT;
 
+    private String name;
     private String user;
     private String password;
 
@@ -33,13 +34,22 @@ public class RecoveryCredentialsProperties {
     public RecoveryCredentialsProperties() {
     }
 
-    public RecoveryCredentialsProperties(String user, String password) {
+    public RecoveryCredentialsProperties(String name, String user, String password) {
+        this.name = name;
         this.user = user;
         this.password = password;
     }
 
     public boolean isValid() {
         return !(this.user == null && this.password == null);
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getUser() {

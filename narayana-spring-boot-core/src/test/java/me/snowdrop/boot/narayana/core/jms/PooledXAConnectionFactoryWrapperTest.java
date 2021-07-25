@@ -23,6 +23,7 @@ import javax.transaction.TransactionManager;
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import me.snowdrop.boot.narayana.core.properties.MessagingHubConnectionFactoryProperties;
 import me.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
+import me.snowdrop.boot.narayana.core.tx.TransactionManagerWrapper;
 import org.jboss.narayana.jta.jms.JmsXAResourceRecoveryHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,7 +64,8 @@ class PooledXAConnectionFactoryWrapperTest {
         ConnectionFactory connectionFactory = this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory);
         assertThat(connectionFactory).isInstanceOf(JmsPoolXAConnectionFactory.class);
         JmsPoolXAConnectionFactory pooledConnectionFactory = (JmsPoolXAConnectionFactory) connectionFactory;
-        assertThat(pooledConnectionFactory.getTransactionManager()).isEqualTo(this.mockTransactionManager);
+        TransactionManagerWrapper transactionManagerWrapper = (TransactionManagerWrapper) pooledConnectionFactory.getTransactionManager();
+        assertThat(transactionManagerWrapper.getDelegate()).isEqualTo(this.mockTransactionManager);
         assertThat(pooledConnectionFactory.getConnectionFactory()).isEqualTo(this.mockXaConnectionFactory);
         verify(this.mockXaRecoveryModule).addXAResourceRecoveryHelper(any(JmsXAResourceRecoveryHelper.class));
         verify(this.mockRecoveryCredentialsProperties).isValid();
@@ -77,7 +79,8 @@ class PooledXAConnectionFactoryWrapperTest {
         ConnectionFactory connectionFactory = this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory);
         assertThat(connectionFactory).isInstanceOf(JmsPoolXAConnectionFactory.class);
         JmsPoolXAConnectionFactory pooledConnectionFactory = (JmsPoolXAConnectionFactory) connectionFactory;
-        assertThat(pooledConnectionFactory.getTransactionManager()).isEqualTo(this.mockTransactionManager);
+        TransactionManagerWrapper transactionManagerWrapper = (TransactionManagerWrapper) pooledConnectionFactory.getTransactionManager();
+        assertThat(transactionManagerWrapper.getDelegate()).isEqualTo(this.mockTransactionManager);
         assertThat(pooledConnectionFactory.getConnectionFactory()).isEqualTo(this.mockXaConnectionFactory);
         verify(this.mockXaRecoveryModule).addXAResourceRecoveryHelper(any(JmsXAResourceRecoveryHelper.class));
         verify(this.mockRecoveryCredentialsProperties).getUser();
