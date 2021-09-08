@@ -361,6 +361,12 @@
           </plugin>
         </plugins>
       </build>
+      <modules>
+        <module>narayana-spring-boot-core</module>
+        <module>narayana-spring-boot-starter</module>
+        <module>narayana-spring-boot-starter-it</module>
+        <module>openshift/recovery-controller</module>
+      </modules>
     </profile>
   </profiles>
 
