@@ -361,13 +361,17 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+    <profile>
+      <id>examples</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
       <modules>
-        <module>narayana-spring-boot-core</module>
-        <module>narayana-spring-boot-starter</module>
-        <module>narayana-spring-boot-starter-it</module>
-        <module>openshift/recovery-controller</module>
+        <module>narayana-spring-boot-samples</module>
       </modules>
     </profile>
+
   </profiles>
 
   <modules>
