@@ -38,29 +38,6 @@
     </plugins>
   </build>
 
-  <profiles>
-    <profile>
-      <id>release</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-release-plugin</artifactId>
-            <configuration>
-              <goals>clean</goals>
-            </configuration>
-            <executions>
-              <execution>
-                <id>default</id> <!-- id is necessary sometimes -->
-                <phase>none</phase>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
-
   <modules>
     <module>narayana-spring-boot-sample-2ds</module>
     <module>narayana-spring-boot-sample-2pc</module>
