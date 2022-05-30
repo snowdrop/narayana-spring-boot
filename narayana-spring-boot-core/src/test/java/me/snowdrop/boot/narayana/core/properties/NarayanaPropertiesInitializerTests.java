@@ -48,7 +48,7 @@ class NarayanaPropertiesInitializerTests {
     }
 
     @Test
-    void shouldSetDefaultProperties() throws Exception {
+    void shouldSetDefaultProperties() {
         NarayanaProperties narayanaProperties = new NarayanaProperties();
         NarayanaPropertiesInitializer narayanaPropertiesInitializer =
                 new NarayanaPropertiesInitializer(narayanaProperties);
@@ -57,7 +57,7 @@ class NarayanaPropertiesInitializerTests {
         assertThat(BeanPopulator.getDefaultInstance(CoreEnvironmentBean.class)
                 .getNodeIdentifier()).isEqualTo("1");
         assertThat(BeanPopulator.getDefaultInstance(ObjectStoreEnvironmentBean.class)
-                .getObjectStoreDir()).endsWith("ObjectStore");
+                .getObjectStoreDir()).contains("ObjectStore");
         assertThat(BeanPopulator
                 .getNamedInstance(ObjectStoreEnvironmentBean.class, "communicationStore")
                 .getObjectStoreDir()).endsWith("ObjectStore");
@@ -99,7 +99,7 @@ class NarayanaPropertiesInitializerTests {
     }
 
     @Test
-    void shouldSetModifiedProperties() throws Exception {
+    void shouldSetModifiedProperties() {
         NarayanaProperties narayanaProperties = new NarayanaProperties();
         narayanaProperties.setTransactionManagerId("test-id");
         narayanaProperties.setLogDir("test-dir");
