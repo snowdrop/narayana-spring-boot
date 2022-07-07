@@ -51,11 +51,12 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <awaitility.version>4.0.3</awaitility.version>
-    <byteman.version>4.0.13</byteman.version>
-    <camel-spring-boot.version>3.7.5</camel-spring-boot.version>
-    <narayana.version>5.11.3.Final</narayana.version>
+    <byteman.version>4.0.19</byteman.version>
+    <camel-spring-boot.version>3.14.2</camel-spring-boot.version>
+    <narayana.version>5.12.7.Final</narayana.version>
     <openshift-client.version>4.9.0</openshift-client.version>
-    <spring-boot.version>2.5.10</spring-boot.version>
+    <spring-boot.version>2.7.1</spring-boot.version>
+    <jboss-transaction-spi.version>7.6.1.Final</jboss-transaction-spi.version>
 
     <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
@@ -130,6 +131,11 @@
         <artifactId>byteman-bmunit5</artifactId>
         <version>${byteman.version}</version>
       </dependency>
+       <dependency>
+          <groupId>org.jboss</groupId>
+          <artifactId>jboss-transaction-spi</artifactId>
+          <version>${jboss-transaction-spi.version}</version>
+        </dependency>
     </dependencies>
   </dependencyManagement>
 

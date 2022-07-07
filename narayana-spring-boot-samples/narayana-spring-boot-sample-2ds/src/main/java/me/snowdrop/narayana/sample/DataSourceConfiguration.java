@@ -56,7 +56,7 @@ public class DataSourceConfiguration {
     private void createDummyTable(DataSource dataSource) throws SQLException {
         try (Connection conn = dataSource.getConnection();
                 Statement stmt = conn.createStatement()) {
-            stmt.execute("create table dummy (value int)");
+            stmt.execute("create table dummy (val int)");
         }
     }
 }
