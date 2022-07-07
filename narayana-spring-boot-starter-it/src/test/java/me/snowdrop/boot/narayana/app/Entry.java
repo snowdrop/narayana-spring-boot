@@ -32,22 +32,22 @@ public class Entry {
     @GeneratedValue
     private Long id;
 
-    private String value;
+    private String val;
 
     Entry() {
     }
 
-    public Entry(String value) {
-        this.value = value;
+    public Entry(String val) {
+        this.val = val;
     }
 
-    public String getValue() {
-        return this.value;
+    public String getVal() {
+        return this.val;
     }
 
     @Override
     public String toString() {
-        return "Entry{id=" + this.id + ", value='" + this.value + "'}";
+        return "Entry{id=" + this.id + ", value='" + this.val + "'}";
     }
 
     @Override
@@ -60,11 +60,11 @@ public class Entry {
         }
         Entry entry = (Entry) o;
         return Objects.equals(this.id, entry.id) &&
-                Objects.equals(this.value, entry.value);
+                Objects.equals(this.val, entry.val);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.id, this.value);
+        return Objects.hash(this.id, this.val);
     }
 }
