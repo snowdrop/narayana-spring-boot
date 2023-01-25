@@ -54,8 +54,10 @@
     <byteman.version>4.0.19</byteman.version>
     <camel-spring-boot.version>3.14.2</camel-spring-boot.version>
     <narayana.version>5.12.7.Final</narayana.version>
-    <openshift-client.version>4.9.0</openshift-client.version>
-    <spring-boot.version>2.7.2</spring-boot.version>
+    <!-- Aligned from org.springframework.cloud:spring-cloud-kubernetes-fabric8-autoconfig:2.1.5 -->
+    <openshift-client.version>5.10.2</openshift-client.version>
+    <spring-boot.version>2.7.8</spring-boot.version>
+    <snakeyaml.version>1.33</snakeyaml.version>
     <jboss-transaction-spi.version>7.6.1.Final</jboss-transaction-spi.version>
 
     <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
