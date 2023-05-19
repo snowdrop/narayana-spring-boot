@@ -50,6 +50,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+    <agroal.version>1.18</agroal.version>
     <awaitility.version>4.0.3</awaitility.version>
     <byteman.version>4.0.19</byteman.version>
     <camel-spring-boot.version>3.14.2</camel-spring-boot.version>

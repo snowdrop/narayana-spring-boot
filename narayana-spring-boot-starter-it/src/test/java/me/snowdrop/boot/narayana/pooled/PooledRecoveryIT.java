@@ -18,11 +18,13 @@ package me.snowdrop.boot.narayana.pooled;
 
 import me.snowdrop.boot.narayana.app.TestApplication;
 import me.snowdrop.boot.narayana.generic.GenericRecoveryIT;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-@SpringBootTest(classes = TestApplication.class, properties = {"narayana.dbcp.enabled=true", "narayana.messaginghub.enabled=true"})
+@SpringBootTest(classes = TestApplication.class, properties = "narayana.messaginghub.enabled=true")
+@EnableAutoConfiguration
 public class PooledRecoveryIT extends GenericRecoveryIT {
 }

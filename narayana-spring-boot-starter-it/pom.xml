@@ -50,6 +50,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+        <groupId>io.agroal</groupId>
+        <artifactId>agroal-spring-boot-starter</artifactId>
+        <version>${agroal.version}</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>artemis-jms-server</artifactId>
       <scope>test</scope>

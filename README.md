@@ -23,37 +23,21 @@ for each instance of your application.
 
 # Using databases
 
-This Narayana starter supports two ways to enlist a relational database to a JTA transaction: Narayana Transactional
-Driver and DBCP2.
-
-By default Narayana Transactional driver is used which provides a basic XAResource enlistment and recovery.
+By default Narayana Transactional driver is used to enlist a relational database to a JTA transaction which provides a basic XAResource enlistment and recovery.
 
 ## Add pooling
 
-If you need a more sophisticated connection management, you can enable DBCP2 support which provides connection pooling
-and many other features. To enable DBCP2 add the following property to you application configuration:
+If you need a more sophisticated connection management, we advice you to use [agroal-spring-boot-starter](https://agroal.github.io)
+which provides connection pooling and many other features. To enable Agroal add the following dependency to your application configuration:
 ```
-narayana.dbcp.enabled=true
-```
-All DBCP2 configuration properties described in its
-[documentation](https://commons.apache.org/proper/commons-dbcp/configuration.html) are mapped with a prefix
-`narayana.dbcp`. So for example if you'd like to set an initial pool size to 10, you could do that by adding this entry
-to your application configuration:
-```
-narayana.dbcp.initialSize=10
+<dependency>
+    <groupId>io.agroal</groupId>
+    <artifactId>agroal-spring-boot-starter</artifactId>
+    <version>1.x.x</version>
+</dependency>
 ```
 
-## Add last resource commit optimization
-
-If you are forced to use a non-xa DataSource to connect to your database you can auto wrap a JDBC Driver instance in a
-special XADataSource instance with last resource commit optimization enabled by adding this entry to your application
-configuration:
-```
-narayana.dbcp.enabled=true
-narayana.lrco.enabled=true
-```
-
-> Due to Narayana internal design restrictions, last resource commit optimization is supported for pooled DataSources only.
+All Agroal configuration properties described in its [documentation](https://agroal.github.io/docs.html)
 
 # Using messaging brokers
 
