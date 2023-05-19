@@ -1,4 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-me.snowdrop.boot.narayana.openshift.recovery.StatefulsetRecoveryControllerAutoConfiguration,\
-me.snowdrop.boot.narayana.openshift.recovery.NarayanaRecoveryTerminationControllerAutoConfiguration,\
-me.snowdrop.boot.narayana.openshift.recovery.camel.CamelServiceShutdownControllerAutoConfiguration

@@ -193,52 +193,12 @@ public class NarayanaProperties {
         this.recoveryDbCredentials = recoveryDbCredentials;
     }
 
-    @Deprecated
-    public String getRecoveryDbUser() {
-        return this.recoveryDbCredentials.getUser();
-    }
-
-    @Deprecated
-    public void setRecoveryDbUser(String recoveryDbUser) {
-        this.recoveryDbCredentials.setUser(recoveryDbUser);
-    }
-
-    @Deprecated
-    public String getRecoveryDbPass() {
-        return this.recoveryDbCredentials.getPassword();
-    }
-
-    @Deprecated
-    public void setRecoveryDbPass(String recoveryDbPass) {
-        this.recoveryDbCredentials.setPassword(recoveryDbPass);
-    }
-
     public RecoveryCredentialsProperties getRecoveryJmsCredentials() {
         return this.recoveryJmsCredentials;
     }
 
     public void setRecoveryJmsCredentials(RecoveryCredentialsProperties recoveryJmsCredentials) {
         this.recoveryJmsCredentials = recoveryJmsCredentials;
-    }
-
-    @Deprecated
-    public String getRecoveryJmsUser() {
-        return this.recoveryJmsCredentials.getUser();
-    }
-
-    @Deprecated
-    public void setRecoveryJmsUser(String recoveryJmsUser) {
-        this.recoveryJmsCredentials.setUser(recoveryJmsUser);
-    }
-
-    @Deprecated
-    public String getRecoveryJmsPass() {
-        return this.recoveryJmsCredentials.getUser();
-    }
-
-    @Deprecated
-    public void setRecoveryJmsPass(String recoveryJmsPass) {
-        this.recoveryJmsCredentials.setPassword(recoveryJmsPass);
     }
 
     public MessagingHubConnectionFactoryProperties getMessaginghub() {

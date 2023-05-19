@@ -7,8 +7,8 @@ is correct.
 
 By default, Narayana transaction logs are written to a `transaction-logs` directory in your application home directory
 (the directory in which your application jar file resides). You can customize the location of this directory by setting
-a `narayana.log-dir` or `spring.jta.log-dir` property in your application.properties file. Properties starting with
-`narayana` can also be used to customize the Narayana configuration. See the
+a `narayana.log-dir` property in your application.properties file. Properties starting with `narayana` can also be used
+to customize the Narayana configuration. See the
 [NarayanaProperties](narayana-spring-boot-core/src/main/java/me/snowdrop/boot/narayana/core/properties/NarayanaProperties.java)
 Javadoc for complete details.
 
@@ -18,8 +18,7 @@ Narayana project [documentation](http://narayana.io/docs/project/index.html).
 
 > To ensure that multiple transaction managers can safely coordinate the same resource managers, each Narayana instance
 must be configured with a unique ID. By default, this ID is set to 1. To ensure uniqueness in production, you should
-configure the `narayana.transaction-manager-id` or `spring.jta.transaction-manager-id` property with a different value
-for each instance of your application.
+configure the `narayana.transaction-manager-id` property with a different value for each instance of your application.
 
 # Using databases
 
@@ -33,7 +32,7 @@ which provides connection pooling and many other features. To enable Agroal add 
 <dependency>
     <groupId>io.agroal</groupId>
     <artifactId>agroal-spring-boot-starter</artifactId>
-    <version>1.x.x</version>
+    <version>2.x.x</version>
 </dependency>
 ```
 
@@ -59,15 +58,6 @@ narayana.messaginghub.maxConnections=10
 ```
 
 # Release
-
-## With GitHub action
-
-GitHub release action is activates with a tag.
-For example, to release a version 1.2.3 create and push the following tag. 
-```bash
-git tag release-1.2.3
-git push origin release-1.2.3
-```
 
 ## Manually
 

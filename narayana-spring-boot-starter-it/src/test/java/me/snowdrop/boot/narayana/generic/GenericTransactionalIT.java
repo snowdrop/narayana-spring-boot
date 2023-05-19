@@ -18,8 +18,8 @@ package me.snowdrop.boot.narayana.generic;
 
 import java.time.Duration;
 
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
+import jakarta.transaction.Transaction;
+import jakarta.transaction.TransactionManager;
 
 import io.agroal.springframework.boot.AgroalDataSourceConfiguration;
 import me.snowdrop.boot.narayana.app.EntriesService;

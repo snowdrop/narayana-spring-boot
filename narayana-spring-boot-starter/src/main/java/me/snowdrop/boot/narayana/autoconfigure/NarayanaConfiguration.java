@@ -18,11 +18,11 @@ package me.snowdrop.boot.narayana.autoconfigure;
 
 import java.io.File;
 
-import javax.jms.Message;
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
-import javax.transaction.TransactionSynchronizationRegistry;
-import javax.transaction.UserTransaction;
+import jakarta.jms.Message;
+import jakarta.transaction.Transaction;
+import jakarta.transaction.TransactionManager;
+import jakarta.transaction.TransactionSynchronizationRegistry;
+import jakarta.transaction.UserTransaction;
 
 import com.arjuna.ats.arjuna.recovery.RecoveryManager;
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;

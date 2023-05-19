@@ -19,9 +19,9 @@ package me.snowdrop.boot.narayana.autoconfigure;
 import java.io.File;
 import java.util.Properties;
 
-import javax.transaction.TransactionManager;
-import javax.transaction.TransactionSynchronizationRegistry;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.TransactionManager;
+import jakarta.transaction.TransactionSynchronizationRegistry;
+import jakarta.transaction.UserTransaction;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import com.arjuna.ats.jbossatx.jta.RecoveryManagerService;

@@ -20,10 +20,12 @@ import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.transaction.TransactionManager;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
+import jakarta.transaction.TransactionManager;
+
+import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
 import io.agroal.springframework.boot.AgroalDataSourceConfiguration;
 import me.snowdrop.boot.narayana.app.EntriesService;
@@ -72,6 +74,9 @@ public class GenericRecoveryIT {
 
     @Autowired
     private TransactionManager transactionManager;
+
+    @Autowired
+    private XARecoveryModule xaRecoveryModule;
 
     @BeforeEach
     void before() {
@@ -155,5 +160,6 @@ public class GenericRecoveryIT {
         // Return XAResource when recovering
         when(this.xaResourceRecoveryHelper.getXAResources())
                 .thenReturn(new XAResource[]{ this.xaResource });
+        this.xaRecoveryModule.addXAResourceRecoveryHelper(this.xaResourceRecoveryHelper);
     }
 }

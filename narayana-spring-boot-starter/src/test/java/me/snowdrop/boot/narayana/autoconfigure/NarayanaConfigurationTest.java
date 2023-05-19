@@ -18,9 +18,9 @@ package me.snowdrop.boot.narayana.autoconfigure;
 
 import java.io.File;
 
-import javax.transaction.TransactionManager;
-import javax.transaction.TransactionSynchronizationRegistry;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.TransactionManager;
+import jakarta.transaction.TransactionSynchronizationRegistry;
+import jakarta.transaction.UserTransaction;
 
 import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
 import org.junit.jupiter.api.BeforeEach;
