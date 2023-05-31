@@ -21,9 +21,11 @@ import jakarta.jms.XAConnectionFactory;
 import jakarta.transaction.TransactionManager;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
+import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
+import me.snowdrop.boot.narayana.core.jms.pool.JmsPoolNarayanaConnectionFactory;
+import me.snowdrop.boot.narayana.core.jms.pool.NamedJmsXAResourceRecoveryHelper;
 import me.snowdrop.boot.narayana.core.properties.MessagingHubConnectionFactoryProperties;
 import me.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
-import org.messaginghub.pooled.jms.JmsPoolXAConnectionFactory;
 
 public class PooledXAConnectionFactoryWrapper extends AbstractXAConnectionFactoryWrapper {
 
@@ -59,7 +61,8 @@ public class PooledXAConnectionFactoryWrapper extends AbstractXAConnectionFactor
 
     @Override
     protected ConnectionFactory wrapConnectionFactoryInternal(XAConnectionFactory xaConnectionFactory) {
-        JmsPoolXAConnectionFactory pooledConnectionFactory = new JmsPoolXAConnectionFactory();
+        JmsPoolNarayanaConnectionFactory pooledConnectionFactory = new JmsPoolNarayanaConnectionFactory();
+        pooledConnectionFactory.setName(this.properties.getName());
         pooledConnectionFactory.setTransactionManager(this.transactionManager);
         pooledConnectionFactory.setConnectionFactory(xaConnectionFactory);
         pooledConnectionFactory.setMaxConnections(this.properties.getMaxConnections());
@@ -71,5 +74,14 @@ public class PooledXAConnectionFactoryWrapper extends AbstractXAConnectionFactor
         pooledConnectionFactory.setBlockIfSessionPoolIsFullTimeout(this.properties.getBlockIfSessionPoolIsFullTimeout().toMillis());
         pooledConnectionFactory.setUseAnonymousProducers(this.properties.isUseAnonymousProducers());
         return pooledConnectionFactory;
+    }
+
+    @Override
+    protected XAResourceRecoveryHelper getRecoveryHelper(XAConnectionFactory xaConnectionFactory, RecoveryCredentialsProperties recoveryCredentials) {
+        if (recoveryCredentials.isValid()) {
+            return new NamedJmsXAResourceRecoveryHelper(xaConnectionFactory, recoveryCredentials.getUser(),
+                recoveryCredentials.getPassword(), this.properties.getName());
+        }
+        return new NamedJmsXAResourceRecoveryHelper(xaConnectionFactory, this.properties.getName());
     }
 }

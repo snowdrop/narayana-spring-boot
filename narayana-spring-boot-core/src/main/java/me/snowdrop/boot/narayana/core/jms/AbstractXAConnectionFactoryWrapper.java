@@ -46,15 +46,15 @@ public abstract class AbstractXAConnectionFactoryWrapper implements XAConnection
 
     @Override
     public ConnectionFactory wrapConnectionFactory(XAConnectionFactory xaConnectionFactory) throws Exception {
-        XAResourceRecoveryHelper recoveryHelper = getRecoveryHelper(xaConnectionFactory);
+        XAResourceRecoveryHelper recoveryHelper = getRecoveryHelper(xaConnectionFactory, this.recoveryCredentials);
         this.xaRecoveryModule.addXAResourceRecoveryHelper(recoveryHelper);
         return wrapConnectionFactoryInternal(xaConnectionFactory);
     }
 
-    private XAResourceRecoveryHelper getRecoveryHelper(XAConnectionFactory xaConnectionFactory) {
-        if (this.recoveryCredentials.isValid()) {
-            return new JmsXAResourceRecoveryHelper(xaConnectionFactory, this.recoveryCredentials.getUser(),
-                this.recoveryCredentials.getPassword());
+    protected XAResourceRecoveryHelper getRecoveryHelper(XAConnectionFactory xaConnectionFactory, RecoveryCredentialsProperties recoveryCredentials) {
+        if (recoveryCredentials.isValid()) {
+            return new JmsXAResourceRecoveryHelper(xaConnectionFactory, recoveryCredentials.getUser(),
+                recoveryCredentials.getPassword());
         }
         return new JmsXAResourceRecoveryHelper(xaConnectionFactory);
     }

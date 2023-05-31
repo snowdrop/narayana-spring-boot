@@ -21,6 +21,7 @@ import java.time.Duration;
 public class MessagingHubConnectionFactoryProperties {
 
     private boolean enabled;
+    private String name;
     private int maxConnections = 1;
     private Duration connectionIdleTimeout = Duration.ofSeconds(30);
     private Duration connectionCheckInterval = Duration.ofMillis(-1);
@@ -36,6 +37,14 @@ public class MessagingHubConnectionFactoryProperties {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getMaxConnections() {

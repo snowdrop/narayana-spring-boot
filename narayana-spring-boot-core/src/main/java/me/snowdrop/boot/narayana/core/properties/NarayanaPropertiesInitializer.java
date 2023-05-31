@@ -49,6 +49,7 @@ public class NarayanaPropertiesInitializer implements InitializingBean {
         setPeriodicRecoveryPeriod(this.properties.getPeriodicRecoveryPeriod());
         setRecoveryBackoffPeriod(this.properties.getRecoveryBackoffPeriod());
         setXaResourceOrphanFilters(this.properties.getXaResourceOrphanFilters());
+        setXAResourceRecordWrappingPlugin(this.properties.getXaResourceRecordWrappingPlugin());
         setRecoveryModules(this.properties.getRecoveryModules());
         setExpiryScanners(this.properties.getExpiryScanners());
     }
@@ -91,6 +92,10 @@ public class NarayanaPropertiesInitializer implements InitializingBean {
 
     private void setXaResourceOrphanFilters(List<String> xaResourceOrphanFilters) {
         getPopulator(JTAEnvironmentBean.class).setXaResourceOrphanFilterClassNames(xaResourceOrphanFilters);
+    }
+
+    private void setXAResourceRecordWrappingPlugin(String xaResourceRecordWrappingPlugin) {
+        getPopulator(JTAEnvironmentBean.class).setXaResourceRecordWrappingPluginClassName(xaResourceRecordWrappingPlugin);
     }
 
     private void setRecoveryModules(List<String> recoveryModules) {

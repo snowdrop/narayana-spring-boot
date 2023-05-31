@@ -36,6 +36,7 @@ import me.snowdrop.boot.narayana.utils.BytemanHelper;
 import org.jboss.byteman.contrib.bmunit.BMRule;
 import org.jboss.byteman.contrib.bmunit.BMUnitConfig;
 import org.jboss.byteman.contrib.bmunit.WithByteman;
+import org.jboss.tm.XAResourceWrapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -48,7 +49,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.BDDMockito.doAnswer;
 import static org.mockito.BDDMockito.when;
 
 /**
@@ -61,7 +64,7 @@ import static org.mockito.BDDMockito.when;
 public class GenericRecoveryIT {
 
     @Mock
-    private XAResource xaResource;
+    private XAResourceWrapper xaResource;
 
     @Mock
     private XAResourceRecoveryHelper xaResourceRecoveryHelper;
@@ -147,6 +150,10 @@ public class GenericRecoveryIT {
     }
 
     private void setupXaMocks() throws Exception {
+        // XAResourceWrapper metadata values
+        when(this.xaResource.getJndiName()).thenReturn("mock");
+        when(this.xaResource.getProductName()).thenReturn("Narayana Fake Integration");
+        when(this.xaResource.getProductVersion()).thenReturn("1.0.0");
         List<Xid> xids = new LinkedList<>();
         // Save Xid provided during prepare
         when(this.xaResource.prepare(any(Xid.class)))
@@ -157,6 +164,9 @@ public class GenericRecoveryIT {
         // Return Xids when recovering
         when(this.xaResource.recover(anyInt()))
                 .then(i -> xids.toArray(new Xid[xids.size()]));
+        // Remove Xid provided during commit
+        doAnswer(i -> xids.remove((Xid) i.getArguments()[0]))
+                .when(this.xaResource).commit(any(Xid.class), anyBoolean());
         // Return XAResource when recovering
         when(this.xaResourceRecoveryHelper.getXAResources())
                 .thenReturn(new XAResource[]{ this.xaResource });
