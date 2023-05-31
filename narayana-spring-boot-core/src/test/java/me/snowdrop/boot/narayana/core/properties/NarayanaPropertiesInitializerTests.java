@@ -81,6 +81,10 @@ class NarayanaPropertiesInitializerTests {
                 .getXaResourceOrphanFilterClassNames())
                 .isEqualTo(xaResourceOrphanFilters);
 
+        assertThat(BeanPopulator.getDefaultInstance(JTAEnvironmentBean.class)
+                .getXaResourceRecordWrappingPluginClassName())
+                .isEqualTo("com.arjuna.ats.internal.jbossatx.jta.XAResourceRecordWrappingPluginImpl");
+
         List<String> recoveryModules = Arrays.asList(
                 "com.arjuna.ats.internal.jta.recovery.arjunacore.CommitMarkableResourceRecordRecoveryModule",
                 "com.arjuna.ats.internal.arjuna.recovery.AtomicActionRecoveryModule",

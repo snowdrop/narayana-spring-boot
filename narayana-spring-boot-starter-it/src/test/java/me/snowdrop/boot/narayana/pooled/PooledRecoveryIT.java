@@ -24,7 +24,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 /**
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-@SpringBootTest(classes = TestApplication.class, properties = "narayana.messaginghub.enabled=true")
+@SpringBootTest(classes = TestApplication.class, properties = {
+    "narayana.messaginghub.enabled=true",
+    "narayana.messaginghub.name=jms",
+    "spring.datasource.generateUniqueName=false",
+    "spring.datasource.name=jdbc"
+})
 @EnableAutoConfiguration
 public class PooledRecoveryIT extends GenericRecoveryIT {
 }

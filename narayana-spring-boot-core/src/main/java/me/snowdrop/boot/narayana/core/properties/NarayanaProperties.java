@@ -87,6 +87,11 @@ public class NarayanaProperties {
             "com.arjuna.ats.internal.jta.recovery.arjunacore.JTAActionStatusServiceXAResourceOrphanFilter"));
 
     /**
+     * Wrapping plugin to map from XAResourceWrapper to XAResourceRecord.
+     */
+    private String xaResourceRecordWrappingPlugin = "com.arjuna.ats.internal.jbossatx.jta.XAResourceRecordWrappingPluginImpl";
+
+    /**
      * Comma-separated list of recovery modules.
      */
     private List<String> recoveryModules = new ArrayList<>(Arrays.asList(
@@ -167,6 +172,14 @@ public class NarayanaProperties {
 
     public void setXaResourceOrphanFilters(List<String> xaResourceOrphanFilters) {
         this.xaResourceOrphanFilters = xaResourceOrphanFilters;
+    }
+
+    public String getXaResourceRecordWrappingPlugin() {
+        return this.xaResourceRecordWrappingPlugin;
+    }
+
+    public void setXaResourceRecordWrappingPlugin(String xaResourceRecordWrappingPlugin) {
+        this.xaResourceRecordWrappingPlugin = xaResourceRecordWrappingPlugin;
     }
 
     public List<String> getRecoveryModules() {
