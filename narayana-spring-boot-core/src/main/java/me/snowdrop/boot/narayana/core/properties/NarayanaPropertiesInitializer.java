@@ -40,6 +40,7 @@ public class NarayanaPropertiesInitializer implements InitializingBean {
         this.properties = narayanaProperties;
     }
 
+    @Override
     public void afterPropertiesSet() {
         setNodeIdentifier(this.properties.getTransactionManagerId());
         setXARecoveryNodes(this.properties.getXaRecoveryNodes());
@@ -48,6 +49,7 @@ public class NarayanaPropertiesInitializer implements InitializingBean {
         setDefaultTimeout(this.properties.getDefaultTimeout());
         setPeriodicRecoveryPeriod(this.properties.getPeriodicRecoveryPeriod());
         setRecoveryBackoffPeriod(this.properties.getRecoveryBackoffPeriod());
+        setExpiryScanInterval(this.properties.getExpiryScanInterval());
         setXaResourceOrphanFilters(this.properties.getXaResourceOrphanFilters());
         setXAResourceRecordWrappingPlugin(this.properties.getXaResourceRecordWrappingPlugin());
         setRecoveryModules(this.properties.getRecoveryModules());
@@ -88,6 +90,10 @@ public class NarayanaPropertiesInitializer implements InitializingBean {
 
     private void setRecoveryBackoffPeriod(int recoveryBackoffPeriod) {
         getPopulator(RecoveryEnvironmentBean.class).setRecoveryBackoffPeriod(recoveryBackoffPeriod);
+    }
+
+    private void setExpiryScanInterval(int expiryScanInterval) {
+        getPopulator(RecoveryEnvironmentBean.class).setExpiryScanInterval(expiryScanInterval);
     }
 
     private void setXaResourceOrphanFilters(List<String> xaResourceOrphanFilters) {

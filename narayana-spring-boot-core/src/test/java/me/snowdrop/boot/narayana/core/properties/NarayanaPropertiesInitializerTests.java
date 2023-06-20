@@ -72,6 +72,8 @@ class NarayanaPropertiesInitializerTests {
                 .getPeriodicRecoveryPeriod()).isEqualTo(120);
         assertThat(BeanPopulator.getDefaultInstance(RecoveryEnvironmentBean.class)
                 .getRecoveryBackoffPeriod()).isEqualTo(10);
+        assertThat(BeanPopulator.getDefaultInstance(RecoveryEnvironmentBean.class)
+                .getExpiryScanInterval()).isEqualTo(12);
 
         List<String> xaResourceOrphanFilters = Arrays.asList(
                 "com.arjuna.ats.internal.jta.recovery.arjunacore.JTATransactionLogXAResourceOrphanFilter",
