@@ -69,6 +69,11 @@ public class NarayanaProperties {
     private int recoveryBackoffPeriod = 10;
 
     /**
+     * Interval on which the ObjectStore will be scanned for expired items, in hours.
+     */
+    private int expiryScanInterval = 12;
+
+    /**
      * Database credentials to be used by recovery manager.
      */
     private RecoveryCredentialsProperties recoveryDbCredentials = new RecoveryCredentialsProperties();
@@ -141,6 +146,10 @@ public class NarayanaProperties {
         return this.defaultTimeout;
     }
 
+    public void setDefaultTimeout(int defaultTimeout) {
+        this.defaultTimeout = defaultTimeout;
+    }
+
     public int getPeriodicRecoveryPeriod() {
         return this.periodicRecoveryPeriod;
     }
@@ -157,8 +166,12 @@ public class NarayanaProperties {
         this.recoveryBackoffPeriod = recoveryBackoffPeriod;
     }
 
-    public void setDefaultTimeout(int defaultTimeout) {
-        this.defaultTimeout = defaultTimeout;
+    public int getExpiryScanInterval() {
+        return this.expiryScanInterval;
+    }
+
+    public void setExpiryScanInterval(int expiryScanInterval) {
+        this.expiryScanInterval = expiryScanInterval;
     }
 
     public List<String> getXaResourceOrphanFilters() {
