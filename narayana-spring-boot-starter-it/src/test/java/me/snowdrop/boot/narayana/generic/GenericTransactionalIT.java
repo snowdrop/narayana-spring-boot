@@ -18,9 +18,10 @@ package me.snowdrop.boot.narayana.generic;
 
 import java.time.Duration;
 
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
+import jakarta.transaction.Transaction;
+import jakarta.transaction.TransactionManager;
 
+import io.agroal.springframework.boot.AgroalDataSourceConfiguration;
 import me.snowdrop.boot.narayana.app.EntriesService;
 import me.snowdrop.boot.narayana.app.Entry;
 import me.snowdrop.boot.narayana.app.MessagesService;
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,6 +40,7 @@ import static org.awaitility.Awaitility.await;
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
 @SpringBootTest(classes = TestApplication.class)
+@EnableAutoConfiguration(exclude = AgroalDataSourceConfiguration.class)
 public class GenericTransactionalIT {
 
     @Autowired

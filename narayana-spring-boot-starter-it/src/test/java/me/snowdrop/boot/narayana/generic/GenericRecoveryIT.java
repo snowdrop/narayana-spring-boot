@@ -20,11 +20,14 @@ import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.transaction.TransactionManager;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
+import jakarta.transaction.TransactionManager;
+
+import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
+import io.agroal.springframework.boot.AgroalDataSourceConfiguration;
 import me.snowdrop.boot.narayana.app.EntriesService;
 import me.snowdrop.boot.narayana.app.Entry;
 import me.snowdrop.boot.narayana.app.MessagesService;
@@ -38,6 +41,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,6 +57,7 @@ import static org.mockito.BDDMockito.when;
 @WithByteman
 @BMUnitConfig
 @SpringBootTest(classes = TestApplication.class)
+@EnableAutoConfiguration(exclude = AgroalDataSourceConfiguration.class)
 public class GenericRecoveryIT {
 
     @Mock
@@ -70,9 +75,12 @@ public class GenericRecoveryIT {
     @Autowired
     private TransactionManager transactionManager;
 
+    @Autowired
+    private XARecoveryModule xaRecoveryModule;
+
     @BeforeEach
     void before() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         this.messagesService.clearReceivedMessages();
         this.entriesService.clearEntries();
         BytemanHelper.reset();
@@ -107,6 +115,7 @@ public class GenericRecoveryIT {
 
         await("Wait for the recovery to happen")
                 .atMost(Duration.ofSeconds(30))
+                .pollInterval(Duration.ofSeconds(1))
                 .untilAsserted(() -> {
                     assertMessagesAfterRecovery(this.messagesService.getReceivedMessages());
                     assertEntriesAfterRecovery(this.entriesService.getEntries());
@@ -151,5 +160,6 @@ public class GenericRecoveryIT {
         // Return XAResource when recovering
         when(this.xaResourceRecoveryHelper.getXAResources())
                 .thenReturn(new XAResource[]{ this.xaResource });
+        this.xaRecoveryModule.addXAResourceRecoveryHelper(this.xaResourceRecoveryHelper);
     }
 }

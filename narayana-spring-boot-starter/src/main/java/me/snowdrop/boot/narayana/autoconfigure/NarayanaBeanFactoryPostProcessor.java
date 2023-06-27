@@ -16,7 +16,7 @@
 
 package me.snowdrop.boot.narayana.autoconfigure;
 
-import javax.transaction.TransactionManager;
+import jakarta.transaction.TransactionManager;
 
 import com.arjuna.ats.jbossatx.jta.RecoveryManagerService;
 import org.springframework.beans.BeansException;
@@ -41,8 +41,8 @@ public class NarayanaBeanFactoryPostProcessor implements BeanFactoryPostProcesso
         String[] recoveryManagerServices = beanFactory.getBeanNamesForType(RecoveryManagerService.class, true, false);
         addBeanDependencies(beanFactory, transactionManagers, "javax.sql.DataSource");
         addBeanDependencies(beanFactory, recoveryManagerServices, "javax.sql.DataSource");
-        addBeanDependencies(beanFactory, transactionManagers, "javax.jms.ConnectionFactory");
-        addBeanDependencies(beanFactory, recoveryManagerServices, "javax.jms.ConnectionFactory");
+        addBeanDependencies(beanFactory, transactionManagers, "jakarta.jms.ConnectionFactory");
+        addBeanDependencies(beanFactory, recoveryManagerServices, "jakarta.jms.ConnectionFactory");
     }
 
     private void addBeanDependencies(ConfigurableListableBeanFactory beanFactory, String[] beanNames,

@@ -16,8 +16,8 @@
 
 package me.snowdrop.boot.narayana.core.jms;
 
-import javax.jms.ConnectionFactory;
-import javax.jms.XAConnectionFactory;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.XAConnectionFactory;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;

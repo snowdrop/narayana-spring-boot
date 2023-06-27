@@ -19,7 +19,7 @@ package me.snowdrop.boot.narayana.app;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -19,13 +19,11 @@ package me.snowdrop.narayana.sample;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
 
 import javax.sql.DataSource;
-import javax.transaction.TransactionManager;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
-import me.snowdrop.boot.narayana.core.jdbc.PooledXADataSourceWrapper;
+import me.snowdrop.boot.narayana.core.jdbc.GenericXADataSourceWrapper;
 import org.h2.jdbcx.JdbcDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,22 +32,22 @@ import org.springframework.context.annotation.Configuration;
 public class DataSourceConfiguration {
 
     @Bean(name = "ds1")
-    public DataSource firstDataSource(TransactionManager transactionManager, XARecoveryModule xaRecoveryModule) throws Exception {
+    public DataSource firstDataSource(XARecoveryModule xaRecoveryModule) throws Exception {
         JdbcDataSource h2XaDataSource = new JdbcDataSource();
         h2XaDataSource.setURL("jdbc:h2:mem:ds1;DB_CLOSE_DELAY=-1");
         createDummyTable(h2XaDataSource);
 
-        PooledXADataSourceWrapper wrapper = new PooledXADataSourceWrapper(transactionManager, xaRecoveryModule, new HashMap<>());
+        GenericXADataSourceWrapper wrapper = new GenericXADataSourceWrapper(xaRecoveryModule);
         return wrapper.wrapDataSource(h2XaDataSource);
     }
 
     @Bean(name = "ds2")
-    public DataSource secondDataSource(TransactionManager transactionManager, XARecoveryModule xaRecoveryModule) throws Exception {
+    public DataSource secondDataSource(XARecoveryModule xaRecoveryModule) throws Exception {
         JdbcDataSource h2XaDataSource = new JdbcDataSource();
         h2XaDataSource.setURL("jdbc:h2:mem:ds2;DB_CLOSE_DELAY=-1");
         createDummyTable(h2XaDataSource);
 
-        PooledXADataSourceWrapper wrapper = new PooledXADataSourceWrapper(transactionManager, xaRecoveryModule, new HashMap<>());
+        GenericXADataSourceWrapper wrapper = new GenericXADataSourceWrapper(xaRecoveryModule);
         return wrapper.wrapDataSource(h2XaDataSource);
     }
 

@@ -18,9 +18,9 @@ package me.snowdrop.boot.narayana.autoconfigure;
 
 import java.io.File;
 
-import javax.transaction.TransactionManager;
-import javax.transaction.TransactionSynchronizationRegistry;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.TransactionManager;
+import jakarta.transaction.TransactionSynchronizationRegistry;
+import jakarta.transaction.UserTransaction;
 
 import me.snowdrop.boot.narayana.core.properties.NarayanaProperties;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +30,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.transaction.TransactionManagerCustomizers;
-import org.springframework.boot.autoconfigure.transaction.jta.JtaProperties;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.transaction.jta.JtaTransactionManager;
 
@@ -45,9 +44,6 @@ import static org.mockito.Mockito.verify;
  */
 @ExtendWith(MockitoExtension.class)
 class NarayanaConfigurationTest {
-
-    @Mock
-    private JtaProperties mockJtaProperties;
 
     @Mock
     private ObjectProvider<TransactionManagerCustomizers> mockTransactionManagerCustomizersProvider;
@@ -71,8 +67,7 @@ class NarayanaConfigurationTest {
 
     @BeforeEach
     void before() {
-        this.configuration = new NarayanaConfiguration(this.mockJtaProperties,
-                this.mockTransactionManagerCustomizersProvider);
+        this.configuration = new NarayanaConfiguration(this.mockTransactionManagerCustomizersProvider);
     }
 
     @Test
@@ -83,32 +78,11 @@ class NarayanaConfigurationTest {
     }
 
     @Test
-    void narayanaPropertiesInitializerShouldUseSpringJtaLogDir() {
-        given(this.mockJtaProperties.getLogDir()).willReturn("spring-jta-log-dir");
-        this.configuration.narayanaPropertiesInitializer(this.mockNarayanaProperties);
-        verify(this.mockNarayanaProperties).setLogDir("spring-jta-log-dir");
-    }
-
-    @Test
     void narayanaPropertiesInitializerShouldUseDefaultLogDir() {
         this.configuration.narayanaPropertiesInitializer(this.mockNarayanaProperties);
         File applicationHomeDir = new ApplicationHome().getDir();
         File expectedLogDir = new File(applicationHomeDir, "transaction-logs");
         verify(this.mockNarayanaProperties).setLogDir(expectedLogDir.getAbsolutePath());
-    }
-
-    @Test
-    void narayanaPropertiesInitializerShouldUseNarayanaTransactionManagerId() {
-        given(this.mockNarayanaProperties.getTransactionManagerId()).willReturn("narayana-manager-id");
-        this.configuration.narayanaPropertiesInitializer(this.mockNarayanaProperties);
-        verify(this.mockNarayanaProperties, times(0)).setTransactionManagerId(anyString());
-    }
-
-    @Test
-    void narayanaPropertiesInitializerShouldUseSpringJtaTransactionManagerId() {
-        given(this.mockJtaProperties.getTransactionManagerId()).willReturn("spring-jta-manager-id");
-        this.configuration.narayanaPropertiesInitializer(this.mockNarayanaProperties);
-        verify(this.mockNarayanaProperties).setTransactionManagerId("spring-jta-manager-id");
     }
 
     @Test
@@ -125,8 +99,7 @@ class NarayanaConfigurationTest {
     void jtaTransactionManagerShouldBeCustomized() {
         given(this.mockTransactionManagerCustomizersProvider.getIfAvailable()).willReturn(
                 this.mockTransactionManagerCustomizers);
-        this.configuration = new NarayanaConfiguration(this.mockJtaProperties,
-                this.mockTransactionManagerCustomizersProvider);
+        this.configuration = new NarayanaConfiguration(this.mockTransactionManagerCustomizersProvider);
         JtaTransactionManager jtaTransactionManager = this.configuration.transactionManager(
                 this.mockUserTransaction, this.mockTransactionManager, this.mockTransactionSynchronizationRegistry);
         verify(this.mockTransactionManagerCustomizers).customize(jtaTransactionManager);

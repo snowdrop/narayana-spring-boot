@@ -17,6 +17,7 @@
 package me.snowdrop.boot.narayana.core.jdbc;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -80,8 +81,13 @@ class NarayanaDataSourceTests {
 
     @Test
     void shouldGetConnectionAndCommit() throws SQLException {
+        DatabaseMetaData mockMetaData = mock(DatabaseMetaData.class);
         Connection mockConnection = mock(Connection.class);
         XAConnection mockXaConnection = mock(XAConnection.class);
+        given(mockMetaData.getDriverName()).willReturn("mock");
+        given(mockMetaData.getDriverMajorVersion()).willReturn(1);
+        given(mockMetaData.getDriverMinorVersion()).willReturn(0);
+        given(mockConnection.getMetaData()).willReturn(mockMetaData);
         given(mockXaConnection.getConnection()).willReturn(mockConnection);
         given(this.mockXaDataSource.getXAConnection()).willReturn(mockXaConnection);
 
@@ -103,8 +109,13 @@ class NarayanaDataSourceTests {
     void shouldGetConnectionAndCommitWithCredentials() throws SQLException {
         String username = "testUsername";
         String password = "testPassword";
+        DatabaseMetaData mockMetaData = mock(DatabaseMetaData.class);
         Connection mockConnection = mock(Connection.class);
         XAConnection mockXaConnection = mock(XAConnection.class);
+        given(mockMetaData.getDriverName()).willReturn("mock");
+        given(mockMetaData.getDriverMajorVersion()).willReturn(1);
+        given(mockMetaData.getDriverMinorVersion()).willReturn(0);
+        given(mockConnection.getMetaData()).willReturn(mockMetaData);
         given(mockXaConnection.getConnection()).willReturn(mockConnection);
         given(this.mockXaDataSource.getXAConnection(username, password)).willReturn(mockXaConnection);
 

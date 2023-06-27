@@ -19,9 +19,7 @@ package me.snowdrop.boot.narayana.core.properties;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -102,12 +100,6 @@ public class NarayanaProperties {
      */
     private List<String> expiryScanners = new ArrayList<>(Collections.singletonList(
             "com.arjuna.ats.internal.arjuna.recovery.ExpiredTransactionStatusManagerScanner"));
-
-    /**
-     * Map of DBCP specific properties used if pooled data source wrapper is enabled.
-     * See https://commons.apache.org/proper/commons-dbcp/configuration.html for the list of supported properties.
-     */
-    private Map<String, String> dbcp = new HashMap<>();
 
     /**
      * MessagingHub specific properties used if pooled connection factory wrapper is enabled.
@@ -201,60 +193,12 @@ public class NarayanaProperties {
         this.recoveryDbCredentials = recoveryDbCredentials;
     }
 
-    @Deprecated
-    public String getRecoveryDbUser() {
-        return this.recoveryDbCredentials.getUser();
-    }
-
-    @Deprecated
-    public void setRecoveryDbUser(String recoveryDbUser) {
-        this.recoveryDbCredentials.setUser(recoveryDbUser);
-    }
-
-    @Deprecated
-    public String getRecoveryDbPass() {
-        return this.recoveryDbCredentials.getPassword();
-    }
-
-    @Deprecated
-    public void setRecoveryDbPass(String recoveryDbPass) {
-        this.recoveryDbCredentials.setPassword(recoveryDbPass);
-    }
-
     public RecoveryCredentialsProperties getRecoveryJmsCredentials() {
         return this.recoveryJmsCredentials;
     }
 
     public void setRecoveryJmsCredentials(RecoveryCredentialsProperties recoveryJmsCredentials) {
         this.recoveryJmsCredentials = recoveryJmsCredentials;
-    }
-
-    @Deprecated
-    public String getRecoveryJmsUser() {
-        return this.recoveryJmsCredentials.getUser();
-    }
-
-    @Deprecated
-    public void setRecoveryJmsUser(String recoveryJmsUser) {
-        this.recoveryJmsCredentials.setUser(recoveryJmsUser);
-    }
-
-    @Deprecated
-    public String getRecoveryJmsPass() {
-        return this.recoveryJmsCredentials.getUser();
-    }
-
-    @Deprecated
-    public void setRecoveryJmsPass(String recoveryJmsPass) {
-        this.recoveryJmsCredentials.setPassword(recoveryJmsPass);
-    }
-
-    public Map<String, String> getDbcp() {
-        return this.dbcp;
-    }
-
-    public void setDbcp(Map<String, String> dbcp) {
-        this.dbcp = dbcp;
     }
 
     public MessagingHubConnectionFactoryProperties getMessaginghub() {
