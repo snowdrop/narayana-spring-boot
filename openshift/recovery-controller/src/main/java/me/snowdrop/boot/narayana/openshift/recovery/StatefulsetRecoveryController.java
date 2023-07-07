@@ -25,8 +25,7 @@ import java.util.stream.Collectors;
 
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.apps.StatefulSet;
-import io.fabric8.openshift.client.DefaultOpenShiftClient;
-import io.fabric8.openshift.client.OpenShiftClient;
+import io.fabric8.kubernetes.client.KubernetesClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -44,9 +43,12 @@ public class StatefulsetRecoveryController {
 
     private PodStatusManager podStatusManager;
 
-    public StatefulsetRecoveryController(StatefulsetRecoveryControllerProperties properties, PodStatusManager podStatusManager) {
+    private KubernetesClient kubernetesClient;
+
+    public StatefulsetRecoveryController(StatefulsetRecoveryControllerProperties properties, PodStatusManager podStatusManager, KubernetesClient kubernetesClient) {
         this.properties = Objects.requireNonNull(properties, "No properties set");
         this.podStatusManager = Objects.requireNonNull(podStatusManager, "No podStatusManager set");
+        this.kubernetesClient = Objects.requireNonNull(kubernetesClient, "No kubernetesClient set");
 
         Objects.requireNonNull(properties.getStatefulset(), "statefulset property missing in recovery controller configuration");
         Objects.requireNonNull(properties.getCurrentPodName(), "current-pod-name property missing in recovery controller configuration");
@@ -58,8 +60,6 @@ public class StatefulsetRecoveryController {
         if (this.properties.isEnabledOnAllPods() || isMainStatefulsetPod()) {
             // Run this on the first pod only if not configured differently
 
-            try (OpenShiftClient client = new DefaultOpenShiftClient()) {
-
                 Set<String> pendingPods = this.podStatusManager.getAllPodsStatus().entrySet().stream()
                         .filter(e -> !Optional.of(PodStatus.STOPPED).equals(e.getValue()))
                         .map(Map.Entry::getKey)
@@ -69,7 +69,7 @@ public class StatefulsetRecoveryController {
                 int minReplicas = 0;
                 for (String podName : pendingPods) {
                     LOG.debug("Retrieving pod {} from Openshift", podName);
-                    Pod pod = client.pods().withName(podName).get();
+                    Pod pod = this.kubernetesClient.pods().withName(podName).get();
                     if (pod == null) {
                         // pod has completely been removed from the cluster
                         LOG.debug("Pod {} not found in Openshift", podName);
@@ -88,7 +88,7 @@ public class StatefulsetRecoveryController {
 
                 if (minReplicas > 1) {
                     // One pod is running, this one
-                    StatefulSet statefulSet = client.apps().statefulSets().withName(this.properties.getStatefulset()).get();
+                    StatefulSet statefulSet = this.kubernetesClient.apps().statefulSets().withName(this.properties.getStatefulset()).get();
                     if (statefulSet == null) {
                         LOG.warn("Cannot find StatefulSet named {} in namespace", this.properties.getStatefulset());
                     } else {
@@ -97,7 +97,7 @@ public class StatefulsetRecoveryController {
                             LOG.warn("Pod {}-{} has pending work and must be restored again", this.properties.getStatefulset(), minReplicas - 1);
 
                             LOG.debug("Scaling the statefulset back to {} replicas", minReplicas);
-                            client.apps().statefulSets().withName(this.properties.getStatefulset()).scale(minReplicas);
+                            this.kubernetesClient.apps().statefulSets().withName(this.properties.getStatefulset()).scale(minReplicas);
                             LOG.info("Statefulset {} successfully scaled to {} replicas", this.properties.getStatefulset(), minReplicas);
                         } else if (replicas == 0) {
                             LOG.debug("StatefulSet {} is going to be shut down. Controller will not interfere", this.properties.getStatefulset(), replicas);
@@ -106,8 +106,6 @@ public class StatefulsetRecoveryController {
                         }
                     }
                 }
-            }
-
         }
     }
 
