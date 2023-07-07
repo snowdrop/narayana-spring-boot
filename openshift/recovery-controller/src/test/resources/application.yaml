@@ -1,0 +1,9 @@
+logging.level.me.snowdrop.boot.narayana.openshift.recovery: DEBUG
+
+narayana.log-dir: ./target/tx-object-store
+
+snowdrop.narayana.openshift.recovery.enabled: true
+snowdrop.narayana.openshift.recovery.status-dir: ./target/status
+snowdrop.narayana.openshift.recovery.statefulset: pod
+snowdrop.narayana.openshift.recovery.current-pod-name: pod-0
+snowdrop.narayana.openshift.recovery.period: 1000

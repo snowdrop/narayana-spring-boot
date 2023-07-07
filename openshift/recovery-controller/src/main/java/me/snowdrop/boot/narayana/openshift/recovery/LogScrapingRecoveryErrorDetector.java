@@ -25,9 +25,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
-import io.fabric8.openshift.client.DefaultOpenShiftClient;
-import io.fabric8.openshift.client.OpenShiftClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +46,7 @@ public class LogScrapingRecoveryErrorDetector implements RecoveryErrorDetector {
 
     private Predicate<String> matcher;
 
-    private OpenShiftClient client;
+    private KubernetesClient kubernetesClient;
 
     private LogWatch logWatch;
 
@@ -61,14 +60,15 @@ public class LogScrapingRecoveryErrorDetector implements RecoveryErrorDetector {
 
     private ExecutorService executorService;
 
-    public LogScrapingRecoveryErrorDetector(String podName, String pattern) {
+    public LogScrapingRecoveryErrorDetector(String podName, String pattern, KubernetesClient kubernetesClient) {
         this.podName = Objects.requireNonNull(podName, "pod name cannot be null");
         this.matcher = Pattern.compile(pattern).asPredicate();
+        this.kubernetesClient = Objects.requireNonNull(kubernetesClient, "kubernetes client cannot be null");
     }
 
     @Override
     public void startDetection() {
-        if (this.client == null && this.logWatch == null && this.executorService == null) {
+        if (this.logWatch == null && this.executorService == null) {
             // Printing the START_MESSAGE to limit log scraping
             LOG.info("Log-scraping recovery error detector started: {}", START_MESSAGE);
             this.watchClosed = false;
@@ -76,9 +76,7 @@ public class LogScrapingRecoveryErrorDetector implements RecoveryErrorDetector {
             this.startMessageFound = false;
             this.stopMessageFound = false;
 
-            this.client = new DefaultOpenShiftClient();
-
-            this.logWatch = this.client.pods().withName(this.podName).watchLog();
+            this.logWatch = this.kubernetesClient.pods().withName(this.podName).watchLog();
 
             this.executorService = Executors.newSingleThreadExecutor();
             this.startLogScraping();
@@ -149,15 +147,6 @@ public class LogScrapingRecoveryErrorDetector implements RecoveryErrorDetector {
                 LOG.info("Problem while closing the executor service", ex);
             } finally {
                 this.executorService = null;
-            }
-        }
-        if (this.client != null) {
-            try {
-                this.client.close();
-            } catch (Exception ex) {
-                // ignore
-            } finally {
-                this.client = null;
             }
         }
     }

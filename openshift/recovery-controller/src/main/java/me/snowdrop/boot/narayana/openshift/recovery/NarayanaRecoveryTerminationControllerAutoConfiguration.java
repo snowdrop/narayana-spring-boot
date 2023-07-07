@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import io.fabric8.kubernetes.client.KubernetesClient;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -48,8 +49,8 @@ public class NarayanaRecoveryTerminationControllerAutoConfiguration {
     @Bean
     @ConditionalOnProperty(value = "snowdrop.narayana.openshift.recovery.log-scraping-error-detection-enabled", matchIfMissing = true)
     @ConditionalOnMissingBean(LogScrapingRecoveryErrorDetector.class)
-    public LogScrapingRecoveryErrorDetector logScrapingRecoveryErrorDetector(StatefulsetRecoveryControllerProperties properties) {
-        return new LogScrapingRecoveryErrorDetector(properties.getCurrentPodName(), properties.getLogScrapingErrorDetectionPattern());
+    public LogScrapingRecoveryErrorDetector logScrapingRecoveryErrorDetector(StatefulsetRecoveryControllerProperties properties, KubernetesClient kubernetesClient) {
+        return new LogScrapingRecoveryErrorDetector(properties.getCurrentPodName(), properties.getLogScrapingErrorDetectionPattern(), kubernetesClient);
     }
 
 }

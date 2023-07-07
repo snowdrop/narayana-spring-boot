@@ -16,6 +16,8 @@
 
 package me.snowdrop.boot.narayana.openshift.recovery;
 
+import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.openshift.client.DefaultOpenShiftClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -40,10 +42,16 @@ public class StatefulsetRecoveryControllerAutoConfiguration {
         return new PodStatusManager(properties);
     }
 
+    @Bean(destroyMethod = "close")
+    @ConditionalOnMissingBean(KubernetesClient.class)
+    public KubernetesClient kubernetesClient() {
+        return new DefaultOpenShiftClient();
+    }
+
     @Bean
     @ConditionalOnMissingBean(StatefulsetRecoveryController.class)
-    public StatefulsetRecoveryController statefulsetRecoveryController(StatefulsetRecoveryControllerProperties properties, PodStatusManager podStatusManager) {
-        return new StatefulsetRecoveryController(properties, podStatusManager);
+    public StatefulsetRecoveryController statefulsetRecoveryController(StatefulsetRecoveryControllerProperties properties, PodStatusManager podStatusManager, KubernetesClient kubernetesClient) {
+        return new StatefulsetRecoveryController(properties, podStatusManager, kubernetesClient);
     }
 
 }
