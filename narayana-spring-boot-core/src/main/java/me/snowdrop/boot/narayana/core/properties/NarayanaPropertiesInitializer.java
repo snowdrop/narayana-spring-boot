@@ -52,6 +52,8 @@ public class NarayanaPropertiesInitializer implements InitializingBean {
         setExpiryScanInterval(this.properties.getExpiryScanInterval());
         setXaResourceOrphanFilters(this.properties.getXaResourceOrphanFilters());
         setXAResourceRecordWrappingPlugin(this.properties.getXaResourceRecordWrappingPlugin());
+        setLastResourceOptimisationInterface(this.properties.getLastResourceOptimisationInterface());
+        setCommitMarkableResourceJNDINames(this.properties.getCommitMarkableResourceJNDINames());
         setRecoveryModules(this.properties.getRecoveryModules());
         setExpiryScanners(this.properties.getExpiryScanners());
     }
@@ -102,6 +104,14 @@ public class NarayanaPropertiesInitializer implements InitializingBean {
 
     private void setXAResourceRecordWrappingPlugin(String xaResourceRecordWrappingPlugin) {
         getPopulator(JTAEnvironmentBean.class).setXaResourceRecordWrappingPluginClassName(xaResourceRecordWrappingPlugin);
+    }
+
+    private void setLastResourceOptimisationInterface(String lastResourceOptimisationInterface) {
+        getPopulator(JTAEnvironmentBean.class).setLastResourceOptimisationInterfaceClassName(lastResourceOptimisationInterface);
+    }
+
+    private void setCommitMarkableResourceJNDINames(List<String> commitMarkableResourceJNDINames) {
+        getPopulator(JTAEnvironmentBean.class).setCommitMarkableResourceJNDINames(commitMarkableResourceJNDINames);
     }
 
     private void setRecoveryModules(List<String> recoveryModules) {

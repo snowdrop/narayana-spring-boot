@@ -97,6 +97,16 @@ public class NarayanaProperties {
     private String xaResourceRecordWrappingPlugin = "com.arjuna.ats.internal.jbossatx.jta.XAResourceRecordWrappingPluginImpl";
 
     /**
+     * Interface used for last resource commit optimisation.
+     */
+    private String lastResourceOptimisationInterface = "org.jboss.tm.LastResource";
+
+    /**
+     * JNDI names of CommitMarkableResource instances.
+     */
+    private List<String> commitMarkableResourceJNDINames = new ArrayList<>();
+
+    /**
      * Comma-separated list of recovery modules.
      */
     private List<String> recoveryModules = new ArrayList<>(Arrays.asList(
@@ -193,6 +203,22 @@ public class NarayanaProperties {
 
     public void setXaResourceRecordWrappingPlugin(String xaResourceRecordWrappingPlugin) {
         this.xaResourceRecordWrappingPlugin = xaResourceRecordWrappingPlugin;
+    }
+
+    public String getLastResourceOptimisationInterface() {
+        return this.lastResourceOptimisationInterface;
+    }
+
+    public void setLastResourceOptimisationInterface(String lastResourceOptimisationInterface) {
+        this.lastResourceOptimisationInterface = lastResourceOptimisationInterface;
+    }
+
+    public List<String> getCommitMarkableResourceJNDINames() {
+        return this.commitMarkableResourceJNDINames;
+    }
+
+    public void setCommitMarkableResourceJNDINames(List<String> commitMarkableResourceJNDINames) {
+        this.commitMarkableResourceJNDINames = commitMarkableResourceJNDINames;
     }
 
     public List<String> getRecoveryModules() {
