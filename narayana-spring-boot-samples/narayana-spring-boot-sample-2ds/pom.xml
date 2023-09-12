@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>me.snowdrop</groupId>
+    <groupId>dev.snowdrop</groupId>
     <artifactId>narayana-spring-boot-samples</artifactId>
     <version>2.6.7-SNAPSHOT</version>
   </parent>
@@ -13,7 +13,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>me.snowdrop</groupId>
+      <groupId>dev.snowdrop</groupId>
       <artifactId>narayana-spring-boot-starter</artifactId>
       <version>${project.version}</version>
     </dependency>
