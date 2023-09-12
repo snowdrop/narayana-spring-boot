@@ -1,4 +1,4 @@
-logging.level.me.snowdrop.boot.narayana.openshift.recovery: DEBUG
+logging.level.dev.snowdrop.boot.narayana.openshift.recovery: DEBUG
 
 narayana.log-dir: ./target/tx-object-store
 
