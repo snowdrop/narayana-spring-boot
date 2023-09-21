@@ -94,7 +94,7 @@ public class GenericRecoveryIT {
             targetClass = "com.arjuna.ats.arjuna.coordinator.BasicAction",
             targetMethod = "phase2Commit",
             targetLocation = "ENTRY",
-            helper = "utils.dev.snowdrop.boot.narayana.BytemanHelper",
+            helper = "dev.snowdrop.boot.narayana.utils.BytemanHelper",
             action = "incrementCommitsCounter(); failFirstCommit($0.get_uid());")
     void testCrashBeforeCommit() throws Exception {
         // Setup dummy XAResource and its recovery helper

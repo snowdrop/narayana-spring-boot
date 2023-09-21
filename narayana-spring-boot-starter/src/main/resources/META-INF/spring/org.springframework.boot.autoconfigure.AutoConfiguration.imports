@@ -1,1 +1,1 @@
-autoconfigure.dev.snowdrop.boot.narayana.NarayanaConfiguration
+dev.snowdrop.boot.narayana.autoconfigure.NarayanaConfiguration

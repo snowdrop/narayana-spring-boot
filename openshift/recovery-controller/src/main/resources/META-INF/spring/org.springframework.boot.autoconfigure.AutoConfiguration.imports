@@ -1,3 +1,3 @@
-recovery.openshift.dev.snowdrop.boot.narayana.NarayanaRecoveryTerminationControllerAutoConfiguration
-recovery.openshift.dev.snowdrop.boot.narayana.StatefulsetRecoveryControllerAutoConfiguration
-camel.recovery.openshift.dev.snowdrop.boot.narayana.CamelServiceShutdownControllerAutoConfiguration
+dev.snowdrop.boot.narayana.openshift.recovery.NarayanaRecoveryTerminationControllerAutoConfiguration
+dev.snowdrop.boot.narayana.openshift.recovery.StatefulsetRecoveryControllerAutoConfiguration
+dev.snowdrop.boot.narayana.openshift.recovery.camel.CamelServiceShutdownControllerAutoConfiguration
