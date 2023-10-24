@@ -16,6 +16,7 @@
 
 package dev.snowdrop.boot.narayana.core.jdbc;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -105,10 +106,15 @@ class NarayanaDataSourceTests {
         verify(mockConnection, times(1)).commit();
     }
 
+    private Properties loadAuthProperties() throws IOException {
+        Properties properties = new Properties();
+        properties.load(NarayanaDataSourceTests.class.getClassLoader().getResourceAsStream("datasourcetests.properties"));
+        return properties;
+    }
+
     @Test
-    void shouldGetConnectionAndCommitWithCredentials() throws SQLException {
-        String username = "testUsername";
-        String password = "testPassword";
+    void shouldGetConnectionAndCommitWithCredentials() throws IOException, SQLException {
+        Properties authProperties = loadAuthProperties();
         DatabaseMetaData mockMetaData = mock(DatabaseMetaData.class);
         Connection mockConnection = mock(Connection.class);
         XAConnection mockXaConnection = mock(XAConnection.class);
@@ -117,20 +123,20 @@ class NarayanaDataSourceTests {
         given(mockMetaData.getDriverMinorVersion()).willReturn(0);
         given(mockConnection.getMetaData()).willReturn(mockMetaData);
         given(mockXaConnection.getConnection()).willReturn(mockConnection);
-        given(this.mockXaDataSource.getXAConnection(username, password)).willReturn(mockXaConnection);
+        given(this.mockXaDataSource.getXAConnection(authProperties.getProperty("username"), authProperties.getProperty("username"))).willReturn(mockXaConnection);
 
         // TODO properties not used
         Properties properties = new Properties();
         properties.put(TransactionalDriver.XADataSource, this.mockXaDataSource);
-        properties.put(TransactionalDriver.userName, username);
-        properties.put(TransactionalDriver.password, password);
+        properties.put(TransactionalDriver.userName, authProperties.getProperty("username"));
+        properties.put(TransactionalDriver.password, authProperties.getProperty("username"));
 
-        Connection connection = this.dataSourceBean.getConnection(username, password);
+        Connection connection = this.dataSourceBean.getConnection(authProperties.getProperty("username"), authProperties.getProperty("username"));
         assertThat(connection).isInstanceOf(ConnectionImple.class);
 
         connection.commit();
 
-        verify(this.mockXaDataSource, times(1)).getXAConnection(username, password);
+        verify(this.mockXaDataSource, times(1)).getXAConnection(authProperties.getProperty("username"), authProperties.getProperty("username"));
         verify(mockXaConnection, times(1)).getConnection();
         verify(mockConnection, times(1)).commit();
     }
