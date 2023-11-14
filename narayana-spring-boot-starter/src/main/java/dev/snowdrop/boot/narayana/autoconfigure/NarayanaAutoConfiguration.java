@@ -35,7 +35,7 @@ import dev.snowdrop.boot.narayana.core.properties.NarayanaProperties;
 import dev.snowdrop.boot.narayana.core.properties.NarayanaPropertiesInitializer;
 import org.jboss.tm.XAResourceRecoveryRegistry;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -46,7 +46,6 @@ import org.springframework.boot.jdbc.XADataSourceWrapper;
 import org.springframework.boot.jms.XAConnectionFactoryWrapper;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.jta.JtaTransactionManager;
@@ -57,7 +56,7 @@ import org.springframework.util.StringUtils;
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-@Configuration
+@AutoConfiguration(before = JtaAutoConfiguration.class)
 @EnableConfigurationProperties(NarayanaProperties.class)
 @ConditionalOnProperty(prefix = "spring.jta", value = "enabled", matchIfMissing = true)
 @ConditionalOnClass({
@@ -67,12 +66,11 @@ import org.springframework.util.StringUtils;
         com.arjuna.ats.jta.UserTransaction.class
 })
 @ConditionalOnMissingBean(PlatformTransactionManager.class)
-@AutoConfigureBefore(JtaAutoConfiguration.class)
-public class NarayanaConfiguration {
+public class NarayanaAutoConfiguration {
 
     private final TransactionManagerCustomizers transactionManagerCustomizers;
 
-    public NarayanaConfiguration(ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers) {
+    public NarayanaAutoConfiguration(ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers) {
         this.transactionManagerCustomizers = transactionManagerCustomizers.getIfAvailable();
     }
 
