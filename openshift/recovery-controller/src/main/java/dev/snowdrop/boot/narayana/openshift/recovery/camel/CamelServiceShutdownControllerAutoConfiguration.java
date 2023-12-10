@@ -23,20 +23,16 @@ import org.apache.camel.ServiceStatus;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * Shutdown controller auto-configuration for the Camel context.
  *
  * @author <a href="mailto:nferraro@redhat.com">Nicola Ferraro</a>
  */
-@Configuration
-@AutoConfigureAfter({CamelAutoConfiguration.class})
-@AutoConfigureBefore({NarayanaRecoveryTerminationControllerAutoConfiguration.class})
+@AutoConfiguration(before = NarayanaRecoveryTerminationControllerAutoConfiguration.class, after = CamelAutoConfiguration.class)
 public class CamelServiceShutdownControllerAutoConfiguration {
 
     @Bean
