@@ -18,11 +18,11 @@ package dev.snowdrop.boot.narayana.openshift.recovery;
 
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.openshift.client.DefaultOpenShiftClient;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
@@ -30,7 +30,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  *
  * @author <a href="mailto:nferraro@redhat.com">Nicola Ferraro</a>
  */
-@Configuration
+@AutoConfiguration
 @EnableScheduling
 @EnableConfigurationProperties(StatefulsetRecoveryControllerProperties.class)
 @ConditionalOnProperty("snowdrop.narayana.openshift.recovery.enabled")

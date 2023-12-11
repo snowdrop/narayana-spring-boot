@@ -43,7 +43,7 @@ import static org.mockito.Mockito.verify;
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
 @ExtendWith(MockitoExtension.class)
-class NarayanaConfigurationTest {
+class NarayanaAutoConfigurationTest {
 
     @Mock
     private ObjectProvider<TransactionManagerCustomizers> mockTransactionManagerCustomizersProvider;
@@ -63,11 +63,11 @@ class NarayanaConfigurationTest {
     @Mock
     private TransactionSynchronizationRegistry mockTransactionSynchronizationRegistry;
 
-    private NarayanaConfiguration configuration;
+    private NarayanaAutoConfiguration configuration;
 
     @BeforeEach
     void before() {
-        this.configuration = new NarayanaConfiguration(this.mockTransactionManagerCustomizersProvider);
+        this.configuration = new NarayanaAutoConfiguration(this.mockTransactionManagerCustomizersProvider);
     }
 
     @Test
@@ -99,7 +99,7 @@ class NarayanaConfigurationTest {
     void jtaTransactionManagerShouldBeCustomized() {
         given(this.mockTransactionManagerCustomizersProvider.getIfAvailable()).willReturn(
                 this.mockTransactionManagerCustomizers);
-        this.configuration = new NarayanaConfiguration(this.mockTransactionManagerCustomizersProvider);
+        this.configuration = new NarayanaAutoConfiguration(this.mockTransactionManagerCustomizersProvider);
         JtaTransactionManager jtaTransactionManager = this.configuration.transactionManager(
                 this.mockUserTransaction, this.mockTransactionManager, this.mockTransactionSynchronizationRegistry);
         verify(this.mockTransactionManagerCustomizers).customize(jtaTransactionManager);

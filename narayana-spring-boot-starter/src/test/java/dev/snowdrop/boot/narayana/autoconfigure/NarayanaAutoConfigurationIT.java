@@ -44,7 +44,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-class NarayanaConfigurationIT {
+class NarayanaAutoConfigurationIT {
 
     private AnnotationConfigApplicationContext context;
 
@@ -58,7 +58,7 @@ class NarayanaConfigurationIT {
 
     @Test
     void allDefaultBeansShouldBeLoaded() {
-        this.context = new AnnotationConfigApplicationContext(NarayanaConfiguration.class);
+        this.context = new AnnotationConfigApplicationContext(NarayanaAutoConfiguration.class);
         this.context.getBean(NarayanaBeanFactoryPostProcessor.class);
         this.context.getBean(XADataSourceWrapper.class);
         this.context.getBean(XAConnectionFactoryWrapper.class);
@@ -79,7 +79,7 @@ class NarayanaConfigurationIT {
         PropertiesPropertySource propertySource = new PropertiesPropertySource("test", properties);
 
         this.context = new AnnotationConfigApplicationContext();
-        this.context.register(NarayanaConfiguration.class);
+        this.context.register(NarayanaAutoConfiguration.class);
         this.context.getEnvironment().getPropertySources().addFirst(propertySource);
         this.context.refresh();
 
@@ -96,7 +96,7 @@ class NarayanaConfigurationIT {
         PropertiesPropertySource propertySource = new PropertiesPropertySource("test", properties);
 
         this.context = new AnnotationConfigApplicationContext();
-        this.context.register(NarayanaConfiguration.class);
+        this.context.register(NarayanaAutoConfiguration.class);
         this.context.getEnvironment().getPropertySources().addFirst(propertySource);
         this.context.refresh();
 
@@ -112,7 +112,7 @@ class NarayanaConfigurationIT {
         PropertiesPropertySource propertySource = new PropertiesPropertySource("test", properties);
 
         this.context = new AnnotationConfigApplicationContext();
-        this.context.register(NarayanaConfiguration.class);
+        this.context.register(NarayanaAutoConfiguration.class);
         this.context.getEnvironment().getPropertySources().addFirst(propertySource);
         this.context.refresh();
 
@@ -126,7 +126,7 @@ class NarayanaConfigurationIT {
         PropertiesPropertySource propertySource = new PropertiesPropertySource("test", properties);
 
         this.context = new AnnotationConfigApplicationContext();
-        this.context.register(NarayanaConfiguration.class);
+        this.context.register(NarayanaAutoConfiguration.class);
         this.context.getEnvironment().getPropertySources().addFirst(propertySource);
         this.context.refresh();
 
@@ -141,7 +141,7 @@ class NarayanaConfigurationIT {
         PropertiesPropertySource propertySource = new PropertiesPropertySource("test", properties);
 
         this.context = new AnnotationConfigApplicationContext();
-        this.context.register(NarayanaConfiguration.class);
+        this.context.register(NarayanaAutoConfiguration.class);
         this.context.getEnvironment().getPropertySources().addFirst(propertySource);
         this.context.refresh();
 
