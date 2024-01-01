@@ -9,7 +9,7 @@ By default, Narayana transaction logs are written to a `transaction-logs` direct
 (the directory in which your application jar file resides). You can customize the location of this directory by setting
 a `narayana.log-dir` property in your application.properties file. Properties starting with `narayana` can also be used
 to customize the Narayana configuration. See the
-[NarayanaProperties](narayana-spring-boot-core/src/main/java/me/snowdrop/boot/narayana/core/properties/NarayanaProperties.java)
+[NarayanaProperties](narayana-spring-boot-core/src/main/java/dev/snowdrop/boot/narayana/core/properties/NarayanaProperties.java)
 Javadoc for complete details.
 
 > Only a limited number of Narayana configuration options are exposed via `application.properties`. For a more
