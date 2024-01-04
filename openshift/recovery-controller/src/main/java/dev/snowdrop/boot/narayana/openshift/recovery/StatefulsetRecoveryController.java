@@ -100,7 +100,7 @@ public class StatefulsetRecoveryController {
                             this.kubernetesClient.apps().statefulSets().withName(this.properties.getStatefulset()).scale(minReplicas);
                             LOG.info("Statefulset {} successfully scaled to {} replicas", this.properties.getStatefulset(), minReplicas);
                         } else if (replicas == 0) {
-                            LOG.debug("StatefulSet {} is going to be shut down. Controller will not interfere", this.properties.getStatefulset(), replicas);
+                            LOG.debug("StatefulSet {} is going to be shut down. Controller will not interfere", this.properties.getStatefulset());
                         } else {
                             LOG.debug("StatefulSet {} has a sufficient number of replicas: {} >= {}", this.properties.getStatefulset(), replicas, minReplicas);
                         }
