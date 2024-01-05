@@ -16,11 +16,10 @@
 
 package dev.snowdrop.boot.narayana.openshift.recovery;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import io.fabric8.kubernetes.client.KubernetesClient;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -40,8 +39,8 @@ public class NarayanaRecoveryTerminationControllerAutoConfiguration {
     @Bean(initMethod = "start", destroyMethod = "stop")
     @DependsOn("recoveryManagerService")
     @ConditionalOnMissingBean(NarayanaRecoveryTerminationController.class)
-    public NarayanaRecoveryTerminationController narayanaRecoveryTerminationController(PodStatusManager podStatusManager, Optional<List<ServiceShutdownController>> shutdownControllers, Optional<List<RecoveryErrorDetector>> recoveryErrorDetectors) {
-        return new NarayanaRecoveryTerminationController(podStatusManager, shutdownControllers.orElse(Collections.emptyList()), recoveryErrorDetectors.orElse(Collections.emptyList()));
+    public NarayanaRecoveryTerminationController narayanaRecoveryTerminationController(PodStatusManager podStatusManager, ObjectProvider<List<ServiceShutdownController>> shutdownControllers, ObjectProvider<List<RecoveryErrorDetector>> recoveryErrorDetectors) {
+        return new NarayanaRecoveryTerminationController(podStatusManager, shutdownControllers.getIfAvailable(List::of), recoveryErrorDetectors.getIfAvailable(List::of));
     }
 
     @Bean

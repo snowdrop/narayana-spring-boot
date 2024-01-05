@@ -16,12 +16,15 @@
 
 package dev.snowdrop.boot.narayana.core.jms.pool;
 
+import java.io.Serial;
+
 import jakarta.jms.Connection;
 
 import org.messaginghub.pooled.jms.JmsPoolXAConnectionFactory;
 
 public class JmsPoolNarayanaConnectionFactory extends JmsPoolXAConnectionFactory {
 
+    @Serial
     private static final long serialVersionUID = 1709204966732828338L;
 
     private String name;
