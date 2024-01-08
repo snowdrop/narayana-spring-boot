@@ -106,7 +106,7 @@ public class DataSourceXAResourceRecoveryHelper implements XAResourceRecoveryHel
     @Override
     public Xid[] recover(int flag) throws XAException {
         try {
-            return getDelegate(true).recover(flag);
+            return getDelegate().recover(flag);
         } finally {
             if (flag == XAResource.TMENDRSCAN) {
                 disconnect();
@@ -127,51 +127,51 @@ public class DataSourceXAResourceRecoveryHelper implements XAResourceRecoveryHel
 
     @Override
     public void start(Xid xid, int flags) throws XAException {
-        getDelegate(true).start(xid, flags);
+        getDelegate().start(xid, flags);
     }
 
     @Override
     public void end(Xid xid, int flags) throws XAException {
-        getDelegate(true).end(xid, flags);
+        getDelegate().end(xid, flags);
     }
 
     @Override
     public int prepare(Xid xid) throws XAException {
-        return getDelegate(true).prepare(xid);
+        return getDelegate().prepare(xid);
     }
 
     @Override
     public void commit(Xid xid, boolean onePhase) throws XAException {
-        getDelegate(true).commit(xid, onePhase);
+        getDelegate().commit(xid, onePhase);
     }
 
     @Override
     public void rollback(Xid xid) throws XAException {
-        getDelegate(true).rollback(xid);
+        getDelegate().rollback(xid);
     }
 
     @Override
     public boolean isSameRM(XAResource xaResource) throws XAException {
-        return getDelegate(true).isSameRM(xaResource);
+        return getDelegate().isSameRM(xaResource);
     }
 
     @Override
     public void forget(Xid xid) throws XAException {
-        getDelegate(true).forget(xid);
+        getDelegate().forget(xid);
     }
 
     @Override
     public int getTransactionTimeout() throws XAException {
-        return getDelegate(true).getTransactionTimeout();
+        return getDelegate().getTransactionTimeout();
     }
 
     @Override
     public boolean setTransactionTimeout(int seconds) throws XAException {
-        return getDelegate(true).setTransactionTimeout(seconds);
+        return getDelegate().setTransactionTimeout(seconds);
     }
 
-    private XAResource getDelegate(boolean required) {
-        if (this.delegate == null && required) {
+    private XAResource getDelegate() {
+        if (this.delegate == null) {
             throw new IllegalStateException("Connection has not been opened");
         }
         return this.delegate;

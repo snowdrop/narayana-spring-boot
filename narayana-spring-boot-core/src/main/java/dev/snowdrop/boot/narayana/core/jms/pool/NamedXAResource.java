@@ -77,8 +77,8 @@ public class NamedXAResource implements XAResourceWrapper {
 
     @Override
     public boolean isSameRM(XAResource xaRes) throws XAException {
-        if (xaRes instanceof NamedXAResource) {
-            return getResource().isSameRM(((NamedXAResource) xaRes).getResource());
+        if (xaRes instanceof NamedXAResource namedXaResource) {
+            return getResource().isSameRM((namedXaResource).getResource());
         }
         return false;
     }
