@@ -120,7 +120,7 @@ public class NarayanaProperties {
 
     /**
      * MessagingHub specific properties used if pooled connection factory wrapper is enabled.
-     * See https://github.com/messaginghub/pooled-jms/blob/master/pooled-jms-docs/Configuration.md for the list of supported properties.
+     * See <a href="https://github.com/messaginghub/pooled-jms/blob/master/pooled-jms-docs/Configuration.md">...</a> for the list of supported properties.
      */
     @NestedConfigurationProperty
     private final MessagingHubConnectionFactoryProperties messaginghub = new MessagingHubConnectionFactoryProperties();
