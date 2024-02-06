@@ -16,8 +16,10 @@
 
 package dev.snowdrop.boot.narayana.core.properties;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
-
 import com.arjuna.ats.arjuna.common.CoordinatorEnvironmentBean;
 import com.arjuna.ats.arjuna.common.CoreEnvironmentBean;
 import com.arjuna.ats.arjuna.common.CoreEnvironmentBeanException;
@@ -33,6 +35,8 @@ import org.springframework.beans.factory.InitializingBean;
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
 public class NarayanaPropertiesInitializer implements InitializingBean {
+
+    private static final String HASH_ALGORITHM_FOR_SHORTENING = "SHA-224";
 
     private final NarayanaProperties properties;
 
@@ -59,11 +63,22 @@ public class NarayanaPropertiesInitializer implements InitializingBean {
     }
 
     private void setNodeIdentifier(String nodeIdentifier) {
+        String verifiedNodeIdentifier = nodeIdentifier;
         try {
-            getPopulator(CoreEnvironmentBean.class).setNodeIdentifier(nodeIdentifier);
-        } catch (CoreEnvironmentBeanException e) {
+            if (nodeIdentifier != null && nodeIdentifier.getBytes(StandardCharsets.UTF_8).length > 28) {
+                verifiedNodeIdentifier = shortenNodeIdentifier(nodeIdentifier);
+            }
+
+            getPopulator(CoreEnvironmentBean.class).setNodeIdentifier(verifiedNodeIdentifier);
+        } catch (CoreEnvironmentBeanException | NoSuchAlgorithmException e) {
             throw new IllegalArgumentException(e);
         }
+    }
+
+    private String shortenNodeIdentifier(String nodeIdentifier) throws NoSuchAlgorithmException {
+        final byte[] nodeIdentifierAsBytes = nodeIdentifier.getBytes();
+        MessageDigest messageDigest224 = MessageDigest.getInstance(HASH_ALGORITHM_FOR_SHORTENING);
+        return new String(messageDigest224.digest(nodeIdentifierAsBytes), StandardCharsets.UTF_8);
     }
 
     private void setXARecoveryNodes(List<String> xaRecoveryNodes) {
