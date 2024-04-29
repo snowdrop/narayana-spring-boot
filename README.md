@@ -75,3 +75,9 @@ Deploy:
 ```bash
 mvn release:perform
 ```
+
+Set all modules to new SNAPSHOT version:
+```bash
+mvn versions:set
+mvn versions:commit
+```
