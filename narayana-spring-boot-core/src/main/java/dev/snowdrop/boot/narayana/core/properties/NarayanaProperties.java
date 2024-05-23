@@ -128,7 +128,7 @@ public class NarayanaProperties {
     /**
      * XA recovery nodes.
      */
-    private List<String> xaRecoveryNodes = List.of("1");
+    private List<String> xaRecoveryNodes = List.of();
 
     public String getLogDir() {
         return this.logDir;

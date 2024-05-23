@@ -17,7 +17,6 @@
 package dev.snowdrop.boot.narayana.core.properties;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -56,6 +55,8 @@ class NarayanaPropertiesInitializerTests {
 
         assertThat(BeanPopulator.getDefaultInstance(CoreEnvironmentBean.class)
                 .getNodeIdentifier()).isEqualTo("1");
+        assertThat(BeanPopulator.getDefaultInstance(JTAEnvironmentBean.class)
+                .getXaRecoveryNodes()).containsOnly("1");
         assertThat(BeanPopulator.getDefaultInstance(ObjectStoreEnvironmentBean.class)
                 .getObjectStoreDir()).contains("ObjectStore");
         assertThat(BeanPopulator
@@ -75,7 +76,7 @@ class NarayanaPropertiesInitializerTests {
         assertThat(BeanPopulator.getDefaultInstance(RecoveryEnvironmentBean.class)
                 .getExpiryScanInterval()).isEqualTo(12);
 
-        List<String> xaResourceOrphanFilters = Arrays.asList(
+        List<String> xaResourceOrphanFilters = List.of(
                 "com.arjuna.ats.internal.jta.recovery.arjunacore.JTATransactionLogXAResourceOrphanFilter",
                 "com.arjuna.ats.internal.jta.recovery.arjunacore.JTANodeNameXAResourceOrphanFilter",
                 "com.arjuna.ats.internal.jta.recovery.arjunacore.JTAActionStatusServiceXAResourceOrphanFilter");
@@ -95,7 +96,7 @@ class NarayanaPropertiesInitializerTests {
                 .getCommitMarkableResourceJNDINames())
                 .isEmpty();
 
-        List<String> recoveryModules = Arrays.asList(
+        List<String> recoveryModules = List.of(
                 "com.arjuna.ats.internal.jta.recovery.arjunacore.CommitMarkableResourceRecordRecoveryModule",
                 "com.arjuna.ats.internal.arjuna.recovery.AtomicActionRecoveryModule",
                 "com.arjuna.ats.internal.txoj.recovery.TORecoveryModule",
@@ -103,7 +104,7 @@ class NarayanaPropertiesInitializerTests {
         assertThat(BeanPopulator.getDefaultInstance(RecoveryEnvironmentBean.class)
                 .getRecoveryModuleClassNames()).isEqualTo(recoveryModules);
 
-        List<String> expiryScanners = Arrays.asList(
+        List<String> expiryScanners = List.of(
                 "com.arjuna.ats.internal.arjuna.recovery.ExpiredTransactionStatusManagerScanner");
         assertThat(BeanPopulator.getDefaultInstance(RecoveryEnvironmentBean.class)
                 .getExpiryScannerClassNames()).isEqualTo(expiryScanners);
@@ -115,22 +116,25 @@ class NarayanaPropertiesInitializerTests {
     @Test
     void shouldSetModifiedProperties() {
         NarayanaProperties narayanaProperties = new NarayanaProperties();
-        narayanaProperties.setTransactionManagerId("test-id");
+        narayanaProperties.setTransactionManagerId("test-id-1");
+        narayanaProperties.setXaRecoveryNodes(List.of("test-id-1", "test-id-2"));
         narayanaProperties.setLogDir("test-dir");
         narayanaProperties.setDefaultTimeout(1);
         narayanaProperties.setPeriodicRecoveryPeriod(2);
         narayanaProperties.setRecoveryBackoffPeriod(3);
         narayanaProperties.setOnePhaseCommit(false);
-        narayanaProperties.setXaResourceOrphanFilters(Arrays.asList("test-filter-1", "test-filter-2"));
-        narayanaProperties.setRecoveryModules(Arrays.asList("test-module-1", "test-module-2"));
-        narayanaProperties.setExpiryScanners(Arrays.asList("test-scanner-1", "test-scanner-2"));
+        narayanaProperties.setXaResourceOrphanFilters(List.of("test-filter-1", "test-filter-2"));
+        narayanaProperties.setRecoveryModules(List.of("test-module-1", "test-module-2"));
+        narayanaProperties.setExpiryScanners(List.of("test-scanner-1", "test-scanner-2"));
 
         NarayanaPropertiesInitializer narayanaPropertiesInitializer =
                 new NarayanaPropertiesInitializer(narayanaProperties);
         narayanaPropertiesInitializer.afterPropertiesSet();
 
         assertThat(BeanPopulator.getDefaultInstance(CoreEnvironmentBean.class)
-                .getNodeIdentifier()).isEqualTo("test-id");
+                .getNodeIdentifier()).isEqualTo("test-id-1");
+        assertThat(BeanPopulator.getDefaultInstance(JTAEnvironmentBean.class)
+                .getXaRecoveryNodes()).containsExactly("test-id-1", "test-id-2");
         assertThat(BeanPopulator.getDefaultInstance(ObjectStoreEnvironmentBean.class)
                 .getObjectStoreDir()).isEqualTo("test-dir");
         assertThat(BeanPopulator
@@ -149,12 +153,12 @@ class NarayanaPropertiesInitializerTests {
                 .getRecoveryBackoffPeriod()).isEqualTo(3);
         assertThat(BeanPopulator.getDefaultInstance(JTAEnvironmentBean.class)
                 .getXaResourceOrphanFilterClassNames())
-                .isEqualTo(Arrays.asList("test-filter-1", "test-filter-2"));
+                .isEqualTo(List.of("test-filter-1", "test-filter-2"));
         assertThat(BeanPopulator.getDefaultInstance(RecoveryEnvironmentBean.class)
                 .getRecoveryModuleClassNames())
-                .isEqualTo(Arrays.asList("test-module-1", "test-module-2"));
+                .isEqualTo(List.of("test-module-1", "test-module-2"));
         assertThat(BeanPopulator.getDefaultInstance(RecoveryEnvironmentBean.class)
                 .getExpiryScannerClassNames())
-                .isEqualTo(Arrays.asList("test-scanner-1", "test-scanner-2"));
+                .isEqualTo(List.of("test-scanner-1", "test-scanner-2"));
     }
 }
