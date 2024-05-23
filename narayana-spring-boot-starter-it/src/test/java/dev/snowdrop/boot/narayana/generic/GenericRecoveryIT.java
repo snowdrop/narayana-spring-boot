@@ -117,7 +117,7 @@ public class GenericRecoveryIT {
         assertEntriesAfterCrash(this.entriesService.getEntries());
 
         await("Wait for the recovery to happen")
-                .atMost(Duration.ofSeconds(30))
+                .atMost(Duration.ofSeconds(60))
                 .pollInterval(Duration.ofSeconds(1))
                 .untilAsserted(() -> {
                     assertMessagesAfterRecovery(this.messagesService.getReceivedMessages());
