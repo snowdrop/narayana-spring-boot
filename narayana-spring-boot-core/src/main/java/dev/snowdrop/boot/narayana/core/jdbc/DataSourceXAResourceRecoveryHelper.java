@@ -16,16 +16,12 @@
 
 package dev.snowdrop.boot.narayana.core.jdbc;
 
-import java.sql.SQLException;
-
-import javax.sql.XAConnection;
 import javax.sql.XADataSource;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
 import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
-import org.jboss.logging.Logger;
 
 /**
  * XAResourceRecoveryHelper implementation which gets XIDs, which needs to be recovered, from the database.
@@ -34,19 +30,7 @@ import org.jboss.logging.Logger;
  */
 public class DataSourceXAResourceRecoveryHelper implements XAResourceRecoveryHelper, XAResource {
 
-    private static final XAResource[] NO_XA_RESOURCES = {};
-
-    private static final Logger logger = Logger.getLogger(DataSourceXAResourceRecoveryHelper.class);
-
-    private final XADataSource xaDataSource;
-
-    private final String user;
-
-    private final String password;
-
-    private XAConnection xaConnection;
-
-    private XAResource delegate;
+    private final ConnectionManager connectionManager;
 
     /**
      * Create a new {@link DataSourceXAResourceRecoveryHelper} instance.
@@ -65,9 +49,7 @@ public class DataSourceXAResourceRecoveryHelper implements XAResourceRecoveryHel
      * @param password     the database password or {@code null}
      */
     public DataSourceXAResourceRecoveryHelper(XADataSource xaDataSource, String user, String password) {
-        this.xaDataSource = xaDataSource;
-        this.user = user;
-        this.password = password;
+        this.connectionManager = new ConnectionManager(xaDataSource, user, password);
     }
 
     @Override
@@ -77,104 +59,70 @@ public class DataSourceXAResourceRecoveryHelper implements XAResourceRecoveryHel
 
     @Override
     public XAResource[] getXAResources() {
-        if (connect()) {
-            return new XAResource[]{ this };
-        }
-        return NO_XA_RESOURCES;
-    }
-
-    private boolean connect() {
-        if (this.delegate == null) {
+        if (!this.connectionManager.isConnected()) {
             try {
-                this.xaConnection = getXaConnection();
-                this.delegate = this.xaConnection.getXAResource();
-            } catch (SQLException ex) {
-                logger.warn("Failed to create connection", ex);
-                return false;
+                this.connectionManager.connect();
+            } catch (XAException ignored) {
+                return new XAResource[0];
             }
         }
-        return true;
-    }
 
-    private XAConnection getXaConnection() throws SQLException {
-        if (this.user == null && this.password == null) {
-            return this.xaDataSource.getXAConnection();
-        }
-        return this.xaDataSource.getXAConnection(this.user, this.password);
+        return new XAResource[]{this};
     }
 
     @Override
     public Xid[] recover(int flag) throws XAException {
         try {
-            return getDelegate().recover(flag);
+            return this.connectionManager.connectAndApply(delegate -> delegate.recover(flag));
         } finally {
             if (flag == XAResource.TMENDRSCAN) {
-                disconnect();
+                this.connectionManager.disconnect();
             }
-        }
-    }
-
-    private void disconnect() throws XAException {
-        try {
-            this.xaConnection.close();
-        } catch (SQLException e) {
-            logger.warn("Failed to close connection", e);
-        } finally {
-            this.xaConnection = null;
-            this.delegate = null;
         }
     }
 
     @Override
     public void start(Xid xid, int flags) throws XAException {
-        getDelegate().start(xid, flags);
+        this.connectionManager.connectAndAccept(delegate -> delegate.start(xid, flags));
     }
 
     @Override
     public void end(Xid xid, int flags) throws XAException {
-        getDelegate().end(xid, flags);
+        this.connectionManager.connectAndAccept(delegate -> delegate.end(xid, flags));
     }
 
     @Override
     public int prepare(Xid xid) throws XAException {
-        return getDelegate().prepare(xid);
+        return this.connectionManager.connectAndApply(delegate -> delegate.prepare(xid));
     }
 
     @Override
     public void commit(Xid xid, boolean onePhase) throws XAException {
-        getDelegate().commit(xid, onePhase);
+        this.connectionManager.connectAndAccept(delegate -> delegate.commit(xid, onePhase));
     }
 
     @Override
     public void rollback(Xid xid) throws XAException {
-        getDelegate().rollback(xid);
+        this.connectionManager.connectAndAccept(delegate -> delegate.rollback(xid));
     }
 
     @Override
     public boolean isSameRM(XAResource xaResource) throws XAException {
-        return getDelegate().isSameRM(xaResource);
+        return this.connectionManager.connectAndApply(delegate -> delegate.isSameRM(xaResource));
     }
 
     @Override
     public void forget(Xid xid) throws XAException {
-        getDelegate().forget(xid);
+        this.connectionManager.connectAndAccept(delegate -> delegate.forget(xid));
     }
 
     @Override
     public int getTransactionTimeout() throws XAException {
-        return getDelegate().getTransactionTimeout();
+        return this.connectionManager.connectAndApply(XAResource::getTransactionTimeout);
     }
 
     @Override
     public boolean setTransactionTimeout(int seconds) throws XAException {
-        return getDelegate().setTransactionTimeout(seconds);
+        return this.connectionManager.connectAndApply(delegate -> delegate.setTransactionTimeout(seconds));
     }
-
-    private XAResource getDelegate() {
-        if (this.delegate == null) {
-            throw new IllegalStateException("Connection has not been opened");
-        }
-        return this.delegate;
-    }
-
 }
