@@ -32,7 +32,7 @@ import dev.snowdrop.boot.narayana.app.Entry;
 import dev.snowdrop.boot.narayana.app.MessagesService;
 import dev.snowdrop.boot.narayana.app.TestApplication;
 import dev.snowdrop.boot.narayana.utils.BytemanHelper;
-import io.agroal.springframework.boot.AgroalDataSourceConfiguration;
+import io.agroal.springframework.boot.AgroalDataSourceAutoConfiguration;
 import org.jboss.byteman.contrib.bmunit.BMRule;
 import org.jboss.byteman.contrib.bmunit.BMUnitConfig;
 import org.jboss.byteman.contrib.bmunit.WithByteman;
@@ -60,7 +60,7 @@ import static org.mockito.BDDMockito.when;
 @WithByteman
 @BMUnitConfig
 @SpringBootTest(classes = TestApplication.class)
-@EnableAutoConfiguration(exclude = AgroalDataSourceConfiguration.class)
+@EnableAutoConfiguration(exclude = AgroalDataSourceAutoConfiguration.class)
 public class GenericRecoveryIT {
 
     @Mock
@@ -117,7 +117,7 @@ public class GenericRecoveryIT {
         assertEntriesAfterCrash(this.entriesService.getEntries());
 
         await("Wait for the recovery to happen")
-                .atMost(Duration.ofSeconds(60))
+                .atMost(Duration.ofSeconds(30))
                 .pollInterval(Duration.ofSeconds(1))
                 .untilAsserted(() -> {
                     assertMessagesAfterRecovery(this.messagesService.getReceivedMessages());
