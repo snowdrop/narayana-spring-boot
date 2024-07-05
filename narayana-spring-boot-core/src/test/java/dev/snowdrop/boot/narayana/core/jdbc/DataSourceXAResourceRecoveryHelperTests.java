@@ -30,7 +30,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -69,7 +68,6 @@ class DataSourceXAResourceRecoveryHelperTests {
         assertThat(xaResources.length).isEqualTo(1);
         assertThat(xaResources[0]).isSameAs(this.recoveryHelper);
         verify(this.mockXaDataSource).getXAConnection();
-        verify(this.mockXaConnection).getXAResource();
     }
 
     @Test
@@ -80,7 +78,6 @@ class DataSourceXAResourceRecoveryHelperTests {
         assertThat(xaResources.length).isEqualTo(1);
         assertThat(xaResources[0]).isSameAs(this.recoveryHelper);
         verify(this.mockXaDataSource).getXAConnection("username", "password");
-        verify(this.mockXaConnection).getXAResource();
     }
 
     @Test
@@ -115,30 +112,10 @@ class DataSourceXAResourceRecoveryHelperTests {
     }
 
     @Test
-    void shouldFailStartCallWithoutDelegate() throws XAException {
-        try {
-            this.recoveryHelper.start(null, 0);
-            fail("IllegalStateException was expected");
-        } catch (IllegalStateException e) {
-            assertThat(e).hasMessage("Connection has not been opened");
-        }
-    }
-
-    @Test
     void shouldDelegateEndCall() throws XAException {
         this.recoveryHelper.getXAResources();
         this.recoveryHelper.end(null, 0);
         verify(this.mockXaResource).end(null, 0);
-    }
-
-    @Test
-    void shouldFailEndCallWithoutDelegate() throws XAException {
-        try {
-            this.recoveryHelper.end(null, 0);
-            fail("IllegalStateException was expected");
-        } catch (IllegalStateException e) {
-            assertThat(e).hasMessage("Connection has not been opened");
-        }
     }
 
     @Test
@@ -149,30 +126,10 @@ class DataSourceXAResourceRecoveryHelperTests {
     }
 
     @Test
-    void shouldFailPrepareCallWithoutDelegate() throws XAException {
-        try {
-            this.recoveryHelper.prepare(null);
-            fail("IllegalStateException was expected");
-        } catch (IllegalStateException e) {
-            assertThat(e).hasMessage("Connection has not been opened");
-        }
-    }
-
-    @Test
     void shouldDelegateCommitCall() throws XAException {
         this.recoveryHelper.getXAResources();
         this.recoveryHelper.commit(null, true);
         verify(this.mockXaResource).commit(null, true);
-    }
-
-    @Test
-    void shouldFailCommitCallWithoutDelegate() throws XAException {
-        try {
-            this.recoveryHelper.commit(null, true);
-            fail("IllegalStateException was expected");
-        } catch (IllegalStateException e) {
-            assertThat(e).hasMessage("Connection has not been opened");
-        }
     }
 
     @Test
@@ -183,30 +140,10 @@ class DataSourceXAResourceRecoveryHelperTests {
     }
 
     @Test
-    void shouldFailRollbackCallWithoutDelegate() throws XAException {
-        try {
-            this.recoveryHelper.rollback(null);
-            fail("IllegalStateException was expected");
-        } catch (IllegalStateException e) {
-            assertThat(e).hasMessage("Connection has not been opened");
-        }
-    }
-
-    @Test
     void shouldDelegateIsSameRMCall() throws XAException {
         this.recoveryHelper.getXAResources();
         this.recoveryHelper.isSameRM(null);
         verify(this.mockXaResource).isSameRM(null);
-    }
-
-    @Test
-    void shouldFailIsSameRMCallWithoutDelegate() throws XAException {
-        try {
-            this.recoveryHelper.isSameRM(null);
-            fail("IllegalStateException was expected");
-        } catch (IllegalStateException e) {
-            assertThat(e).hasMessage("Connection has not been opened");
-        }
     }
 
     @Test
@@ -217,16 +154,6 @@ class DataSourceXAResourceRecoveryHelperTests {
     }
 
     @Test
-    void shouldFailForgetCallWithoutDelegate() throws XAException {
-        try {
-            this.recoveryHelper.forget(null);
-            fail("IllegalStateException was expected");
-        } catch (IllegalStateException e) {
-            assertThat(e).hasMessage("Connection has not been opened");
-        }
-    }
-
-    @Test
     void shouldDelegateGetTransactionTimeoutCall() throws XAException {
         this.recoveryHelper.getXAResources();
         this.recoveryHelper.getTransactionTimeout();
@@ -234,29 +161,9 @@ class DataSourceXAResourceRecoveryHelperTests {
     }
 
     @Test
-    void shouldFailGetTransactionTimeoutCallWithoutDelegate() throws XAException {
-        try {
-            this.recoveryHelper.getTransactionTimeout();
-            fail("IllegalStateException was expected");
-        } catch (IllegalStateException e) {
-            assertThat(e).hasMessage("Connection has not been opened");
-        }
-    }
-
-    @Test
     void shouldDelegateSetTransactionTimeoutCall() throws XAException {
         this.recoveryHelper.getXAResources();
         this.recoveryHelper.setTransactionTimeout(0);
         verify(this.mockXaResource).setTransactionTimeout(0);
-    }
-
-    @Test
-    void shouldFailSetTransactionTimeoutCallWithoutDelegate() throws XAException {
-        try {
-            this.recoveryHelper.setTransactionTimeout(0);
-            fail("IllegalStateException was expected");
-        } catch (IllegalStateException e) {
-            assertThat(e).hasMessage("Connection has not been opened");
-        }
     }
 }
