@@ -16,6 +16,9 @@
 
 package dev.snowdrop.boot.narayana.core.properties;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import com.arjuna.ats.arjuna.common.CoordinatorEnvironmentBean;
@@ -34,6 +37,8 @@ import org.springframework.beans.factory.InitializingBean;
  */
 public class NarayanaPropertiesInitializer implements InitializingBean {
 
+    private static final String HASH_ALGORITHM_FOR_SHORTENING = "SHA-224";
+
     private final NarayanaProperties properties;
 
     public NarayanaPropertiesInitializer(NarayanaProperties narayanaProperties) {
@@ -42,7 +47,7 @@ public class NarayanaPropertiesInitializer implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        setNodeIdentifier(this.properties.getTransactionManagerId());
+        setNodeIdentifier(this.properties.getNodeIdentifier(), this.properties.isShortenNodeIdentifierIfNecessary());
         setXARecoveryNodes(this.properties.getXaRecoveryNodes());
         setObjectStoreDir(this.properties.getLogDir());
         setCommitOnePhase(this.properties.isOnePhaseCommit());
@@ -58,12 +63,24 @@ public class NarayanaPropertiesInitializer implements InitializingBean {
         setExpiryScanners(this.properties.getExpiryScanners());
     }
 
-    private void setNodeIdentifier(String nodeIdentifier) {
+    private void setNodeIdentifier(String nodeIdentifier, boolean shortenNodeIdentifierIfNecessary) {
         try {
-            getPopulator(CoreEnvironmentBean.class).setNodeIdentifier(nodeIdentifier);
-        } catch (CoreEnvironmentBeanException e) {
+            if (nodeIdentifier != null
+                    && nodeIdentifier.getBytes(StandardCharsets.UTF_8).length > 28
+                    && shortenNodeIdentifierIfNecessary) {
+                getPopulator(CoreEnvironmentBean.class).setNodeIdentifier(shortenNodeIdentifier(nodeIdentifier));
+            } else {
+                getPopulator(CoreEnvironmentBean.class).setNodeIdentifier(nodeIdentifier);
+            }
+        } catch (CoreEnvironmentBeanException | NoSuchAlgorithmException e) {
             throw new IllegalArgumentException(e);
         }
+    }
+
+    private byte[] shortenNodeIdentifier(String nodeIdentifier) throws NoSuchAlgorithmException {
+        byte[] nodeIdentifierAsBytes = nodeIdentifier.getBytes(StandardCharsets.UTF_8);
+        MessageDigest messageDigest224 = MessageDigest.getInstance(HASH_ALGORITHM_FOR_SHORTENING);
+        return messageDigest224.digest(nodeIdentifierAsBytes);
     }
 
     private void setXARecoveryNodes(List<String> xaRecoveryNodes) {

@@ -41,9 +41,14 @@ public class NarayanaProperties {
     private String logDir;
 
     /**
-     * Unique transaction manager id.
+     * Unique node identifier.
      */
-    private String transactionManagerId = "1";
+    private String nodeIdentifier = "1";
+
+    /**
+     * Shorten node identifier if exceed a length of 28 bytes.
+     */
+    private boolean shortenNodeIdentifierIfNecessary = false;
 
     /**
      * Enable one phase commit optimization.
@@ -138,12 +143,30 @@ public class NarayanaProperties {
         this.logDir = logDir;
     }
 
+    @Deprecated(forRemoval = true)
     public String getTransactionManagerId() {
-        return this.transactionManagerId;
+        return getNodeIdentifier();
     }
 
-    public void setTransactionManagerId(String transactionManagerId) {
-        this.transactionManagerId = transactionManagerId;
+    @Deprecated(forRemoval = true)
+    public void setTransactionManagerId(String nodeIdentifier) {
+        setNodeIdentifier(nodeIdentifier);
+    }
+
+    public String getNodeIdentifier() {
+        return this.nodeIdentifier;
+    }
+
+    public void setNodeIdentifier(String nodeIdentifier) {
+        this.nodeIdentifier = nodeIdentifier;
+    }
+
+    public boolean isShortenNodeIdentifierIfNecessary() {
+        return this.shortenNodeIdentifierIfNecessary;
+    }
+
+    public void setShortenNodeIdentifierIfNecessary(boolean shortenNodeIdentifierIfNecessary) {
+        this.shortenNodeIdentifierIfNecessary = shortenNodeIdentifierIfNecessary;
     }
 
     public boolean isOnePhaseCommit() {

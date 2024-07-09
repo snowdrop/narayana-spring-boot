@@ -116,7 +116,7 @@ class NarayanaPropertiesInitializerTests {
     @Test
     void shouldSetModifiedProperties() {
         NarayanaProperties narayanaProperties = new NarayanaProperties();
-        narayanaProperties.setTransactionManagerId("test-id-1");
+        narayanaProperties.setNodeIdentifier("test-id-1");
         narayanaProperties.setXaRecoveryNodes(List.of("test-id-1", "test-id-2"));
         narayanaProperties.setLogDir("test-dir");
         narayanaProperties.setDefaultTimeout(1);
@@ -160,5 +160,19 @@ class NarayanaPropertiesInitializerTests {
         assertThat(BeanPopulator.getDefaultInstance(RecoveryEnvironmentBean.class)
                 .getExpiryScannerClassNames())
                 .isEqualTo(List.of("test-scanner-1", "test-scanner-2"));
+    }
+
+    @Test
+    void shouldSetShortenNodeIdentifier() {
+        NarayanaProperties narayanaProperties = new NarayanaProperties();
+        narayanaProperties.setNodeIdentifier("x".repeat(30));
+
+        narayanaProperties.setShortenNodeIdentifierIfNecessary(true);
+        NarayanaPropertiesInitializer narayanaPropertiesInitializer =
+                new NarayanaPropertiesInitializer(narayanaProperties);
+        narayanaPropertiesInitializer.afterPropertiesSet();
+
+        assertThat(BeanPopulator.getDefaultInstance(CoreEnvironmentBean.class)
+                .getNodeIdentifierBytes().length).isEqualTo(28);
     }
 }
