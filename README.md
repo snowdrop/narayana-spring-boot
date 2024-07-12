@@ -1,3 +1,7 @@
+[![Version](https://img.shields.io/maven-central/v/dev.snowdrop/narayana-spring-boot-parent?logo=apache-maven&style=for-the-badge)](https://search.maven.org/artifact/dev.snowdrop/narayana-spring-boot-parent)
+[![GitHub Actions Status](<https://img.shields.io/github/actions/workflow/status/snowdrop/narayana-spring-boot/test.yml?branch=main&logo=GitHub&style=for-the-badge>)](https://github.com/snowdrop/narayana-spring-boot/actions/workflows/test.yml)
+[![License](https://img.shields.io/github/license/snowdrop/narayana-spring-boot?style=for-the-badge&logo=apache)](https://www.apache.org/licenses/LICENSE-2.0)
+
 # Narayana Spring Boot
 
 Narayana is a popular open source JTA transaction manager implementation supported by Red Hat.
