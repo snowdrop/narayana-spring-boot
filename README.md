@@ -9,6 +9,14 @@ You can use the `narayana-spring-boot-starter` starter to add the appropriate Na
 Spring Boot automatically configures Narayana and post-processes your beans to ensure that startup and shutdown ordering
 is correct.
 
+```
+<dependency>
+    <groupId>dev.snowdrop</groupId>
+    <artifactId>narayana-spring-boot-starter</artifactId>
+    <version>RELEASE</version>
+</dependency>
+```
+
 By default, Narayana transaction logs are written to a `transaction-logs` directory in your application home directory
 (the directory in which your application jar file resides). You can customize the location of this directory by setting
 a `narayana.log-dir` property in your application.properties file. Properties starting with `narayana` can also be used
