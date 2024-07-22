@@ -19,6 +19,8 @@ package dev.snowdrop.boot.narayana.core.properties;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 import com.arjuna.ats.arjuna.common.CoordinatorEnvironmentBean;
@@ -77,10 +79,13 @@ public class NarayanaPropertiesInitializer implements InitializingBean {
         }
     }
 
-    private byte[] shortenNodeIdentifier(String nodeIdentifier) throws NoSuchAlgorithmException {
+    private String shortenNodeIdentifier(String nodeIdentifier) throws NoSuchAlgorithmException {
         byte[] nodeIdentifierAsBytes = nodeIdentifier.getBytes(StandardCharsets.UTF_8);
         MessageDigest messageDigest224 = MessageDigest.getInstance(HASH_ALGORITHM_FOR_SHORTENING);
-        return messageDigest224.digest(nodeIdentifierAsBytes);
+        byte[] hashedByteArray = messageDigest224.digest(nodeIdentifierAsBytes);
+        byte[] base64Result = Base64.getEncoder().encode(hashedByteArray);
+        byte[] slice = Arrays.copyOfRange(base64Result, 0, 28);
+        return new String(slice, StandardCharsets.UTF_8);
     }
 
     private void setXARecoveryNodes(List<String> xaRecoveryNodes) {

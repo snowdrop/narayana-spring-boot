@@ -9,7 +9,7 @@ You can use the `narayana-spring-boot-starter` starter to add the appropriate Na
 Spring Boot automatically configures Narayana and post-processes your beans to ensure that startup and shutdown ordering
 is correct.
 
-```
+```xml
 <dependency>
     <groupId>dev.snowdrop</groupId>
     <artifactId>narayana-spring-boot-starter</artifactId>
@@ -31,8 +31,8 @@ Narayana project [documentation](http://narayana.io/docs/project/index.html).
 > To ensure that multiple transaction managers can safely coordinate the same resource managers, each Narayana instance
 must be configured with a unique ID. By default, this ID is set to 1. To ensure uniqueness in production, you should
 configure the `narayana.node-identifier` property with a different value for each instance of your application. This value
-must not exceed a length of 28 bytes. To ensure that the value is shorten to a valid length by hashing with SHA-224,
-configure `narayana.shorten-node-identifier-if-necessary` property to true.
+must not exceed a length of 28 bytes. To ensure that the value is shorten to a valid length by hashing with SHA-224 and encoding
+with base64, configure `narayana.shorten-node-identifier-if-necessary` property to true.
 
 # Using databases
 
@@ -42,7 +42,7 @@ By default Narayana Transactional driver is used to enlist a relational database
 
 If you need a more sophisticated connection management, we advice you to use [agroal-spring-boot-starter](https://agroal.github.io)
 which provides connection pooling and many other features. To enable Agroal add the following dependency to your application configuration:
-```
+```xml
 <dependency>
     <groupId>io.agroal</groupId>
     <artifactId>agroal-spring-boot-starter</artifactId>
@@ -63,11 +63,11 @@ By default Narayana Connection Proxy around the JMS connection factory is used w
 
 If you need a more sophisticated connection management, you can enable MessagingHub support which provides connection pooling
 and many other features. To enable MessagingHub add the following property to you application configuration:
-```
+```properties
 narayana.messaginghub.enabled=true
 ```
 All MessagingHub configuration properties described in its [documentation](https://github.com/messaginghub/pooled-jms/blob/master/pooled-jms-docs/Configuration.md) are mapped with a prefix `narayana.messaginghub`. So for example if you'd like to set an max connections pool size to 10, you could do that by adding this entry to your application configuration:
-```
+```properties
 narayana.messaginghub.maxConnections=10
 ```
 
@@ -76,22 +76,22 @@ narayana.messaginghub.maxConnections=10
 ## Manually
 
 Dry run:
-```bash
+```sh
 mvn release:prepare -DdryRun
 ```
 
 Tag:
-```bash
+```sh
 mvn release:prepare
 ```
 
 Deploy:
-```bash
+```sh
 mvn release:perform
 ```
 
 Set all modules to new SNAPSHOT version:
-```bash
+```sh
 mvn versions:set
 mvn versions:commit
 ```
