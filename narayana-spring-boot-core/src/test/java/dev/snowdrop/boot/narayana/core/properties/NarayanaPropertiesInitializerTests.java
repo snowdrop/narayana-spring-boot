@@ -17,6 +17,7 @@
 package dev.snowdrop.boot.narayana.core.properties;
 
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -173,6 +174,6 @@ class NarayanaPropertiesInitializerTests {
         narayanaPropertiesInitializer.afterPropertiesSet();
 
         assertThat(BeanPopulator.getDefaultInstance(CoreEnvironmentBean.class)
-                .getNodeIdentifierBytes().length).isEqualTo(28);
+                .getNodeIdentifier().getBytes(StandardCharsets.UTF_8)).hasSize(28);
     }
 }
