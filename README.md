@@ -34,6 +34,21 @@ configure the `narayana.node-identifier` property with a different value for eac
 must not exceed a length of 28 bytes. To ensure that the value is shorten to a valid length by hashing with SHA-224 and encoding
 with base64, configure `narayana.shorten-node-identifier-if-necessary` property to true.
 
+# Batch application
+
+If you are running your Spring Boot application as a batch program, you'll have to explicitly call exit (`SIGTERM`) on your application to proper shutdown.
+This is needed because of Narayana is running periodic recovery in a non-daemon background thread.
+
+This could be achieved with the following code example:
+```java
+@SpringBootApplication
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.exit(SpringApplication.run(Application.class, args));
+    }
+}
+```
+
 # Using databases
 
 By default Narayana Transactional driver is used to enlist a relational database to a JTA transaction which provides a basic XAResource enlistment and recovery.
