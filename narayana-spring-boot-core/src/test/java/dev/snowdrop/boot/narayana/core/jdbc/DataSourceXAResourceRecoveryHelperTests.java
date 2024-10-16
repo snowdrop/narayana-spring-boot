@@ -43,10 +43,10 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class DataSourceXAResourceRecoveryHelperTests {
 
-    @Mock(lenient = true)
+    @Mock(strictness = Mock.Strictness.LENIENT)
     private XADataSource mockXaDataSource;
 
-    @Mock(lenient = true)
+    @Mock(strictness = Mock.Strictness.LENIENT)
     private XAConnection mockXaConnection;
 
     @Mock
@@ -65,7 +65,7 @@ class DataSourceXAResourceRecoveryHelperTests {
     @Test
     void shouldCreateConnectionAndGetXAResource() throws SQLException {
         XAResource[] xaResources = this.recoveryHelper.getXAResources();
-        assertThat(xaResources.length).isEqualTo(1);
+        assertThat(xaResources).hasSize(1);
         assertThat(xaResources[0]).isSameAs(this.recoveryHelper);
         verify(this.mockXaDataSource).getXAConnection();
     }
@@ -75,7 +75,7 @@ class DataSourceXAResourceRecoveryHelperTests {
         given(this.mockXaDataSource.getXAConnection(anyString(), anyString())).willReturn(this.mockXaConnection);
         this.recoveryHelper = new DataSourceXAResourceRecoveryHelper(this.mockXaDataSource, "username", "password");
         XAResource[] xaResources = this.recoveryHelper.getXAResources();
-        assertThat(xaResources.length).isEqualTo(1);
+        assertThat(xaResources).hasSize(1);
         assertThat(xaResources[0]).isSameAs(this.recoveryHelper);
         verify(this.mockXaDataSource).getXAConnection("username", "password");
     }
@@ -84,7 +84,7 @@ class DataSourceXAResourceRecoveryHelperTests {
     void shouldFailToCreateConnectionAndNotGetXAResource() throws SQLException {
         given(this.mockXaDataSource.getXAConnection()).willThrow(new SQLException("Test exception"));
         XAResource[] xaResources = this.recoveryHelper.getXAResources();
-        assertThat(xaResources.length).isEqualTo(0);
+        assertThat(xaResources).isEmpty();
         verify(this.mockXaDataSource).getXAConnection();
         verify(this.mockXaConnection, times(0)).getXAResource();
     }
