@@ -32,7 +32,8 @@ Narayana project [documentation](http://narayana.io/docs/project/index.html).
 must be configured with a unique ID. By default, this ID is set to 1. To ensure uniqueness in production, you should
 configure the `narayana.node-identifier` property with a different value for each instance of your application. This value
 must not exceed a length of 28 bytes. To ensure that the value is shorten to a valid length by hashing with SHA-224 and encoding
-with base64, configure `narayana.shorten-node-identifier-if-necessary` property to true.
+with base64, configure `narayana.shorten-node-identifier-if-necessary` property to true. Be aware, this may result in duplicate
+strings which break the uniqueness that is mandatory for safe transaction usage!
 
 # Batch application
 
