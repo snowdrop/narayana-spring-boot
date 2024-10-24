@@ -128,13 +128,13 @@ public class GenericRecoveryIT {
     protected void assertEntriesAfterCrash(List<Entry> entries) {
         assertThat(entries)
                 .as("No entry should exist")
-                .hasSize(0);
+                .isEmpty();
     }
 
     protected void assertMessagesAfterCrash(List<String> messages) {
         assertThat(messages)
                 .as("No message should exist")
-                .hasSize(0);
+                .isEmpty();
     }
 
     protected void assertEntriesAfterRecovery(List<Entry> entries) {
