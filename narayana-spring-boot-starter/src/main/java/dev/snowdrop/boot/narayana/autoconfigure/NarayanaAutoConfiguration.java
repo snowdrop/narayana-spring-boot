@@ -116,7 +116,7 @@ public class NarayanaAutoConfiguration {
         JtaTransactionManager jtaTransactionManager = new JtaTransactionManager(userTransaction, transactionManager);
         jtaTransactionManager.setTransactionSynchronizationRegistry(transactionSynchronizationRegistry);
         if (this.transactionManagerCustomizers != null) {
-            this.transactionManagerCustomizers.customize(jtaTransactionManager);
+            this.transactionManagerCustomizers.customize((org.springframework.transaction.TransactionManager) jtaTransactionManager);
         }
         return jtaTransactionManager;
     }
