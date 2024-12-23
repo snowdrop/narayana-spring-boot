@@ -1,0 +1,1 @@
+EXEC sp_sqljdbc_xa_install

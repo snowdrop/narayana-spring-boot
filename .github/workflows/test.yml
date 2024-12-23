@@ -22,4 +22,4 @@ jobs:
     - name: Install
       run: ./mvnw install -DskipTests
     - name: Test
-      run: ./mvnw verify
+      run: ./mvnw -Ptestcontainers verify
