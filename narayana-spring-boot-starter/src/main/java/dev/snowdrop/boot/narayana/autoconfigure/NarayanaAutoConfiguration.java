@@ -33,7 +33,9 @@ import dev.snowdrop.boot.narayana.core.jms.GenericXAConnectionFactoryWrapper;
 import dev.snowdrop.boot.narayana.core.jms.PooledXAConnectionFactoryWrapper;
 import dev.snowdrop.boot.narayana.core.properties.NarayanaProperties;
 import dev.snowdrop.boot.narayana.core.properties.NarayanaPropertiesInitializer;
+import org.apache.commons.pool2.PooledObject;
 import org.jboss.tm.XAResourceRecoveryRegistry;
+import org.messaginghub.pooled.jms.JmsPoolConnectionFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -185,7 +187,7 @@ public class NarayanaAutoConfiguration {
     }
 
     @ConditionalOnProperty(name = "narayana.messaginghub.enabled", havingValue = "true")
-    @ConditionalOnClass(Message.class)
+    @ConditionalOnClass({Message.class, JmsPoolConnectionFactory.class, PooledObject.class })
     static class PooledJmsConfiguration {
 
         @Bean
