@@ -20,15 +20,20 @@ import javax.sql.DataSource;
 import javax.sql.XADataSource;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
+import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
 import dev.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
+import org.springframework.boot.jdbc.XADataSourceWrapper;
 
 /**
- * {@link AbstractXADataSourceWrapper} implementation that uses {@link NarayanaDataSource} to wrap an
- * {@link XADataSource}.
+ * An {@link XADataSourceWrapper} implementation which handles {@link XAResourceRecoveryHelper} creation and
+ * registration. It delegates the actual {@link XADataSource} wrapping to its subclass {@link NarayanaDataSource}.
  *
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
-public class GenericXADataSourceWrapper extends AbstractXADataSourceWrapper {
+public class GenericXADataSourceWrapper implements XADataSourceWrapper {
+
+    private final XARecoveryModule xaRecoveryModule;
+    private final RecoveryCredentialsProperties recoveryCredentials;
 
     /**
      * Create a new {@link GenericXADataSourceWrapper} instance.
@@ -46,18 +51,29 @@ public class GenericXADataSourceWrapper extends AbstractXADataSourceWrapper {
      * @param recoveryCredentials credentials for recovery helper
      */
     public GenericXADataSourceWrapper(XARecoveryModule xaRecoveryModule, RecoveryCredentialsProperties recoveryCredentials) {
-        super(xaRecoveryModule, recoveryCredentials);
+        this.xaRecoveryModule = xaRecoveryModule;
+        this.recoveryCredentials = recoveryCredentials;
     }
 
     /**
-     * Wrap provided {@link XADataSource} with an instance of {@link NarayanaDataSource}.
+     * Register newly created recovery helper with the {@link XARecoveryModule} and delegate data source wrapping.
      *
-     * @param dataSource data source that needs to be wrapped.
-     * @return wrapped data source.
+     * @param dataSource {@link XADataSource} that needs to be wrapped.
+     * @return wrapped data source
+     * @throws Exception in case data source wrapping has failed
      */
     @Override
-    protected DataSource wrapDataSourceInternal(XADataSource dataSource) {
+    public DataSource wrapDataSource(XADataSource dataSource) throws Exception {
+        XAResourceRecoveryHelper recoveryHelper = getRecoveryHelper(dataSource);
+        this.xaRecoveryModule.addXAResourceRecoveryHelper(recoveryHelper);
         return new NarayanaDataSource(dataSource);
     }
 
+    private XAResourceRecoveryHelper getRecoveryHelper(XADataSource dataSource) {
+        if (this.recoveryCredentials.isValid()) {
+            return new DataSourceXAResourceRecoveryHelper(dataSource, this.recoveryCredentials.getUser(),
+                    this.recoveryCredentials.getPassword());
+        }
+        return new DataSourceXAResourceRecoveryHelper(dataSource);
+    }
 }
