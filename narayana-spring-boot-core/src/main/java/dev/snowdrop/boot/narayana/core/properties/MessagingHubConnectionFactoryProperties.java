@@ -20,8 +20,8 @@ import java.time.Duration;
 
 public class MessagingHubConnectionFactoryProperties {
 
-    private boolean enabled;
-    private String name;
+    private boolean enabled = false;
+    private String name = "jms";
     private int maxConnections = 1;
     private Duration connectionIdleTimeout = Duration.ofSeconds(30);
     private Duration connectionCheckInterval = Duration.ofMillis(-1);
