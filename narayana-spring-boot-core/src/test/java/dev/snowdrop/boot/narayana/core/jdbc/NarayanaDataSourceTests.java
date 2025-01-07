@@ -27,7 +27,6 @@ import javax.sql.XAConnection;
 import javax.sql.XADataSource;
 
 import com.arjuna.ats.internal.jdbc.ConnectionImple;
-import com.arjuna.ats.jdbc.TransactionalDriver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -92,10 +91,6 @@ class NarayanaDataSourceTests {
         given(mockXaConnection.getConnection()).willReturn(mockConnection);
         given(this.mockXaDataSource.getXAConnection()).willReturn(mockXaConnection);
 
-        // TODO properties not used
-        Properties properties = new Properties();
-        properties.put(TransactionalDriver.XADataSource, this.mockXaDataSource);
-
         Connection connection = this.dataSourceBean.getConnection();
         assertThat(connection).isInstanceOf(ConnectionImple.class);
 
@@ -124,12 +119,6 @@ class NarayanaDataSourceTests {
         given(mockConnection.getMetaData()).willReturn(mockMetaData);
         given(mockXaConnection.getConnection()).willReturn(mockConnection);
         given(this.mockXaDataSource.getXAConnection(authProperties.getProperty("username"), authProperties.getProperty("username"))).willReturn(mockXaConnection);
-
-        // TODO properties not used
-        Properties properties = new Properties();
-        properties.put(TransactionalDriver.XADataSource, this.mockXaDataSource);
-        properties.put(TransactionalDriver.userName, authProperties.getProperty("username"));
-        properties.put(TransactionalDriver.password, authProperties.getProperty("username"));
 
         Connection connection = this.dataSourceBean.getConnection(authProperties.getProperty("username"), authProperties.getProperty("username"));
         assertThat(connection).isInstanceOf(ConnectionImple.class);
