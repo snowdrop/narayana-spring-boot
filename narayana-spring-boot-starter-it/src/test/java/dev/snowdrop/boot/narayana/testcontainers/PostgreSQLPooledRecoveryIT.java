@@ -30,7 +30,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 @SpringBootTest(classes = TestApplication.class, properties = {
     "narayana.messaginghub.enabled=true",
-    "narayana.messaginghub.name=jms",
     "spring.datasource.generateUniqueName=false",
     "spring.datasource.name=jdbc"
 })
