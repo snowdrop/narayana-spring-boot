@@ -18,6 +18,7 @@ package dev.snowdrop.boot.narayana.core.properties;
 
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ import com.arjuna.ats.arjuna.common.CoordinatorEnvironmentBean;
 import com.arjuna.ats.arjuna.common.CoreEnvironmentBean;
 import com.arjuna.ats.arjuna.common.ObjectStoreEnvironmentBean;
 import com.arjuna.ats.arjuna.common.RecoveryEnvironmentBean;
+import com.arjuna.ats.jdbc.common.JDBCEnvironmentBean;
 import com.arjuna.ats.jta.common.JTAEnvironmentBean;
 import com.arjuna.common.internal.util.propertyservice.BeanPopulator;
 import org.junit.jupiter.api.AfterEach;
@@ -112,6 +114,12 @@ class NarayanaPropertiesInitializerTests {
 
         assertThat(BeanPopulator.getDefaultInstance(JTAEnvironmentBean.class)
                 .getXaResourceRecoveryClassNames()).isEmpty();
+
+        assertThat(BeanPopulator.getDefaultInstance(JDBCEnvironmentBean.class)
+                .getIsolationLevel()).isEqualTo(Connection.TRANSACTION_SERIALIZABLE);
+
+        assertThat(BeanPopulator.getDefaultInstance(JDBCEnvironmentBean.class)
+                .getDefaultIsSameRMOverride()).isFalse();
     }
 
     @Test

@@ -54,7 +54,8 @@ public class Application {
 
 By default, [Narayana Transactional driver](https://www.narayana.io/docs/api/com/arjuna/ats/jdbc/TransactionalDriver.html)
 is used to enlist a relational database to a JTA transaction which provides a basic XAResource enlistment and recovery as
-well as a simple pooling mechanism.
+well as a simple pooling mechanism which is disabled as default. See [TransactionalDriverProperties](narayana-spring-boot-core/src/main/java/dev/snowdrop/boot/narayana/core/properties/TransactionalDriverProperties.java)
+for more details.
 
 > Be aware that Narayana Transactional driver automatically set transaction isolation level to `Connection.TRANSACTION_SERIALIZABLE`,
 which might change default behaviour of the used database system!
