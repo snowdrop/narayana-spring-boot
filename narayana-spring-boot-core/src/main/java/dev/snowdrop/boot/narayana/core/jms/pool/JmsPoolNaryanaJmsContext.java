@@ -18,29 +18,24 @@ package dev.snowdrop.boot.narayana.core.jms.pool;
 
 import javax.transaction.xa.XAResource;
 
-import jakarta.jms.Connection;
-import jakarta.jms.JMSException;
-import jakarta.transaction.TransactionManager;
+import org.messaginghub.pooled.jms.JmsPoolConnection;
+import org.messaginghub.pooled.jms.JmsPoolXAJMSContext;
 
-import org.messaginghub.pooled.jms.JmsPoolSession;
-import org.messaginghub.pooled.jms.pool.PooledXAConnection;
-
-public class PooledNarayanaConnection extends PooledXAConnection {
+public class JmsPoolNaryanaJmsContext extends JmsPoolXAJMSContext {
 
     private final String name;
 
-    public PooledNarayanaConnection(Connection connection, TransactionManager transactionManager, String name) {
-        super(connection, transactionManager);
+    public JmsPoolNaryanaJmsContext(JmsPoolConnection connection, int sessionMode, String name) {
+        super(connection, sessionMode);
         this.name = name;
     }
 
     @Override
-    protected XAResource createXaResource(JmsPoolSession session) throws JMSException {
-        XAResource xares = super.createXaResource(session);
+    public XAResource getXAResource() {
+        XAResource xares = super.getXAResource();
         if (this.name != null) {
             xares = new NamedXAResource(xares, this.name);
         }
         return xares;
     }
-
 }
