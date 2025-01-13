@@ -28,6 +28,7 @@ import com.arjuna.ats.arjuna.common.CoreEnvironmentBean;
 import com.arjuna.ats.arjuna.common.CoreEnvironmentBeanException;
 import com.arjuna.ats.arjuna.common.ObjectStoreEnvironmentBean;
 import com.arjuna.ats.arjuna.common.RecoveryEnvironmentBean;
+import com.arjuna.ats.jdbc.common.JDBCEnvironmentBean;
 import com.arjuna.ats.jta.common.JTAEnvironmentBean;
 import com.arjuna.common.internal.util.propertyservice.BeanPopulator;
 import org.springframework.beans.factory.InitializingBean;
@@ -63,6 +64,8 @@ public class NarayanaPropertiesInitializer implements InitializingBean {
         setCommitMarkableResourceJNDINames(this.properties.getCommitMarkableResourceJNDINames());
         setRecoveryModules(this.properties.getRecoveryModules());
         setExpiryScanners(this.properties.getExpiryScanners());
+        setDefaultIsolationLevel(this.properties.getTransactionalDriver().getDefaultIsolationLevel().getLevel());
+        setDefaultIsSameRMOverride(this.properties.getTransactionalDriver().isDefaultIsSameRMOverride());
     }
 
     private void setNodeIdentifier(String nodeIdentifier, boolean shortenNodeIdentifierIfNecessary) {
@@ -145,6 +148,14 @@ public class NarayanaPropertiesInitializer implements InitializingBean {
 
     private void setExpiryScanners(List<String> expiryScanners) {
         getPopulator(RecoveryEnvironmentBean.class).setExpiryScannerClassNames(expiryScanners);
+    }
+
+    private void setDefaultIsolationLevel(int defaultIsolationLevel) {
+        getPopulator(JDBCEnvironmentBean.class).setIsolationLevel(defaultIsolationLevel);
+    }
+
+    private void setDefaultIsSameRMOverride(boolean defaultIsSameRMOverride) {
+        getPopulator(JDBCEnvironmentBean.class).setDefaultIsSameRMOverride(defaultIsSameRMOverride);
     }
 
     private <T> T getPopulator(Class<T> beanClass) {

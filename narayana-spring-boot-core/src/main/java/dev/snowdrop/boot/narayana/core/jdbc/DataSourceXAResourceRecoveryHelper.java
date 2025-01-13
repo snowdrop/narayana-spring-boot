@@ -31,14 +31,16 @@ import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
 public class DataSourceXAResourceRecoveryHelper implements XAResourceRecoveryHelper, XAResource {
 
     private final ConnectionManager connectionManager;
+    private final String name;
 
     /**
      * Create a new {@link DataSourceXAResourceRecoveryHelper} instance.
      *
      * @param xaDataSource the XA data source
+     * @param name         the datasource name or {@code null}
      */
-    public DataSourceXAResourceRecoveryHelper(XADataSource xaDataSource) {
-        this(xaDataSource, null, null);
+    public DataSourceXAResourceRecoveryHelper(XADataSource xaDataSource, String name) {
+        this(xaDataSource, null, null, name);
     }
 
     /**
@@ -47,9 +49,11 @@ public class DataSourceXAResourceRecoveryHelper implements XAResourceRecoveryHel
      * @param xaDataSource the XA data source
      * @param user         the database user or {@code null}
      * @param password     the database password or {@code null}
+     * @param name         the datasource name or {@code null}
      */
-    public DataSourceXAResourceRecoveryHelper(XADataSource xaDataSource, String user, String password) {
+    public DataSourceXAResourceRecoveryHelper(XADataSource xaDataSource, String user, String password, String name) {
         this.connectionManager = new ConnectionManager(xaDataSource, user, password);
+        this.name = name;
     }
 
     @Override
@@ -67,7 +71,7 @@ public class DataSourceXAResourceRecoveryHelper implements XAResourceRecoveryHel
             }
         }
 
-        return new XAResource[]{this};
+        return new XAResource[]{new NamedXAResource(this, this.name)};
     }
 
     @Override

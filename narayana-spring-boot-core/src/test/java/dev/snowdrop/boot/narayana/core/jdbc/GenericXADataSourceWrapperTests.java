@@ -16,7 +16,12 @@
 
 package dev.snowdrop.boot.narayana.core.jdbc;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+
 import javax.sql.DataSource;
+import javax.sql.XAConnection;
 import javax.sql.XADataSource;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
@@ -44,6 +49,15 @@ class GenericXADataSourceWrapperTests {
     private XADataSource mockXaDataSource;
 
     @Mock
+    private XAConnection mockXaConnection;
+
+    @Mock
+    private Connection mockConnection;
+
+    @Mock
+    private DatabaseMetaData mockDatabaseMetaData;
+
+    @Mock
     private XARecoveryModule mockXaRecoveryModule;
 
     @Mock
@@ -52,7 +66,11 @@ class GenericXADataSourceWrapperTests {
     private GenericXADataSourceWrapper wrapper;
 
     @BeforeEach
-    void before() {
+    void before() throws SQLException {
+        given(this.mockXaDataSource.getXAConnection()).willReturn(this.mockXaConnection);
+        given(this.mockXaConnection.getConnection()).willReturn(this.mockConnection);
+        given(this.mockConnection.getMetaData()).willReturn(this.mockDatabaseMetaData);
+        given(this.mockDatabaseMetaData.getDatabaseProductName()).willReturn("");
         this.wrapper = new GenericXADataSourceWrapper(this.mockXaRecoveryModule, this.mockRecoveryCredentialsProperties);
     }
 

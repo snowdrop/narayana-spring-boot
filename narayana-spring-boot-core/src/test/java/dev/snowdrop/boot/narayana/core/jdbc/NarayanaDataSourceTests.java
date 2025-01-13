@@ -27,6 +27,7 @@ import javax.sql.XAConnection;
 import javax.sql.XADataSource;
 
 import com.arjuna.ats.internal.jdbc.ConnectionImple;
+import dev.snowdrop.boot.narayana.core.properties.TransactionalDriverProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,11 +51,13 @@ class NarayanaDataSourceTests {
     @Mock
     private XADataSource mockXaDataSource;
 
+    private TransactionalDriverProperties transactionalDriverProperties;
     private NarayanaDataSource dataSourceBean;
 
     @BeforeEach
     void before() {
-        this.dataSourceBean = new NarayanaDataSource(this.mockXaDataSource);
+        this.transactionalDriverProperties = new TransactionalDriverProperties();
+        this.dataSourceBean = new NarayanaDataSource(this.mockXaDataSource, this.transactionalDriverProperties);
     }
 
     @Test
@@ -77,6 +80,24 @@ class NarayanaDataSourceTests {
     void shouldUnwrapXaDataSource() throws SQLException {
         assertThat(this.dataSourceBean.unwrap(XADataSource.class)).isInstanceOf(XADataSource.class);
         assertThat(this.dataSourceBean.unwrap(XADataSource.class)).isSameAs(this.mockXaDataSource);
+    }
+
+    @Test
+    void shouldGetSameConnection() throws SQLException {
+        this.transactionalDriverProperties.getPool().setEnabled(true);
+        Connection connection1 = this.dataSourceBean.getConnection();
+        connection1.close();
+        Connection connection2 = this.dataSourceBean.getConnection();
+        assertThat(connection2).isSameAs(connection1);
+    }
+
+    @Test
+    void shouldNotGetSameConnection() throws SQLException {
+        this.transactionalDriverProperties.getPool().setEnabled(false);
+        Connection connection1 = this.dataSourceBean.getConnection();
+        connection1.close();
+        Connection connection2 = this.dataSourceBean.getConnection();
+        assertThat(connection2).isNotSameAs(connection1);
     }
 
     @Test

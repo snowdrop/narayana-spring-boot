@@ -164,6 +164,7 @@ public class NarayanaAutoConfiguration {
         public XADataSourceWrapper xaDataSourceWrapper(NarayanaProperties narayanaProperties,
                 XARecoveryModule xaRecoveryModule) {
             return new GenericXADataSourceWrapper(xaRecoveryModule,
+                    narayanaProperties.getTransactionalDriver(),
                     narayanaProperties.getRecoveryDbCredentials());
         }
 

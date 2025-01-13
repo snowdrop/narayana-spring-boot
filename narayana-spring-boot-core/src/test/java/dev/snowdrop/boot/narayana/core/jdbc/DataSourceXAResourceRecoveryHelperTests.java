@@ -56,7 +56,7 @@ class DataSourceXAResourceRecoveryHelperTests {
 
     @BeforeEach
     void before() throws SQLException {
-        this.recoveryHelper = new DataSourceXAResourceRecoveryHelper(this.mockXaDataSource);
+        this.recoveryHelper = new DataSourceXAResourceRecoveryHelper(this.mockXaDataSource, null);
 
         given(this.mockXaDataSource.getXAConnection()).willReturn(this.mockXaConnection);
         given(this.mockXaConnection.getXAResource()).willReturn(this.mockXaResource);
@@ -66,17 +66,17 @@ class DataSourceXAResourceRecoveryHelperTests {
     void shouldCreateConnectionAndGetXAResource() throws SQLException {
         XAResource[] xaResources = this.recoveryHelper.getXAResources();
         assertThat(xaResources).hasSize(1);
-        assertThat(xaResources[0]).isSameAs(this.recoveryHelper);
+        assertThat(((NamedXAResource) xaResources[0]).getResource()).isSameAs(this.recoveryHelper);
         verify(this.mockXaDataSource).getXAConnection();
     }
 
     @Test
     void shouldCreateConnectionWithCredentialsAndGetXAResource() throws SQLException {
         given(this.mockXaDataSource.getXAConnection(anyString(), anyString())).willReturn(this.mockXaConnection);
-        this.recoveryHelper = new DataSourceXAResourceRecoveryHelper(this.mockXaDataSource, "username", "password");
+        this.recoveryHelper = new DataSourceXAResourceRecoveryHelper(this.mockXaDataSource, "username", "password", null);
         XAResource[] xaResources = this.recoveryHelper.getXAResources();
         assertThat(xaResources).hasSize(1);
-        assertThat(xaResources[0]).isSameAs(this.recoveryHelper);
+        assertThat(((NamedXAResource) xaResources[0]).getResource()).isSameAs(this.recoveryHelper);
         verify(this.mockXaDataSource).getXAConnection("username", "password");
     }
 

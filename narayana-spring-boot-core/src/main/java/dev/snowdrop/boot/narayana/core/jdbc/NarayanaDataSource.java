@@ -28,6 +28,7 @@ import javax.sql.XADataSource;
 
 import com.arjuna.ats.internal.jdbc.ConnectionManager;
 import com.arjuna.ats.jdbc.TransactionalDriver;
+import dev.snowdrop.boot.narayana.core.properties.TransactionalDriverProperties;
 
 /**
  * {@link DataSource} implementation wrapping {@link XADataSource} and using
@@ -38,30 +39,38 @@ import com.arjuna.ats.jdbc.TransactionalDriver;
 public class NarayanaDataSource implements DataSource {
 
     private final XADataSource xaDataSource;
+    private final TransactionalDriverProperties transactionalDriverProperties;
 
     /**
      * Create a new {@link NarayanaDataSource} instance.
      *
-     * @param xaDataSource the XA DataSource
+     * @param xaDataSource                    the XA DataSource
+     * @param transactionalDriverProperties   Transactional driver pool properties
      */
-    public NarayanaDataSource(XADataSource xaDataSource) {
+    public NarayanaDataSource(XADataSource xaDataSource, TransactionalDriverProperties transactionalDriverProperties) {
         this.xaDataSource = xaDataSource;
+        this.transactionalDriverProperties = transactionalDriverProperties;
+    }
+
+    private Properties createProperties() {
+        Properties properties = new Properties();
+        properties.put(TransactionalDriver.XADataSource, this.xaDataSource);
+        properties.put(TransactionalDriver.poolConnections, String.valueOf(this.transactionalDriverProperties.getPool().isEnabled()));
+        properties.put(TransactionalDriver.maxConnections, this.transactionalDriverProperties.getPool().getMaxConnections());
+        return properties;
     }
 
     @Override
     public Connection getConnection() throws SQLException {
-        Properties properties = new Properties();
-        properties.put(TransactionalDriver.XADataSource, this.xaDataSource);
-        return ConnectionManager.create(null, properties);
+        return ConnectionManager.create(this.transactionalDriverProperties.getName(), createProperties());
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        Properties properties = new Properties();
-        properties.put(TransactionalDriver.XADataSource, this.xaDataSource);
+        Properties properties = createProperties();
         properties.put(TransactionalDriver.userName, username);
         properties.put(TransactionalDriver.password, password);
-        return ConnectionManager.create(null, properties);
+        return ConnectionManager.create(this.transactionalDriverProperties.getName(), properties);
     }
 
     @Override
