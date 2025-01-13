@@ -20,7 +20,9 @@ import java.io.Serial;
 
 import jakarta.jms.Connection;
 
+import org.messaginghub.pooled.jms.JmsPoolConnection;
 import org.messaginghub.pooled.jms.JmsPoolXAConnectionFactory;
+import org.messaginghub.pooled.jms.JmsPoolXAJMSContext;
 
 public class JmsPoolNarayanaConnectionFactory extends JmsPoolXAConnectionFactory {
 
@@ -40,5 +42,10 @@ public class JmsPoolNarayanaConnectionFactory extends JmsPoolXAConnectionFactory
     @Override
     protected PooledNarayanaConnection createPooledConnection(Connection connection) {
         return new PooledNarayanaConnection(connection, getTransactionManager(), getName());
+    }
+
+    @Override
+    protected JmsPoolXAJMSContext newPooledConnectionContext(JmsPoolConnection connection, int sessionMode) {
+        return new JmsPoolNaryanaJmsContext(connection, sessionMode, getName());
     }
 }
