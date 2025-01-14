@@ -53,11 +53,12 @@ public class Application {
 # Using databases
 
 By default, [Narayana Transactional driver](https://www.narayana.io/docs/api/com/arjuna/ats/jdbc/TransactionalDriver.html)
-is used to enlist a relational database to a JTA transaction which provides a basic XAResource enlistment and recovery as
-well as a simple pooling mechanism which is disabled as default. See [TransactionalDriverProperties](narayana-spring-boot-core/src/main/java/dev/snowdrop/boot/narayana/core/properties/TransactionalDriverProperties.java)
+is used to enlist a relational database to a JTA transaction which provides a basic `javax.transaction.xa.XAResource`
+enlistment and recovery as well as a simple pooling mechanism which is disabled as default. See
+[TransactionalDriverProperties](narayana-spring-boot-core/src/main/java/dev/snowdrop/boot/narayana/core/properties/TransactionalDriverProperties.java)
 for more details.
 
-> Be aware that Narayana Transactional driver automatically set transaction isolation level to `Connection.TRANSACTION_SERIALIZABLE`,
+> Be aware that Narayana Transactional driver automatically set transaction isolation level to `java.sql.Connection.TRANSACTION_SERIALIZABLE`,
 which might change default behaviour of the used database system!
 For example, [Oracle Database](narayana-spring-boot-starter-it/src/test/resources/oracle-initscript.sql)
 
@@ -74,6 +75,16 @@ which provides connection pooling and many other features. To enable Agroal add 
 ```
 
 All Agroal configuration properties described in its [documentation](https://agroal.github.io/docs.html)
+
+## Examples
+
+For common database management systems, there are unit tests implemented with [testcontainers](https://testcontainers.com/)
+to demonstrate the usage and the basic default configuration of `narayana-spring-boot-starter` in two use cases with
+single `java.sql.Connection` (`<xxx>GenericRecoveryIT`) and pooled `java.sql.Connection` (`<xxx>PooledRecoveryIT`) managed
+`java.sql.DataSource`.
+
+Have a look at the following
+[test cases](narayana-spring-boot-starter-it/src/test/java/dev/snowdrop/boot/narayana/testcontainers) for details.
 
 # Using messaging brokers
 
