@@ -18,7 +18,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>dev.snowdrop</groupId>
   <artifactId>narayana-spring-boot-parent</artifactId>
-  <version>3.3.2-SNAPSHOT</version>
+  <version>3.4.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Narayana Spring Boot :: parent</name>
@@ -53,23 +53,23 @@
     <agroal.version>2.5</agroal.version>
     <awaitility.version>4.2.2</awaitility.version>
     <byteman.version>4.0.23</byteman.version>
-    <camel.version>4.8.1</camel.version>
-    <camel-spring-boot.version>4.8.1</camel-spring-boot.version>
+    <camel.version>4.10.0</camel.version>
+    <camel-spring-boot.version>4.10.0</camel-spring-boot.version>
     <narayana.version>7.2.1.Final</narayana.version>
     <openshift-client.version>7.0.1</openshift-client.version>
-    <spring-boot.version>3.3.6</spring-boot.version>
+    <spring-boot.version>3.4.2</spring-boot.version>
 
-    <maven-checkstyle-plugin.version>3.5.0</maven-checkstyle-plugin.version>
+    <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
     <maven-deploy-plugin.version>3.1.3</maven-deploy-plugin.version>
     <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
-    <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
+    <maven-failsafe-plugin.version>3.5.2</maven-failsafe-plugin.version>
     <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
     <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
-    <maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
-    <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
+    <maven-javadoc-plugin.version>3.10.1</maven-javadoc-plugin.version>
+    <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
     <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-    <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+    <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
     <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
   </properties>
 

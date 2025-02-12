@@ -102,6 +102,6 @@ class NarayanaAutoConfigurationTest {
         this.configuration = new NarayanaAutoConfiguration(this.mockTransactionManagerCustomizersProvider);
         JtaTransactionManager jtaTransactionManager = this.configuration.transactionManager(
                 this.mockUserTransaction, this.mockTransactionManager, this.mockTransactionSynchronizationRegistry);
-        verify(this.mockTransactionManagerCustomizers).customize((org.springframework.transaction.TransactionManager) jtaTransactionManager);
+        verify(this.mockTransactionManagerCustomizers).customize(jtaTransactionManager);
     }
 }
