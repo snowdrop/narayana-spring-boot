@@ -46,6 +46,6 @@ public class JmsPoolNarayanaConnectionFactory extends JmsPoolXAConnectionFactory
 
     @Override
     protected JmsPoolXAJMSContext newPooledConnectionContext(JmsPoolConnection connection, int sessionMode) {
-        return new JmsPoolNaryanaJmsContext(connection, sessionMode, getName());
+        return new JmsPoolNarayanaJmsContext(connection, sessionMode, getName());
     }
 }

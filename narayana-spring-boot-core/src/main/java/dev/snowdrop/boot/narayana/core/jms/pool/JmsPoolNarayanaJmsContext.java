@@ -21,11 +21,11 @@ import javax.transaction.xa.XAResource;
 import org.messaginghub.pooled.jms.JmsPoolConnection;
 import org.messaginghub.pooled.jms.JmsPoolXAJMSContext;
 
-public class JmsPoolNaryanaJmsContext extends JmsPoolXAJMSContext {
+public class JmsPoolNarayanaJmsContext extends JmsPoolXAJMSContext {
 
     private final String name;
 
-    public JmsPoolNaryanaJmsContext(JmsPoolConnection connection, int sessionMode, String name) {
+    public JmsPoolNarayanaJmsContext(JmsPoolConnection connection, int sessionMode, String name) {
         super(connection, sessionMode);
         this.name = name;
     }
