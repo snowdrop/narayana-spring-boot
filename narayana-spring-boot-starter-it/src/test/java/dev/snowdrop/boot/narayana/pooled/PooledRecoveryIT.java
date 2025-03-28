@@ -26,7 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest(classes = TestApplication.class, properties = {
     "narayana.messaginghub.enabled=true",
-    "spring.datasource.agroal.flushOnClose=true",
+    "spring.datasource.agroal.poolRecovery=false",
     "spring.datasource.generateUniqueName=false",
     "spring.datasource.name=jdbc"
 })
