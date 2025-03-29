@@ -32,7 +32,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 @SpringBootTest(classes = TestApplication.class, properties = {
         "narayana.messaginghub.enabled=true",
-        "spring.datasource.agroal.flushOnClose=true",
+        "spring.datasource.agroal.poolRecovery=false",
         "spring.datasource.generateUniqueName=false",
         "spring.datasource.name=jdbc",
         "spring.datasource.xa.properties.driverType=4"
