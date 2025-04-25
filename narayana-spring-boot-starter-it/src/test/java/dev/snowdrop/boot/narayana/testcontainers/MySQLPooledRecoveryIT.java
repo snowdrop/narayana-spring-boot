@@ -37,7 +37,7 @@ public class MySQLPooledRecoveryIT extends PooledRecoveryIT {
 
     @Container
     @ServiceConnection
-    static JdbcDatabaseContainer<?> mysql = new MySQLContainer<>("mysql:latest")
+    static JdbcDatabaseContainer<?> mysql = new MySQLContainer<>("mysql:9.2.0")
             .withUsername("root")
             .withPassword("root");
 }
