@@ -53,11 +53,11 @@
     <agroal.version>2.7.1</agroal.version>
     <awaitility.version>4.2.2</awaitility.version>
     <byteman.version>4.0.25</byteman.version>
-    <camel.version>4.10.4</camel.version>
-    <camel-spring-boot.version>4.10.4</camel-spring-boot.version>
+    <camel.version>4.10.5</camel.version>
+    <camel-spring-boot.version>4.10.5</camel-spring-boot.version>
     <narayana.version>7.2.2.Final</narayana.version>
     <openshift-client.version>7.2.0</openshift-client.version>
-    <spring-boot.version>3.4.5</spring-boot.version>
+    <spring-boot.version>3.4.6</spring-boot.version>
 
     <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
