@@ -44,7 +44,7 @@ jobs:
 
       - name: 'Create a release and upload the bundle'
         run: |
-         mvn versions:set -DprocessAllModules=true -DnewVersion=3.4.2-SNAPSHOT
+         mvn versions:set -DprocessAllModules=true -DnewVersion=3.4.2
          mvn deploy -Prelease -B -DskipTests -DskipPublishing=false -DwaitUntil=uploaded
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
