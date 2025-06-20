@@ -42,9 +42,10 @@ jobs:
 
           cat thisisafiletosign.txt.asc
 
-      - name: 'Sign the files of the module: narayana-spring-boot-core'
+      - name: 'Create a release and upload the bundle'
         run: |
-         mvn deploy -Prelease -B -DskipTests -DskipPublishing=false -DwaitUntil=uploaded -DignorePublishedComponents=true
+         mvn versions:set -DprocessAllModules=true -DnewVersion=3.4.2-SNAPSHOT
+         mvn deploy -Prelease -B -DskipTests -DskipPublishing=false -DwaitUntil=uploaded
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
