@@ -28,7 +28,7 @@ jobs:
         run: |
           gpg --list-keys
           echo "thisisafiletosign" > thisisafiletosign.txt
-          gpg --detach-sign --armor --local-user 96FFFC7D0C14DD28CFC79FC4143E219AE10A69A4 thisisafiletosign.txt
+          gpg --local-user snowdrop-core@redhat.com --armor --detach-sign --status-fd 1 --batch --no-tty --pinentry-mode error --output thisisafiletosign.txt
           ls -la
           cat thisisafiletosign.txt.asc
 
