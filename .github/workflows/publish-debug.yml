@@ -25,6 +25,8 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Check the gpg key, sign a file
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
           set -ex
           
@@ -35,15 +37,15 @@ jobs:
           
           #echo "pinentry-mode loopback" >> ~/.gnupg/gpg-agent.conf
           #echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
-          
-          echo "${{ secrets.GPG_PASSPHRASE }}" > ~/.gpg-passphrase
-          chmod 600 ~/.gpg-passphrase
-          
+          #echo "${{ secrets.GPG_PASSPHRASE }}" > ~/.gpg-passphrase
+          #chmod 600 ~/.gpg-passphrase
           #systemctl --user restart gpg-agent
+          
           export GPG_TTY=$(tty)
           
           gpg --local-user snowdrop-core@redhat.com --armor --detach-sign \
-            --status-fd 1 --batch --no-tty --pinentry-mode loopback \
+            --status-fd 1 --batch --yes --no-tty --pinentry-mode loopback \
+            --passphrase "$GPG_PASSPHRASE" \
             --output thisisafiletosign.txt.asc thisisafiletosign.txt 
           
           ls -la
