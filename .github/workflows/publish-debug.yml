@@ -5,7 +5,7 @@ on:
   #  types: [created]
 
 env:
-    RELEASE_VERSION: 3.4.2.2
+    RELEASE_VERSION: 3.4.1.1
 
 jobs:
   publish:
@@ -27,7 +27,7 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Check the gpg key, sign a file
+      - name: Check the gpg key imported and sign a dummy file
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
@@ -48,7 +48,7 @@ jobs:
       - name: 'Create a release and upload the bundle'
         run: |
          mvn versions:set -DprocessAllModules=true -DnewVersion=$RELEASE_VERSION
-         mvn deploy -Prelease -B -DskipTests -DskipPublishing=false -DwaitUntil=uploaded
+         mvn -B deploy -Prelease -DskipTests
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
