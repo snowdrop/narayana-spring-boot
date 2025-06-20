@@ -34,27 +34,18 @@ jobs:
           
           echo "thisisafiletosign" > thisisafiletosign.txt
           rm -f -- thisisafiletosign.txt.asc
-          
-          #echo "pinentry-mode loopback" >> ~/.gnupg/gpg-agent.conf
-          #echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
-          #echo "${{ secrets.GPG_PASSPHRASE }}" > ~/.gpg-passphrase
-          #chmod 600 ~/.gpg-passphrase
-          #systemctl --user restart gpg-agent
-          
-          export GPG_TTY=$(tty)
-          
+        
           gpg --local-user snowdrop-core@redhat.com --armor --detach-sign \
             --status-fd 1 --batch --yes --no-tty --pinentry-mode loopback \
             --passphrase "$GPG_PASSPHRASE" \
             --output thisisafiletosign.txt.asc thisisafiletosign.txt 
-          
-          ls -la
+
           cat thisisafiletosign.txt.asc
 
       - name: 'Sign the files of the module: narayana-spring-boot-core'
         run: |
          cd narayana-spring-boot-core
-         mvn gpg:sign -Prelease
+         mvn package gpg:sign -Prelease -B
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
