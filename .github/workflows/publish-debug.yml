@@ -45,8 +45,15 @@ jobs:
       - name: 'Sign the files of the module: narayana-spring-boot-core'
         run: |
          cd narayana-spring-boot-core
-         mvn package gpg:sign -Prelease -B
+         mvn package gpg:sign -Prelease -B -X
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Check files signed
+        run: |
+          set -ex
+          
+          cd narayana-spring-boot-core
+          ls -la target
