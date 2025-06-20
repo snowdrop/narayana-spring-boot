@@ -53,6 +53,7 @@ jobs:
       - name: Check files signed
         run: |
           set -ex
-
-          ls -la narayana-spring-boot-core/target/*.asc
-          cat narayana-spring-boot-core/target/narayana-spring-boot-core-3.4.1.pom.asc
+         
+          cd target/central-publishing
+          unzip central-bundle.zip
+          gpg --verify d dev/snowdrop/narayana-spring-boot-core/3.4.1/narayana-spring-boot-core-3.4.1-sources.jar
