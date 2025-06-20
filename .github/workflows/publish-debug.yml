@@ -4,6 +4,9 @@ on:
   #release:
   #  types: [created]
 
+env:
+    RELEASE_VERSION: 3.4.2.2
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -44,7 +47,7 @@ jobs:
 
       - name: 'Create a release and upload the bundle'
         run: |
-         mvn versions:set -DprocessAllModules=true -DnewVersion=3.4.2.1
+         mvn versions:set -DprocessAllModules=true -DnewVersion=$RELEASE_VERSION
          mvn deploy -Prelease -B -DskipTests -DskipPublishing=false -DwaitUntil=uploaded
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
@@ -57,5 +60,5 @@ jobs:
           
           cd target/central-publishing
           unzip central-bundle.zip
-          gpg --verify dev/snowdrop/narayana-spring-boot-core/3.4.1/narayana-spring-boot-core-3.4.1-sources.jar.asc
+          gpg --verify dev/snowdrop/narayana-spring-boot-recovery-controller/$RELEASE_VERSION/narayana-spring-boot-recovery-controller-$RELEASE_VERSION-sources.jar.asc
           
