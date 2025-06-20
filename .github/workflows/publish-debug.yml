@@ -33,6 +33,13 @@ jobs:
           echo "thisisafiletosign" > thisisafiletosign.txt
           rm -f -- thisisafiletosign.txt.asc
           
+          echo "pinentry-mode loopback" >> ~/.gnupg/gpg-agent.conf
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+          echo "${{ secrets.GPG_PASSPHRASE }}" > ~/.gpg-passphrase
+          chmod 600 ~/.gpg-passphrase
+          gpgconf --kill gpg-agent
+          export GPG_TTY=$(tty)
+          
           gpg --local-user snowdrop-core@redhat.com --armor --detach-sign \
             --status-fd 1 --batch --no-tty --pinentry-mode error \
             --output thisisafiletosign.txt.asc thisisafiletosign.txt 
