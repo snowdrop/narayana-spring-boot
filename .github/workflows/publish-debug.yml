@@ -1,4 +1,4 @@
-name: Publish package to the Maven Central Repository
+name: Debugging job
 on:
   workflow_dispatch:
   #release:
