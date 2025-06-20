@@ -37,7 +37,9 @@ jobs:
           echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
           echo "${{ secrets.GPG_PASSPHRASE }}" > ~/.gpg-passphrase
           chmod 600 ~/.gpg-passphrase
-          gpgconf --kill gpg-agent
+          
+          systemctl --user restart gpg-agent
+          
           export GPG_TTY=$(tty)
           
           gpg --local-user snowdrop-core@redhat.com --armor --detach-sign \
