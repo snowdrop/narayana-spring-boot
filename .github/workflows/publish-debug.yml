@@ -33,7 +33,9 @@ jobs:
           echo "thisisafiletosign" > thisisafiletosign.txt
           rm -f -- thisisafiletosign.txt.asc
           
-          gpg --local-user snowdrop-core@redhat.com --armor --detach-sign --status-fd 1 --batch --no-tty --pinentry-mode error --output thisisafiletosign.txt
+          gpg --local-user snowdrop-core@redhat.com --armor --detach-sign \
+            --status-fd 1 --batch --no-tty --pinentry-mode error \
+            --output thisisafiletosign.txt.asc thisisafiletosign.txt 
           
           ls -la
           cat thisisafiletosign.txt.asc
