@@ -26,10 +26,15 @@ jobs:
 
       - name: Check the gpg key, sign a file
         run: |
+          set -ex
+          
           gpg --list-keys
+          
           echo "thisisafiletosign" > thisisafiletosign.txt
-          rm thisisafiletosign.txt.asc
+          rm -f -- thisisafiletosign.txt.asc
+          
           gpg --local-user snowdrop-core@redhat.com --armor --detach-sign --status-fd 1 --batch --no-tty --pinentry-mode error --output thisisafiletosign.txt
+          
           ls -la
           cat thisisafiletosign.txt.asc
 
