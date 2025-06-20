@@ -44,7 +44,7 @@ jobs:
 
       - name: 'Sign the files of the module: narayana-spring-boot-core'
         run: |
-         mvn deploy -Prelease -B -DskipTests -DskipPublishing=true
+         mvn deploy -Prelease -B -DskipTests -DskipPublishing=false -DwaitUntil=uploaded
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
