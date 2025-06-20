@@ -55,8 +55,6 @@ jobs:
         run: |
           set -ex
           
-          gpg --verify narayana-spring-boot-core/target/narayana-spring-boot-core-3.4.1.pom.asc
-          
           cd target/central-publishing
           unzip central-bundle.zip
           gpg --verify dev/snowdrop/narayana-spring-boot-core/3.4.1/narayana-spring-boot-core-3.4.1-sources.jar.asc
