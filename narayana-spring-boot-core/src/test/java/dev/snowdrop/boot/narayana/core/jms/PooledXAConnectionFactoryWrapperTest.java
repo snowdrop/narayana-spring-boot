@@ -16,24 +16,35 @@
 
 package dev.snowdrop.boot.narayana.core.jms;
 
+import javax.transaction.xa.XAResource;
+
+import jakarta.jms.Connection;
 import jakarta.jms.ConnectionFactory;
+import jakarta.jms.ConnectionMetaData;
+import jakarta.jms.Session;
+import jakarta.jms.XAConnection;
 import jakarta.jms.XAConnectionFactory;
+import jakarta.transaction.Transaction;
 import jakarta.transaction.TransactionManager;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import dev.snowdrop.boot.narayana.core.properties.MessagingHubConnectionFactoryProperties;
 import dev.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
 import org.jboss.narayana.jta.jms.JmsXAResourceRecoveryHelper;
+import org.jboss.tm.LastResource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.messaginghub.pooled.jms.JmsPoolXAConnectionFactory;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,16 +56,16 @@ class PooledXAConnectionFactoryWrapperTest {
     private TransactionManager mockTransactionManager;
     @Mock
     private XARecoveryModule mockXaRecoveryModule;
-    private MessagingHubConnectionFactoryProperties messagingHubConnectionFactoryProperties;
+    @Spy
+    private MessagingHubConnectionFactoryProperties spyMessagingHubConnectionFactoryProperties;
     @Mock
     private RecoveryCredentialsProperties mockRecoveryCredentialsProperties;
     private PooledXAConnectionFactoryWrapper wrapper;
 
     @BeforeEach
     void before() {
-        this.messagingHubConnectionFactoryProperties = new MessagingHubConnectionFactoryProperties();
         this.wrapper = new PooledXAConnectionFactoryWrapper(this.mockTransactionManager, this.mockXaRecoveryModule,
-                this.messagingHubConnectionFactoryProperties, this.mockRecoveryCredentialsProperties);
+                this.spyMessagingHubConnectionFactoryProperties, this.mockRecoveryCredentialsProperties);
     }
 
     @Test
@@ -82,5 +93,25 @@ class PooledXAConnectionFactoryWrapperTest {
         verify(this.mockXaRecoveryModule).addXAResourceRecoveryHelper(any(JmsXAResourceRecoveryHelper.class));
         verify(this.mockRecoveryCredentialsProperties).getUser();
         verify(this.mockRecoveryCredentialsProperties).getPassword();
+    }
+
+    @Test
+    void wrapWithLastResource() throws Exception {
+        given(this.spyMessagingHubConnectionFactoryProperties.isLastResource()).willReturn(true);
+        given(this.mockRecoveryCredentialsProperties.isValid()).willReturn(false);
+        ConnectionFactory connectionFactory = this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory);
+
+        XAConnection mockXaConnection = mock(XAConnection.class);
+        given(this.mockXaConnectionFactory.createXAConnection()).willReturn(mockXaConnection);
+        given(mockXaConnection.getMetaData()).willReturn(mock(ConnectionMetaData.class));
+        try (Connection connection = connectionFactory.createConnection()) {
+            Transaction mockTransaction = mock(Transaction.class);
+            given(this.mockTransactionManager.getTransaction()).willReturn(mockTransaction);
+            ArgumentCaptor<XAResource> captorXaResource = ArgumentCaptor.captor();
+            given(mockTransaction.enlistResource(captorXaResource.capture())).willReturn(true);
+            try (Session ignored = connection.createSession()) {
+                assertThat(captorXaResource.getValue()).isInstanceOf(LastResource.class);
+            }
+        }
     }
 }

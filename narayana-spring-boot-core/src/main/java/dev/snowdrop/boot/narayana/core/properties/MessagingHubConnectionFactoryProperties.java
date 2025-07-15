@@ -22,6 +22,7 @@ public class MessagingHubConnectionFactoryProperties {
 
     private boolean enabled = false;
     private String name = "jms";
+    private boolean lastResource = false;
     private int maxConnections = 1;
     private Duration connectionIdleTimeout = Duration.ofSeconds(30);
     private Duration connectionCheckInterval = Duration.ofMillis(-1);
@@ -45,6 +46,14 @@ public class MessagingHubConnectionFactoryProperties {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isLastResource() {
+        return this.lastResource;
+    }
+
+    public void setLastResource(boolean lastResource) {
+        this.lastResource = lastResource;
     }
 
     public int getMaxConnections() {

@@ -28,19 +28,26 @@ import org.messaginghub.pooled.jms.pool.PooledXAConnection;
 public class PooledNarayanaConnection extends PooledXAConnection {
 
     private final String name;
+    private final boolean lastResource;
 
-    public PooledNarayanaConnection(Connection connection, TransactionManager transactionManager, String name) {
+    public PooledNarayanaConnection(Connection connection, TransactionManager transactionManager, String name, boolean lastResource) {
         super(connection, transactionManager);
         this.name = name;
+        this.lastResource = lastResource;
     }
 
     @Override
     protected XAResource createXaResource(JmsPoolSession session) throws JMSException {
         XAResource xares = super.createXaResource(session);
         if (this.name != null) {
-            xares = new NamedXAResource(xares, this.name);
+            if (this.lastResource) {
+                xares = new NamedLastXAResource(xares, this.name);
+            } else {
+                xares = new NamedXAResource(xares, this.name);
+            }
+        } else if (this.lastResource) {
+            xares = new LastXAResource(xares);
         }
         return xares;
     }
-
 }

@@ -63,6 +63,7 @@ public class PooledXAConnectionFactoryWrapper extends AbstractXAConnectionFactor
     protected ConnectionFactory wrapConnectionFactoryInternal(XAConnectionFactory xaConnectionFactory) {
         JmsPoolNarayanaConnectionFactory pooledConnectionFactory = new JmsPoolNarayanaConnectionFactory();
         pooledConnectionFactory.setName(this.properties.getName());
+        pooledConnectionFactory.setLastResource(this.properties.isLastResource());
         pooledConnectionFactory.setTransactionManager(this.transactionManager);
         pooledConnectionFactory.setConnectionFactory(xaConnectionFactory);
         pooledConnectionFactory.setMaxConnections(this.properties.getMaxConnections());
