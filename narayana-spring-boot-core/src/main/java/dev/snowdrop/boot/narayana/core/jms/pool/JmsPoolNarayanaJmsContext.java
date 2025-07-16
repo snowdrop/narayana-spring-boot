@@ -24,17 +24,25 @@ import org.messaginghub.pooled.jms.JmsPoolXAJMSContext;
 public class JmsPoolNarayanaJmsContext extends JmsPoolXAJMSContext {
 
     private final String name;
+    private final boolean lastResource;
 
-    public JmsPoolNarayanaJmsContext(JmsPoolConnection connection, int sessionMode, String name) {
+    public JmsPoolNarayanaJmsContext(JmsPoolConnection connection, int sessionMode, String name, boolean lastResource) {
         super(connection, sessionMode);
         this.name = name;
+        this.lastResource = lastResource;
     }
 
     @Override
     public XAResource getXAResource() {
         XAResource xares = super.getXAResource();
         if (this.name != null) {
-            xares = new NamedXAResource(xares, this.name);
+            if (this.lastResource) {
+                xares = new NamedLastXAResource(xares, this.name);
+            } else {
+                xares = new NamedXAResource(xares, this.name);
+            }
+        } else if (this.lastResource) {
+            xares = new LastXAResource(xares);
         }
         return xares;
     }

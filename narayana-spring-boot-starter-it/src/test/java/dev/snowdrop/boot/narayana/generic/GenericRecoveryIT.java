@@ -31,6 +31,7 @@ import dev.snowdrop.boot.narayana.app.EntriesService;
 import dev.snowdrop.boot.narayana.app.Entry;
 import dev.snowdrop.boot.narayana.app.MessagesService;
 import dev.snowdrop.boot.narayana.app.TestApplication;
+import dev.snowdrop.boot.narayana.core.properties.NarayanaProperties;
 import dev.snowdrop.boot.narayana.utils.BytemanHelper;
 import io.agroal.springframework.boot.AgroalDataSourceAutoConfiguration;
 import org.jboss.byteman.contrib.bmunit.BMRule;
@@ -62,6 +63,8 @@ import static org.mockito.BDDMockito.when;
 @SpringBootTest(classes = TestApplication.class)
 @EnableAutoConfiguration(exclude = AgroalDataSourceAutoConfiguration.class)
 public class GenericRecoveryIT {
+    // Margin in seconds to compensate for a complete run through recovery code within waits
+    private static final int RECOVERY_CODE_EXECUTION_MARGIN = 1;
 
     @Mock
     private XAResourceWrapper xaResource;
@@ -80,6 +83,9 @@ public class GenericRecoveryIT {
 
     @Autowired
     private XARecoveryModule xaRecoveryModule;
+
+    @Autowired
+    private NarayanaProperties narayanaProperties;
 
     @BeforeEach
     void before() {
@@ -116,8 +122,17 @@ public class GenericRecoveryIT {
         assertMessagesAfterCrash(this.messagesService.getReceivedMessages());
         assertEntriesAfterCrash(this.entriesService.getEntries());
 
+        // Maximum time to wait for a recovery run. Keeping in mind the worst case scenario:
+        // With a crash after first scan, but before backoffPeriod, the total time will be
+        // BackoffPeriod + PeriodicRecoveryPeriod + BackoffPeriod and some extra time for
+        // code execution other than waiting.
+        int recoveryWaitTime = this.narayanaProperties.getRecoveryBackoffPeriod() +
+                        this.narayanaProperties.getPeriodicRecoveryPeriod() +
+                        this.narayanaProperties.getRecoveryBackoffPeriod() +
+                        RECOVERY_CODE_EXECUTION_MARGIN;
+
         await("Wait for the recovery to happen")
-                .atMost(Duration.ofSeconds(30))
+                .atMost(Duration.ofSeconds(recoveryWaitTime))
                 .pollInterval(Duration.ofSeconds(1))
                 .untilAsserted(() -> {
                     assertMessagesAfterRecovery(this.messagesService.getReceivedMessages());
