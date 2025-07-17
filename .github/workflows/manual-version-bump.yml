@@ -3,8 +3,8 @@ name: Manual Version Bump to Next SNAPSHOT
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: 'Branch to bump (default: main)'
+      base_branch:
+        description: 'Base branch for the PR (default: main)'
         required: false
         default: 'main'
 
@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout branch
+      - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.inputs.branch }}
+          ref: ${{ github.event.inputs.base_branch }}
 
       - name: Set up JDK
         uses: actions/setup-java@v2
@@ -24,7 +24,8 @@ jobs:
           distribution: 'adopt'
           java-version: '21'
 
-      - name: Bump to next snapshot version
+      - name: Calculate next snapshot version
+        id: bump
         run: |
           current_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "Current version: $current_version"
@@ -33,13 +34,31 @@ jobs:
           next_patch=$((patch + 1))
           next_version="${major}.${minor}.${next_patch}-SNAPSHOT"
           echo "Next version: $next_version"
+          echo "next_version=$next_version" >> $GITHUB_OUTPUT
 
-          mvn versions:set -DnewVersion=$next_version
+      - name: Create new branch
+        run: |
+          git checkout -b bump-version-${{ steps.bump.outputs.next_version }}
+
+      - name: Bump version and commit
+        run: |
+          mvn versions:set -DnewVersion=${{ steps.bump.outputs.next_version }}
           mvn versions:commit
 
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git commit -am "chore: bump version to $next_version"
-          git push origin HEAD:${{ github.event.inputs.branch }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git commit -am "chore: bump version to ${{ steps.bump.outputs.next_version }}"
+
+      - name: Push changes to new branch
+        run: |
+          git push origin HEAD
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: bump-version-${{ steps.bump.outputs.next_version }}
+          base: ${{ github.event.inputs.base_branch }}
+          title: "chore: bump version to ${{ steps.bump.outputs.next_version }}"
+          body: |
+            This PR updates the project version to `${{ steps.bump.outputs.next_version }}`.
