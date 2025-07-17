@@ -62,3 +62,4 @@ jobs:
           title: "chore: bump version to ${{ steps.bump.outputs.next_version }}"
           body: |
             This PR updates the project version to `${{ steps.bump.outputs.next_version }}`.
+          reviewers: aureamunoz
