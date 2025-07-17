@@ -27,3 +27,11 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+  bump-version:
+    needs: publish
+    uses: ./.github/workflows/bump-version.yml
+    with:
+      base_branch: main
+    secrets:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
