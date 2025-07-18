@@ -115,27 +115,47 @@ you could do that by adding this entry to your application configuration:
 narayana.messaginghub.maxConnections=10
 ```
 
-# Release
+# Release & Versioning Process
 
-## Manually
+This repository uses a two-step automated process for releasing artifacts to Maven Central and updating the project version.
 
-Dry run:
-```sh
-mvn release:prepare -DdryRun
-```
+## Step 1: Create a GitHub Release
 
-Tag:
-```sh
-mvn release:prepare
-```
+To start the release process:
 
-Deploy:
-```sh
-mvn release:perform
-```
+1. Go to the **Releases** section in GitHub.
+2. Click **"Draft a new release"**.
+3. In the **Tag version** field, enter the release version (e.g., `v1.2.3`).
+4. Fill in the **Release title** and description if needed.
+5. Click **"Publish release"**.
 
-Set all modules to new SNAPSHOT version:
-```sh
-mvn versions:set
-mvn versions:commit
-```
+This will trigger the `Publish package to the Maven Central Repository` GitHub Action.
+
+
+## What happens next?
+
+1. The `Publish package to the Maven Central Repository` workflow:
+    - Publishes the current version to Maven Central (via `mvn deploy`).
+    - Then calls a reusable workflow (`bump-version.yml`) that:
+        - Calculates the next `-SNAPSHOT` version (e.g., `1.2.4-SNAPSHOT`).
+        - Creates a new branch.
+        - Updates the `pom.xml`.
+        - Opens a Pull Request with the version bump.
+
+
+## Final Step: Merge the PR
+
+Once the Pull Request is created, manual action should be perform to:
+
+1. Review the changes.
+2. If everything looks good, merge the PR.
+3. Your main branch will now be at the next `-SNAPSHOT` version, ready for development.
+
+### Notes
+
+- The tag created in the GitHub release must match the version being released.
+- The PR will be automatically created only if the `pom.xml` version changes.
+- If no changes are detected, the workflow will silently skip the bump.
+
+
+
