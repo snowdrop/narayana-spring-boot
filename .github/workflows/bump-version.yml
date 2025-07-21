@@ -1,0 +1,82 @@
+name: Manual Version Bump to Next SNAPSHOT
+
+on:
+  workflow_call:
+    inputs:
+      base_branch:
+        required: true
+        type: string
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.base_branch }}
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '21'
+
+      - name: Calculate next snapshot version
+        id: bump
+        run: |
+          current_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "Current version: $current_version"
+          base_version=$(echo $current_version | sed 's/-.*//')
+          IFS='.' read -r major minor patch <<< "$base_version"
+          next_patch=$((patch + 1))
+          next_version="${major}.${minor}.${next_patch}-SNAPSHOT"
+          echo "Next version: $next_version"
+          echo "next_version=$next_version" >> $GITHUB_OUTPUT
+
+      - name: Create new branch
+        run: |
+          git checkout -b bump-version-${{ steps.bump.outputs.next_version }}
+
+      - name: Bump version and commit
+        run: |
+          mvn versions:set -DnewVersion=${{ steps.bump.outputs.next_version }}
+          mvn versions:commit
+          
+          echo "::group::Git diff"
+          git diff
+          echo "::endgroup::"
+      
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+      
+          if [ -n "$(git status --porcelain)" ]; then
+          echo "There are changes to commit."
+          git add pom.xml
+          git add **/pom.xml
+          git commit -m "chore: bump version to ${{ steps.bump.outputs.next_version }}"
+          else
+          echo "⚠️ No changes detected after mvn versions:commit. Skipping commit."
+          fi
+
+      - name: Debug show Git status
+        run: git status
+
+      - name: Push changes to new branch
+        run: |
+          git push origin HEAD
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: bump-version-${{ steps.bump.outputs.next_version }}
+          base: ${{ github.event.inputs.base_branch }}
+          title: "chore: bump version to ${{ steps.bump.outputs.next_version }}"
+          body: |
+            This PR updates the project version to `${{ steps.bump.outputs.next_version }}`.
+          reviewers: aureamunoz
