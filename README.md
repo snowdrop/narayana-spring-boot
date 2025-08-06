@@ -158,4 +158,22 @@ Once the Pull Request is created, manual action should be perform to:
 - If no changes are detected, the workflow will silently skip the bump.
 
 
+## Debugging job (Post-Sonatype Migration)
+
+This workflow is designed for testing the Maven Central publishing pipeline after the migration to Sonatype. 
+It helps verify that critical aspects of the release process—such as Maven settings, credentials, GPG key import and usage, and artifact signing—are functioning correctly.
+
+⚠️ Note: This workflow is not intended for production releases.
+It is triggered manually via workflow_dispatch and can be reused for debugging or validation before running a full release.
+
+Key steps in this job:
+
+- Sets up the JDK and configures settings.xml to authenticate with Maven Central.
+- Verifies that the GPG key has been correctly imported by signing a dummy file.
+- Executes a mvn deploy using the release profile and GPG signing.
+- Validates that the generated artifacts are properly signed.
+
+This job is especially useful for testing after changes to the GPG key, credentials, or repository configuration.
+
+
 

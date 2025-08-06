@@ -1,3 +1,7 @@
+# Debugging job used to test Maven Central publishing after the Sonatype migration.
+# This workflow is triggered manually and intended for validation and troubleshooting,
+# not for production releases.
+
 name: Debugging job
 on:
   workflow_dispatch:
@@ -27,6 +31,7 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
+      # Confirm GPG key is correctly imported by signing a dummy file
       - name: Check the gpg key imported and sign a dummy file
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
@@ -45,6 +50,7 @@ jobs:
 
           cat thisisafiletosign.txt.asc
 
+      # Deploy the project using the release profile and check GPG signing
       - name: 'Create a release and upload the bundle'
         run: |
          mvn versions:set -DprocessAllModules=true -DnewVersion=$RELEASE_VERSION
@@ -54,6 +60,7 @@ jobs:
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
+      # Verify that the generated artifacts have been correctly signed
       - name: Check files signed
         run: |
           set -ex
