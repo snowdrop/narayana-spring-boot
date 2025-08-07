@@ -173,7 +173,3 @@ Key steps in this job:
 - Executes a mvn deploy using the release profile and GPG signing.
 - Validates that the generated artifacts are properly signed.
 
-This job is especially useful for testing after changes to the GPG key, credentials, or repository configuration.
-
-
-
