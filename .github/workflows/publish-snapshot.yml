@@ -5,18 +5,26 @@
 name: Debugging job
 on:
   workflow_dispatch:
-  #release:
-  #  types: [created]
+    inputs:
+      release_version:
+        description: 'Snapshot version to use (must end with -SNAPSHOT)'
+        required: true
 
 env:
-    RELEASE_VERSION: 3.4.1.1
+  RELEASE_VERSION: ${{ github.event.inputs.release_version }}
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Validate that version is a SNAPSHOT
+        run: |
+          if [[ "$RELEASE_VERSION" != *-SNAPSHOT ]]; then
+           echo "ERROR: RELEASE_VERSION must be a SNAPSHOT version. Current value: $RELEASE_VERSION"
+           exit 1
+          fi
 
+      - uses: actions/checkout@v2
       # Install JDK
       # Configure the maven settings.xml and add a server entry with maven central token username/password and GPG private key
       # The server-username, server-password and gpg-passphrase are declared as env variables.
