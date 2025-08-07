@@ -2,7 +2,7 @@
 # This workflow is triggered manually and intended for validation and troubleshooting,
 # not for production releases.
 
-name: Debugging job
+name: Snapshot & Debugging release job
 on:
   workflow_dispatch:
     inputs:
