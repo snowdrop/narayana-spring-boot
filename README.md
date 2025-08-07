@@ -158,4 +158,18 @@ Once the Pull Request is created, manual action should be perform to:
 - If no changes are detected, the workflow will silently skip the bump.
 
 
+## Snapshot & debug release job (Post-Sonatype Migration)
+
+This workflow is designed to release a snapshot on Maven Central and to validate under the hood that signing an artifact is working
+It helps verify that critical aspects of the release process—such as Maven settings, credentials, GPG key import and usage, and artifact signing—are functioning correctly.
+
+⚠️ Note: This workflow is not intended for production releases.
+It is triggered manually via workflow_dispatch and can be reused for debugging or validation before running a full release.
+
+Key steps in this job:
+
+- Sets up the JDK and configures settings.xml to authenticate with Maven Central.
+- Verifies that the GPG key has been correctly imported by signing a dummy file.
+- Executes a mvn deploy using the release profile and GPG signing.
+- Validates that the generated artifacts are properly signed.
 
