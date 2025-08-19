@@ -61,6 +61,8 @@ jobs:
           if [ -n "$(git status --porcelain)" ]; then
             echo "There are changes to commit."
             find . -name "pom.xml.versionsBackup" -delete
+            git status
+            find . -name pom.xml -exec grep -H "<version>" {} \;
             git add -A
             git commit -m "chore: bump version to ${{ steps.bump.outputs.next_version }}"
           else
