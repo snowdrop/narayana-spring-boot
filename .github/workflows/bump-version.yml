@@ -60,10 +60,9 @@ jobs:
       
           if [ -n "$(git status --porcelain)" ]; then
             echo "There are changes to commit."
-            git add pom.xml
-            git add **/pom.xml
-            git commit -m "chore: bump version to ${{ steps.bump.outputs.next_version }}"
             find . -name "pom.xml.versionsBackup" -delete
+            git add -A
+            git commit -m "chore: bump version to ${{ steps.bump.outputs.next_version }}"
           else
             echo "⚠️ No changes detected after mvn versions:commit. Skipping commit."
           fi
