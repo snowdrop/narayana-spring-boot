@@ -48,7 +48,7 @@ jobs:
 
       - name: Bump version and commit
         run: |
-          mvn versions:set -DnewVersion=${{ steps.bump.outputs.next_version }}
+          mvn versions:set -DnewVersion=${{ steps.bump.outputs.next_version }} -DgenerateBackupPoms=false
           mvn versions:commit
           
           echo "::group::Git diff"
