@@ -33,5 +33,3 @@ jobs:
     uses: ./.github/workflows/bump-version.yml
     with:
       base_branch: main
-    secrets:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
