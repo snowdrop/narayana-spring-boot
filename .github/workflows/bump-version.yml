@@ -70,7 +70,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
           branch: bump-version-${{ steps.bump.outputs.next_version }}
           base: ${{ github.event.inputs.base_branch }}
           title: "chore: bump version to ${{ steps.bump.outputs.next_version }}"
