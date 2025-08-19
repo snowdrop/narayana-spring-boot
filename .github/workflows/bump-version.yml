@@ -59,21 +59,19 @@ jobs:
           git config user.email "github-actions@github.com"
       
           if [ -n "$(git status --porcelain)" ]; then
-          echo "There are changes to commit."
-          git add pom.xml
-          git add **/pom.xml
-          git commit -m "chore: bump version to ${{ steps.bump.outputs.next_version }}"
+            echo "There are changes to commit."
+            git add pom.xml
+            git add **/pom.xml
+            git commit -m "chore: bump version to ${{ steps.bump.outputs.next_version }}"
           else
-          echo "⚠️ No changes detected after mvn versions:commit. Skipping commit."
+            echo "⚠️ No changes detected after mvn versions:commit. Skipping commit."
           fi
 
       - name: Debug show Git status
         run: git status
 
       - name: Push changes to new branch
-        run: |
-          git pull --rebase origin ${{ github.event.inputs.base_branch }}
-          git push origin bump-version-${{ steps.bump.outputs.next_version }}
+        run: git push origin bump-version-${{ steps.bump.outputs.next_version }}
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
