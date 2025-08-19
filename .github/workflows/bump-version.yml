@@ -72,7 +72,8 @@ jobs:
 
       - name: Push changes to new branch
         run: |
-          git push origin HEAD
+          git pull --rebase origin ${{ github.event.inputs.base_branch }}
+          git push origin bump-version-${{ steps.bump.outputs.next_version }}
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
