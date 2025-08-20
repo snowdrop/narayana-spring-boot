@@ -75,12 +75,13 @@ jobs:
         run: git status
 
       - name: Push changes to new branch
+        id: push_branch
         run: |
           git pull --rebase origin ${{ github.event.inputs.base_branch }}
           OUTPUT=$(git push origin bump-version-${{ steps.bump.outputs.next_version }} 2>&1)
           echo "$OUTPUT"
           # extract url for creating PR
-          PR_URL=$(echo "$OUTPUT" | grep -o 'https://github.com[^ ]*')
+          PR_URL=$(echo "$OUTPUT" | grep -o 'https://github.com[^ ]*pull/new[^ ]*' | head -n1)
           if [ -n "$PR_URL" ]; then
             echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
           fi
