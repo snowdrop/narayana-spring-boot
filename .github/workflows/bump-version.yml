@@ -97,6 +97,7 @@ jobs:
           BASE="main"
           HEAD="bump-version-${{ steps.bump.outputs.next_version }}"
           TITLE="chore: bump version to ${{ steps.bump.outputs.next_version }}"
+          REVIEWER="aureamunoz"
           BODY="This PR was created automatically by the release workflow."
       
           DATA=$(jq -n \
@@ -104,6 +105,7 @@ jobs:
             --arg head "$HEAD" \
             --arg base "$BASE" \
             --arg body "$BODY" \
+            --arg reviewer "$REVIEWER" \
             '{title: $title, head: $head, base: $base, body: $body}')
       
           RESPONSE=$(curl -s -X POST \
@@ -115,42 +117,3 @@ jobs:
           echo "API response: $RESPONSE"
           PR_URL=$(echo "$RESPONSE" | jq -r .html_url)
           echo "Created PR: $PR_URL"
-
-
-#      - name: Create pull request via API
-#        run: |
-#          OWNER="snowdrop"
-#          REPO="narayana-spring-boot"
-#          BASE="main"
-#          HEAD="bump-version-${{ steps.bump.outputs.next_version }}"
-#          TITLE="chore: bump version to ${{ steps.bump.outputs.next_version }}"
-#          BODY="This PR was created automatically by the release workflow."
-#
-#          RESPONSE=$(curl -s -X POST \
-#            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-#            -H "Accept: application/vnd.github.v3+json" \
-#            https://api.github.com/repos/$OWNER/$REPO/pulls \
-#            -d @- <<EOF
-#            {
-#              "title": "$TITLE",
-#              "head": "$HEAD",
-#              "base": "$BASE",
-#              "body": "$BODY"
-#            }
-#            EOF)
-#          echo "API response: $RESPONSE"
-#          PR_URL=$(echo "$RESPONSE" | jq -r .html_url)
-#          echo "Created PR: $PR_URL"
-
-
-
-#      - name: Create Pull Request
-#        uses: peter-evans/create-pull-request@v5
-#        with:
-#          token: ${{ secrets.GITHUB_TOKEN }}
-#          branch: bump-version-${{ steps.bump.outputs.next_version }}
-#          base: ${{ github.event.inputs.base_branch }}
-#          title: "chore: bump version to ${{ steps.bump.outputs.next_version }}"
-#          body: |
-#            This PR updates the project version to `${{ steps.bump.outputs.next_version }}`.
-#          reviewers: aureamunoz
