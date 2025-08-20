@@ -106,7 +106,7 @@ jobs:
             --arg base "$BASE" \
             --arg body "$BODY" \
             --arg reviewer "$REVIEWER" \
-            '{title: $title, head: $head, base: $base, body: $body}')
+            '{title: $title, head: $head, reviewer: $reviewer, base: $base, body: $body}')
       
           RESPONSE=$(curl -s -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
