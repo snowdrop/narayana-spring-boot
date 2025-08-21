@@ -38,9 +38,9 @@ import org.jboss.tm.XAResourceRecoveryRegistry;
 import org.messaginghub.pooled.jms.JmsPoolConnectionFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.transaction.TransactionManagerCustomizers;
 import org.springframework.boot.autoconfigure.transaction.jta.JtaAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -60,7 +60,7 @@ import org.springframework.util.StringUtils;
  */
 @AutoConfiguration(before = JtaAutoConfiguration.class)
 @EnableConfigurationProperties(NarayanaProperties.class)
-@ConditionalOnProperty(prefix = "spring.jta", value = "enabled", matchIfMissing = true)
+@ConditionalOnBooleanProperty(name = "spring.jta.enabled", matchIfMissing = true)
 @ConditionalOnClass({
         Transaction.class,
         JtaTransactionManager.class,
@@ -173,7 +173,7 @@ public class NarayanaAutoConfiguration {
     /**
      * JMS connection factory wrapper configuration.
      */
-    @ConditionalOnProperty(name = "narayana.messaginghub.enabled", havingValue = "false", matchIfMissing = true)
+    @ConditionalOnBooleanProperty(name = "narayana.messaginghub.enabled", havingValue = false, matchIfMissing = true)
     @ConditionalOnClass(Message.class)
     static class GenericJmsConfiguration {
 
@@ -187,8 +187,8 @@ public class NarayanaAutoConfiguration {
 
     }
 
-    @ConditionalOnProperty(name = "narayana.messaginghub.enabled", havingValue = "true")
-    @ConditionalOnClass({Message.class, JmsPoolConnectionFactory.class, PooledObject.class })
+    @ConditionalOnBooleanProperty(name = "narayana.messaginghub.enabled")
+    @ConditionalOnClass({Message.class, JmsPoolConnectionFactory.class, PooledObject.class})
     static class PooledJmsConfiguration {
 
         @Bean
