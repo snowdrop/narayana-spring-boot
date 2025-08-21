@@ -1,8 +1,7 @@
 name: Publish package to the Maven Central Repository
 on:
-  workflow_dispatch:
-#  release:
-#    types: [created]
+  release:
+    types: [created]
 
 
 jobs:
@@ -41,18 +40,21 @@ jobs:
 
       - name: Bump version and commit with mvn release:prepare
         run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          
           mvn --batch-mode release:prepare \
             -DreleaseVersion=${{ steps.bump.outputs.release_version }} \
             -DdevelopmentVersion=${{ steps.bump.outputs.next_version }} \
             -Dtag=${{ steps.bump.outputs.release_version }} \
             -DpushChanges=false
 
-#      - name: Publish package
-#        run: mvn --batch-mode deploy -DskipTests -Prelease
-#        env:
-#          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-#          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
-#          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      - name: Publish package
+        run: mvn --batch-mode deploy -DskipTests -Prelease
+        env:
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
 #  bump-version:
 #    needs: publish
