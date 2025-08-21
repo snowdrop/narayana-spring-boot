@@ -6,12 +6,12 @@ on:
       base_branch:
         required: true
         type: string
-#  workflow_dispatch:
-#    inputs:
-#      base_branch:
-#        description: 'Base branch to use'
-#        required: true
-#        type: string
+  workflow_dispatch:
+    inputs:
+      base_branch:
+        description: 'Base branch to use'
+        required: true
+        type: string
 
 jobs:
   bump-version:
