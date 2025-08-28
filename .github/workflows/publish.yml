@@ -12,6 +12,8 @@ jobs:
       - name: Set up JDK and Maven Settings
         uses: actions/setup-java@v2
         with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
           java-version: '21'
           distribution: 'adopt'
           server-id: central
@@ -31,23 +33,23 @@ jobs:
           base_version=$(echo $current_version | sed 's/-.*//')
           IFS='.' read -r major minor patch <<< "$base_version"
           next_patch=$((patch + 1))
-          release_version="${major}.${minor}.${next_patch}"
+          release_version=${current_version/-SNAPSHOT/}
           next_version="${major}.${minor}.${next_patch}-SNAPSHOT"
           echo "Release version: $release_version"
           echo "release_version=$release_version" >> $GITHUB_OUTPUT
           echo "Next version: $next_version"
           echo "next_version=$next_version" >> $GITHUB_OUTPUT
 
-      - name: Bump version and commit with mvn release:prepare
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          
-          mvn --batch-mode release:prepare \
-            -DreleaseVersion=${{ steps.bump.outputs.release_version }} \
-            -DdevelopmentVersion=${{ steps.bump.outputs.next_version }} \
-            -Dtag=${{ steps.bump.outputs.release_version }} \
-            -DpushChanges=false
+#      - name: Bump version and commit with mvn release:prepare
+#        run: |
+#          git config user.name "github-actions"
+#          git config user.email "github-actions@github.com"
+#
+#          mvn --batch-mode release:prepare \
+#            -DreleaseVersion=${{ steps.bump.outputs.release_version }} \
+#            -DdevelopmentVersion=${{ steps.bump.outputs.next_version }} \
+#            -Dtag=${{ steps.bump.outputs.release_version }} \
+#            -DpushChanges=false
 
       - name: Publish package
         run: mvn --batch-mode deploy -DskipTests -Prelease
