@@ -21,5 +21,6 @@ jobs:
         distribution: 'temurin'
     - name: Install
       run: ./mvnw install -DskipTests
+#      This is a test
     - name: Test
       run: ./mvnw -Ptestcontainers verify
