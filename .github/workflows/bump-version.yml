@@ -1,6 +1,8 @@
 name: Manual Version Bump to Next SNAPSHOT
 
 on:
+  release:
+    types: [ created ]
   workflow_call:
     inputs:
       base_branch:
@@ -35,7 +37,19 @@ jobs:
           distribution: 'adopt'
           java-version: '21'
 
-      - name: Calculate next snapshot version
+#      - name: Calculate next snapshot version
+#        id: bump
+#        run: |
+#          current_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+#          echo "Current version: $current_version"
+#          base_version=$(echo $current_version | sed 's/-.*//')
+#          IFS='.' read -r major minor patch <<< "$base_version"
+#          next_patch=$((patch + 1))
+#          next_version="${major}.${minor}.${next_patch}-SNAPSHOT"
+#          echo "Next version: $next_version"
+#          echo "next_version=$next_version" >> $GITHUB_OUTPUT
+
+      - name: Calculate release version and next snapshot
         id: bump
         run: |
           current_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
@@ -43,7 +57,10 @@ jobs:
           base_version=$(echo $current_version | sed 's/-.*//')
           IFS='.' read -r major minor patch <<< "$base_version"
           next_patch=$((patch + 1))
+          release_version=${current_version/-SNAPSHOT/}
           next_version="${major}.${minor}.${next_patch}-SNAPSHOT"
+          echo "Release version: $release_version"
+          echo "release_version=$release_version" >> $GITHUB_OUTPUT
           echo "Next version: $next_version"
           echo "next_version=$next_version" >> $GITHUB_OUTPUT
 
