@@ -1,19 +1,24 @@
 name: Publish package to the Maven Central Repository
 on:
-  release:
-    types: [created]
-
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
 
 jobs:
-  publish:
+  run_if:
+    if: startsWith(github.head_ref, 'bump-version-')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.inputs.base_branch }}
+          fetch-depth: 0
+          submodules: recursive
       - name: Set up JDK and Maven Settings
         uses: actions/setup-java@v2
         with:
-          ref: ${{ github.ref }}
-          fetch-depth: 0
           java-version: '21'
           distribution: 'adopt'
           server-id: central
@@ -25,41 +30,9 @@ jobs:
         run: |
           gpg --list-keys
 
-      - name: Calculate release version and next snapshot
-        id: bump
-        run: |
-          current_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "Current version: $current_version"
-          base_version=$(echo $current_version | sed 's/-.*//')
-          IFS='.' read -r major minor patch <<< "$base_version"
-          next_patch=$((patch + 1))
-          release_version=${current_version/-SNAPSHOT/}
-          next_version="${major}.${minor}.${next_patch}-SNAPSHOT"
-          echo "Release version: $release_version"
-          echo "release_version=$release_version" >> $GITHUB_OUTPUT
-          echo "Next version: $next_version"
-          echo "next_version=$next_version" >> $GITHUB_OUTPUT
-
-#      - name: Bump version and commit with mvn release:prepare
-#        run: |
-#          git config user.name "github-actions"
-#          git config user.email "github-actions@github.com"
-#
-#          mvn --batch-mode release:prepare \
-#            -DreleaseVersion=${{ steps.bump.outputs.release_version }} \
-#            -DdevelopmentVersion=${{ steps.bump.outputs.next_version }} \
-#            -Dtag=${{ steps.bump.outputs.release_version }} \
-#            -DpushChanges=false
-
       - name: Publish package
         run: mvn --batch-mode deploy -DskipTests -Prelease
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-
-#  bump-version:
-#    needs: publish
-#    uses: ./.github/workflows/bump-version.yml
-#    with:
-#      base_branch: main

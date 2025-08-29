@@ -117,7 +117,7 @@ narayana.messaginghub.maxConnections=10
 
 # Release & Versioning Process
 
-This repository uses a two-step automated process for releasing artifacts to Maven Central and updating the project version.
+This repository uses a two-step process for releasing artifacts to Maven Central
 
 ## Step 1: Create a GitHub Release
 
@@ -129,21 +129,18 @@ To start the release process:
 4. Fill in the **Release title** and description if needed.
 5. Click **"Publish release"**.
 
-This will trigger the `Publish package to the Maven Central Repository` GitHub Action.
+This will trigger the `Manual Version Bump to Next SNAPSHOT` GitHub Action.
 
 
 ## What happens next?
 
-1. The `Publish package to the Maven Central Repository` workflow:
-    - Publishes the current version to Maven Central (via `mvn deploy`).
-    - Then calls a reusable workflow (`bump-version.yml`) that:
-        - Calculates the next `-SNAPSHOT` version (e.g., `1.2.4-SNAPSHOT`).
-        - Creates a new branch.
-        - Updates the `pom.xml`.
-        - Opens a Pull Request with the version bump.
+1. The `Manual Version Bump to Next SNAPSHOT` workflow:
+   - Calculates the next `-SNAPSHOT` version (e.g., `1.2.4-SNAPSHOT`).
+   - Creates a new branch called bump-version-*
+   - Updates the `pom.xml`.
+   - Opens a Pull Request with the version bump.
 
-
-## Final Step: Merge the PR
+## Next Step: Merge the PR
 
 Once the Pull Request is created, manual action should be perform to:
 
@@ -151,11 +148,18 @@ Once the Pull Request is created, manual action should be perform to:
 2. If everything looks good, merge the PR.
 3. Your main branch will now be at the next `-SNAPSHOT` version, ready for development.
 
+This will trigger the `Publish package to the Maven Central Repository` GitHub Action.
+
+## Final step: Publish the release.
+
+The `Publish package to the Maven Central Repository` workflow publishes the current version to Maven Central (via `mvn deploy`).
+
+
 ### Notes
 
 - The tag created in the GitHub release must match the version being released.
 - The PR will be automatically created only if the `pom.xml` version changes.
-- If no changes are detected, the workflow will silently skip the bump.
+- The PR will be created with a branch called `bump-version-<next-version>`
 
 
 ## Snapshot & debug release job (Post-Sonatype Migration)
