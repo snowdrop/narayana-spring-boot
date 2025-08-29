@@ -46,23 +46,48 @@ jobs:
           echo "Next version: $next_version"
           echo "next_version=$next_version" >> $GITHUB_OUTPUT
 
-      - name: Create new branch
-        run: |
-          git checkout -b bump-version-${{ steps.bump.outputs.next_version }}
-          echo "Base version: "${{ github.event.inputs.base_branch }}
+#      - name: Create new branch
+#        run: |
+#          git checkout -b bump-version-${{ steps.bump.outputs.next_version }}
+#          echo "Base version: "${{ github.event.inputs.base_branch }}
 
-      - name: Bump version and commit with mvn release:prepare
+      - name: Bump version and commit
         run: |
+          mvn versions:set -DnewVersion=${{ steps.bump.outputs.next_version }} -DgenerateBackupPoms=false
+          mvn versions:commit
+          
+          echo "::group::Git diff"
+          git diff
+          echo "::endgroup::"
+          
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/snowdrop/narayana-spring-boot.git
+          
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "There are changes to commit."
+            find . -name "pom.xml.versionsBackup" -delete
+            git status
+            find . -name pom.xml -exec grep -H "<version>" {} \;
+            git add -A
+            git commit -m "chore: bump version to main"
+#            git commit -m "chore: bump version to ${{ steps.bump.outputs.next_version }}"
+          else
+            echo "⚠️ No changes detected after mvn versions:commit. Skipping commit."
+          fi
 
-          mvn --batch-mode release:prepare \
-            -DreleaseVersion=${{ steps.bump.outputs.release_version }} \
-            -DdevelopmentVersion=${{ steps.bump.outputs.next_version }} \
-            -Dtag=${{ steps.bump.outputs.release_version }} \
-            -DreleaseBranch=bump-version-${{ steps.bump.outputs.next_version }} \
-            -DskipTests
+      - name: Debug show Git status
+        run: git status
+
+#      - name: Bump version and commit with mvn release:prepare
+#        run: |
+#          git config user.name "github-actions"
+#          git config user.email "github-actions@github.com"
+#
+#          mvn --batch-mode release:prepare \
+#            -DreleaseVersion=${{ steps.bump.outputs.release_version }} \
+#            -DdevelopmentVersion=${{ steps.bump.outputs.next_version }} \
+#            -Dtag=${{ steps.bump.outputs.release_version }} \
+#            -DskipTests
 
 #      - name: Publish package
 #        run: mvn --batch-mode deploy -DskipTests -Prelease
