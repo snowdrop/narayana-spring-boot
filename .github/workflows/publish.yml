@@ -15,11 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.inputs.base_branch }}
+          fetch-depth: 0
+          submodules: recursive
       - name: Set up JDK and Maven Settings
         uses: actions/setup-java@v2
         with:
-          ref: ${{ github.ref }}
-          fetch-depth: 0
           java-version: '21'
           distribution: 'adopt'
           server-id: central
