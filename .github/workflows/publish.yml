@@ -82,7 +82,6 @@ jobs:
       - name: Push changes to main
         id: push_branch
         run: |
-          git pull --rebase origin ${{ github.event.inputs.base_branch }}
           OUTPUT=$(git push origin main 2>&1)
           echo "$OUTPUT"
           # extract url for creating PR
