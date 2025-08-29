@@ -77,6 +77,18 @@ jobs:
       - name: Debug show Git status
         run: git status
 
+      - name: Push changes to main
+        id: push_branch
+        run: |
+          git pull --rebase origin ${{ github.event.inputs.base_branch }}
+          OUTPUT=$(git push origin main 2>&1)
+          echo "$OUTPUT"
+          # extract url for creating PR
+          PR_URL=$(echo "$OUTPUT" | grep -o 'https://github.com[^ ]*pull/new[^ ]*' | head -n1)
+          if [ -n "$PR_URL" ]; then
+            echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
+          fi
+
 #      - name: Bump version and commit with mvn release:prepare
 #        run: |
 #          git config user.name "github-actions"
