@@ -1,7 +1,10 @@
 name: Publish package to the Maven Central Repository
 on:
-  release:
-    types: [created]
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       base_branch:
@@ -10,7 +13,8 @@ on:
         type: string
 
 jobs:
-  publish:
+  run_if:
+    if: startsWith(github.head_ref, 'bump-version-')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -32,83 +36,13 @@ jobs:
         run: |
           gpg --list-keys
 
-#      - name: Calculate release version and next snapshot
-#        id: bump
-#        run: |
-#          current_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-#          echo "Current version: $current_version"
-#          base_version=$(echo $current_version | sed 's/-.*//')
-#          IFS='.' read -r major minor patch <<< "$base_version"
-#          next_patch=$((patch + 1))
-#          release_version=${current_version/-SNAPSHOT/}
-#          next_version="${major}.${minor}.${next_patch}-SNAPSHOT"
-#          echo "Release version: $release_version"
-#          echo "release_version=$release_version" >> $GITHUB_OUTPUT
-#          echo "Next version: $next_version"
-#          echo "next_version=$next_version" >> $GITHUB_OUTPUT
-
-#      - name: Create new branch
-#        run: |
-#          git checkout -b bump-version-${{ steps.bump.outputs.next_version }}
-#          echo "Base version: "${{ github.event.inputs.base_branch }}
-
-#      - name: Bump version and commit
-#        run: |
-#          mvn versions:set -DnewVersion=${{ steps.bump.outputs.next_version }} -DgenerateBackupPoms=false
-#          mvn versions:commit
-#
-#          echo "::group::Git diff"
-#          git diff
-#          echo "::endgroup::"
-#
-#          git config user.name "github-actions"
-#          git config user.email "github-actions@github.com"
-#
-#          if [ -n "$(git status --porcelain)" ]; then
-#            echo "There are changes to commit."
-#            find . -name "pom.xml.versionsBackup" -delete
-#            git status
-#            find . -name pom.xml -exec grep -H "<version>" {} \;
-#            git add -A
-#            git commit -m "chore: bump version to main"
-#          else
-#            echo "⚠️ No changes detected after mvn versions:commit. Skipping commit."
-#          fi
-#
-#      - name: Debug show Git status
-#        run: git status
-#
-#      - name: Push changes to main
-#        id: push_branch
-#        run: |
-#          OUTPUT=$(git push origin main 2>&1)
-#          echo "$OUTPUT"
-#          # extract url for creating PR
-#          PR_URL=$(echo "$OUTPUT" | grep -o 'https://github.com[^ ]*pull/new[^ ]*' | head -n1)
-#          if [ -n "$PR_URL" ]; then
-#            echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
-#          fi
-
-#      - name: Bump version and commit with mvn release:prepare
-#        run: |
-#          git config user.name "github-actions"
-#          git config user.email "github-actions@github.com"
-#
-#          mvn --batch-mode release:prepare \
-#            -DreleaseVersion=${{ steps.bump.outputs.release_version }} \
-#            -DdevelopmentVersion=${{ steps.bump.outputs.next_version }} \
-#            -Dtag=${{ steps.bump.outputs.release_version }} \
-#            -DskipTests
-
-      - name: Publish package
-        run: mvn --batch-mode clean install -DskipTests
-        env:
-          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-
-#  bump-version:
-#    needs: publish
-#    uses: ./.github/workflows/bump-version.yml
-#    with:
-#      base_branch: main
+      - name: Dummy step for testing triggering
+        run: |
+          echo "Relese will be published..."
+          echo "github.head_ref ${{ github.head_ref}}"
+#      - name: Publish package
+#        run: mvn --batch-mode deploy -DskipTests -Prelease
+#        env:
+#          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+#          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+#          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}

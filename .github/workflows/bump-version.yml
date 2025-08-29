@@ -3,11 +3,6 @@ name: Manual Version Bump to Next SNAPSHOT
 on:
   release:
     types: [ created ]
-  workflow_call:
-    inputs:
-      base_branch:
-        required: true
-        type: string
   workflow_dispatch:
     inputs:
       base_branch:
