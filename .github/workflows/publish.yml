@@ -2,6 +2,12 @@ name: Publish package to the Maven Central Repository
 on:
   release:
     types: [created]
+  workflow_dispatch:
+    inputs:
+      base_branch:
+        description: 'Base branch to use'
+        required: true
+        type: string
 
 
 jobs:
@@ -40,23 +46,23 @@ jobs:
           echo "Next version: $next_version"
           echo "next_version=$next_version" >> $GITHUB_OUTPUT
 
-#      - name: Bump version and commit with mvn release:prepare
-#        run: |
-#          git config user.name "github-actions"
-#          git config user.email "github-actions@github.com"
-#
-#          mvn --batch-mode release:prepare \
-#            -DreleaseVersion=${{ steps.bump.outputs.release_version }} \
-#            -DdevelopmentVersion=${{ steps.bump.outputs.next_version }} \
-#            -Dtag=${{ steps.bump.outputs.release_version }} \
-#            -DpushChanges=false
+      - name: Bump version and commit with mvn release:prepare
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
 
-      - name: Publish package
-        run: mvn --batch-mode deploy -DskipTests -Prelease
-        env:
-          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          mvn --batch-mode release:prepare \
+            -DreleaseVersion=${{ steps.bump.outputs.release_version }} \
+            -DdevelopmentVersion=${{ steps.bump.outputs.next_version }} \
+            -Dtag=${{ steps.bump.outputs.release_version }} \
+            -DpushChanges=false
+
+#      - name: Publish package
+#        run: mvn --batch-mode deploy -DskipTests -Prelease
+#        env:
+#          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+#          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+#          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
 #  bump-version:
 #    needs: publish
