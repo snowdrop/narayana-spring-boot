@@ -70,7 +70,6 @@ jobs:
             find . -name pom.xml -exec grep -H "<version>" {} \;
             git add -A
             git commit -m "chore: bump version to main"
-#            git commit -m "chore: bump version to ${{ steps.bump.outputs.next_version }}"
           else
             echo "⚠️ No changes detected after mvn versions:commit. Skipping commit."
           fi
