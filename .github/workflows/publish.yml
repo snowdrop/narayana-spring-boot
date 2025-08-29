@@ -55,7 +55,7 @@ jobs:
             -DreleaseVersion=${{ steps.bump.outputs.release_version }} \
             -DdevelopmentVersion=${{ steps.bump.outputs.next_version }} \
             -Dtag=${{ steps.bump.outputs.release_version }} \
-            -DpushChanges=false
+            -DskipTests
 
 #      - name: Publish package
 #        run: mvn --batch-mode deploy -DskipTests -Prelease
