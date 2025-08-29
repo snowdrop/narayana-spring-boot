@@ -46,6 +46,11 @@ jobs:
           echo "Next version: $next_version"
           echo "next_version=$next_version" >> $GITHUB_OUTPUT
 
+      - name: Create new branch
+        run: |
+          git checkout -b bump-version-${{ steps.bump.outputs.next_version }}
+          echo "Base version: "${{ github.event.inputs.base_branch }}
+
       - name: Bump version and commit with mvn release:prepare
         run: |
           git config user.name "github-actions"
@@ -56,6 +61,7 @@ jobs:
             -DreleaseVersion=${{ steps.bump.outputs.release_version }} \
             -DdevelopmentVersion=${{ steps.bump.outputs.next_version }} \
             -Dtag=${{ steps.bump.outputs.release_version }} \
+            -DreleaseBranch=bump-version-${{ steps.bump.outputs.next_version }} \
             -DskipTests
 
 #      - name: Publish package
