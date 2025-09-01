@@ -28,6 +28,7 @@ import org.testcontainers.oracle.OracleContainer;
 import org.testcontainers.utility.MountableFile;
 
 @Tag("testcontainers")
+@Tag("agroal")
 @Testcontainers
 @SpringBootTest(classes = TestApplication.class, properties = {
     "narayana.messaginghub.enabled=true",

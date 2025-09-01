@@ -18,12 +18,14 @@ package dev.snowdrop.boot.narayana.pooled;
 
 import dev.snowdrop.boot.narayana.app.TestApplication;
 import dev.snowdrop.boot.narayana.generic.GenericTransactionalIT;
+import org.junit.jupiter.api.Tag;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  * @author <a href="mailto:gytis@redhat.com">Gytis Trikleris</a>
  */
+@Tag("agroal")
 @SpringBootTest(classes = TestApplication.class, properties = "narayana.messaginghub.enabled=true")
 @EnableAutoConfiguration
 public class PooledTransactionalIT extends GenericTransactionalIT {
