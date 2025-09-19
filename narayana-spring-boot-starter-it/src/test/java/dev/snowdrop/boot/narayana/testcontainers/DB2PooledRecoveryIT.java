@@ -29,6 +29,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Tag("testcontainers")
+@Tag("agroal")
 @Testcontainers
 @SpringBootTest(classes = TestApplication.class, properties = {
         "narayana.messaginghub.enabled=true",
