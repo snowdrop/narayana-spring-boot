@@ -19,7 +19,7 @@
   <parent>
     <groupId>dev.snowdrop</groupId>
     <artifactId>narayana-spring-boot-parent</artifactId>
-    <version>3.5.1-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>narayana-spring-boot-starter-it</artifactId>
@@ -168,7 +168,7 @@
               <reuseForks>false</reuseForks>
               <parallel>false</parallel>
               <argLine>-Djdk.attach.allowAttachSelf=true</argLine>
-              <excludedGroups>testcontainers</excludedGroups>
+              <excludedGroups>testcontainers,agroal</excludedGroups>
             </configuration>
           </execution>
         </executions>
@@ -190,7 +190,7 @@
                   <reuseForks>false</reuseForks>
                   <parallel>false</parallel>
                   <argLine>-Djdk.attach.allowAttachSelf=true</argLine>
-                  <excludedGroups>none</excludedGroups>
+                  <excludedGroups>agroal</excludedGroups>
                 </configuration>
               </execution>
             </executions>
