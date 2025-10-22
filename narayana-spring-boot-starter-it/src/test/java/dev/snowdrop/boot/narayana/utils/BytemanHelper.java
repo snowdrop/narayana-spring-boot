@@ -37,7 +37,7 @@ public class BytemanHelper {
     public void failFirstCommit(Uid uid) {
         // Increment is called first, so counter should be 1
         if (commitsCounter == 1) {
-            logger.info(BytemanHelper.class.getName() + " fail first commit");
+            logger.info("{} fail first commit", BytemanHelper.class.getName());
             ActionManager.manager().remove(uid);
             ThreadActionData.popAction();
             throw new RuntimeException("Failing first commit");
@@ -46,7 +46,7 @@ public class BytemanHelper {
 
     public void incrementCommitsCounter() {
         commitsCounter++;
-        logger.info(BytemanHelper.class.getName() + " increment commits counter: " + commitsCounter);
+        logger.info("{} increment commits counter: {}", BytemanHelper.class.getName(), commitsCounter);
     }
 
 }

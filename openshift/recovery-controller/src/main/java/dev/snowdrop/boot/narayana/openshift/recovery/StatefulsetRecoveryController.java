@@ -117,7 +117,7 @@ public class StatefulsetRecoveryController {
         try {
             return OptionalInt.of(Integer.parseInt(podName.substring(this.properties.getStatefulset().length() + 1), 10));
         } catch (Exception e) {
-            LOG.warn("Cannot extract progressive number from pod name: " + podName);
+            LOG.warn("Cannot extract progressive number from pod name: {}", podName);
             return OptionalInt.empty();
         }
     }
