@@ -20,9 +20,9 @@ import dev.snowdrop.boot.narayana.generic.GenericRecoveryIT;
 import org.junit.jupiter.api.Tag;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 @Tag("testcontainers")
 @Testcontainers
@@ -30,6 +30,6 @@ public class PostgreSQLGenericRecoveryIT extends GenericRecoveryIT {
 
     @Container
     @ServiceConnection
-    static JdbcDatabaseContainer<?> postgresql = new PostgreSQLContainer<>("postgres:latest")
+    static JdbcDatabaseContainer<?> postgresql = new PostgreSQLContainer("postgres:latest")
             .withCommand("postgres -c max_prepared_transactions=10");
 }
