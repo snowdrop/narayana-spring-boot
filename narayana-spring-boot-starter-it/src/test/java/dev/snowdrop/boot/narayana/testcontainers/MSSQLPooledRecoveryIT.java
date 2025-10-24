@@ -25,9 +25,9 @@ import org.junit.jupiter.api.Tag;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.MSSQLServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.mssqlserver.MSSQLServerContainer;
 
 @Tag("testcontainers")
 @Tag("agroal")
@@ -41,7 +41,7 @@ public class MSSQLPooledRecoveryIT extends PooledRecoveryIT {
 
     @Container
     @ServiceConnection
-    static JdbcDatabaseContainer<?> mssql = new MSSQLServerContainer<>("mcr.microsoft.com/mssql/server:latest")
+    static JdbcDatabaseContainer<?> mssql = new MSSQLServerContainer("mcr.microsoft.com/mssql/server:latest")
             .acceptLicense()
             .withInitScript("mssql-initscript.sql");
 

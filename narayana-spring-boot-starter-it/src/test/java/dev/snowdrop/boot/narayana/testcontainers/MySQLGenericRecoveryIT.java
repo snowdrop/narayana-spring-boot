@@ -23,9 +23,9 @@ import dev.snowdrop.boot.narayana.generic.GenericRecoveryIT;
 import org.junit.jupiter.api.Tag;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.mysql.MySQLContainer;
 
 @Tag("testcontainers")
 @Testcontainers
@@ -33,7 +33,7 @@ public class MySQLGenericRecoveryIT extends GenericRecoveryIT {
 
     @Container
     @ServiceConnection
-    static JdbcDatabaseContainer<?> mysql = new MySQLContainer<>("mysql:9.2.0")
+    static JdbcDatabaseContainer<?> mysql = new MySQLContainer("mysql:latest")
             .withUsername("root")
             .withPassword("root");
 
