@@ -16,29 +16,15 @@
 
 package dev.snowdrop.boot.narayana.testcontainers;
 
-import dev.snowdrop.boot.narayana.app.TestApplication;
-import dev.snowdrop.boot.narayana.pooled.PooledRecoveryIT;
-import org.junit.jupiter.api.Tag;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Tag("testcontainers")
-@Tag("agroal")
-@Testcontainers
-@SpringBootTest(classes = TestApplication.class, properties = {
-    "narayana.messaginghub.enabled=true",
-    "spring.datasource.generateUniqueName=false",
-    "spring.datasource.name=jdbc"
-})
-public class MySQLPooledRecoveryIT extends PooledRecoveryIT {
+public interface PostgreSQLContainerConfiguration {
 
     @Container
     @ServiceConnection
-    static JdbcDatabaseContainer<?> mysql = new MySQLContainer<>("mysql:9.2.0")
-            .withUsername("root")
-            .withPassword("root");
+    JdbcDatabaseContainer<?> postgresql = new PostgreSQLContainer<>("postgres:latest")
+            .withCommand("postgres -c max_prepared_transactions=10");
 }

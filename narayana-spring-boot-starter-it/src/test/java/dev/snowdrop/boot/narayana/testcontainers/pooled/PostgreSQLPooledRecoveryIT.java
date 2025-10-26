@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-package dev.snowdrop.boot.narayana.testcontainers;
+package dev.snowdrop.boot.narayana.testcontainers.pooled;
 
 import dev.snowdrop.boot.narayana.app.TestApplication;
 import dev.snowdrop.boot.narayana.pooled.PooledRecoveryIT;
+import dev.snowdrop.boot.narayana.testcontainers.PostgreSQLContainerConfiguration;
 import org.junit.jupiter.api.Tag;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Tag("testcontainers")
@@ -34,10 +31,5 @@ import org.testcontainers.junit.jupiter.Testcontainers;
     "spring.datasource.generateUniqueName=false",
     "spring.datasource.name=jdbc"
 })
-public class PostgreSQLPooledRecoveryIT extends PooledRecoveryIT {
-
-    @Container
-    @ServiceConnection
-    static JdbcDatabaseContainer<?> postgresql = new PostgreSQLContainer<>("postgres:latest")
-            .withCommand("postgres -c max_prepared_transactions=10");
+public class PostgreSQLPooledRecoveryIT extends PooledRecoveryIT implements PostgreSQLContainerConfiguration {
 }

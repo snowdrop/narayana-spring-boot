@@ -14,23 +14,14 @@
  * limitations under the License.
  */
 
-package dev.snowdrop.boot.narayana.testcontainers;
+package dev.snowdrop.boot.narayana.testcontainers.generic;
 
-import dev.snowdrop.boot.narayana.generic.GenericRecoveryIT;
+import dev.snowdrop.boot.narayana.generic.GenericTransactionalIT;
+import dev.snowdrop.boot.narayana.testcontainers.OracleContainerConfiguration;
 import org.junit.jupiter.api.Tag;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.oracle.OracleContainer;
-import org.testcontainers.utility.MountableFile;
 
 @Tag("testcontainers")
 @Testcontainers
-public class OracleGenericRecoveryIT extends GenericRecoveryIT {
-
-    @Container
-    @ServiceConnection
-    static JdbcDatabaseContainer<?> oracle = new OracleContainer("gvenzl/oracle-free:slim-faststart")
-            .withCopyFileToContainer(MountableFile.forClasspathResource("oracle-initscript.sql"), "/container-entrypoint-initdb.d/init.sql");
+public class OracleTransactionalIT extends GenericTransactionalIT implements OracleContainerConfiguration {
 }

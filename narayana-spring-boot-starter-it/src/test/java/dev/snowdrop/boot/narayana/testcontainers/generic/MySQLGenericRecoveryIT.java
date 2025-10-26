@@ -14,28 +14,19 @@
  * limitations under the License.
  */
 
-package dev.snowdrop.boot.narayana.testcontainers;
+package dev.snowdrop.boot.narayana.testcontainers.generic;
 
 import java.util.List;
 
 import dev.snowdrop.boot.narayana.app.Entry;
 import dev.snowdrop.boot.narayana.generic.GenericRecoveryIT;
+import dev.snowdrop.boot.narayana.testcontainers.MySQLContainerConfiguration;
 import org.junit.jupiter.api.Tag;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.MSSQLServerContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Tag("testcontainers")
 @Testcontainers
-public class MSSQLGenericRecoveryIT extends GenericRecoveryIT {
-
-    @Container
-    @ServiceConnection
-    static JdbcDatabaseContainer<?> mssql = new MSSQLServerContainer<>("mcr.microsoft.com/mssql/server:latest")
-            .acceptLicense()
-            .withInitScript("mssql-initscript.sql");
+public class MySQLGenericRecoveryIT extends GenericRecoveryIT implements MySQLContainerConfiguration {
 
     @Override
     protected void assertEntriesAfterCrash(List<Entry> entries) {

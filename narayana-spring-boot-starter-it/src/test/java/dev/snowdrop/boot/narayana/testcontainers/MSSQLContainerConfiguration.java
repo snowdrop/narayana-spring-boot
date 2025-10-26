@@ -16,37 +16,16 @@
 
 package dev.snowdrop.boot.narayana.testcontainers;
 
-import java.util.List;
-
-import dev.snowdrop.boot.narayana.app.Entry;
-import dev.snowdrop.boot.narayana.app.TestApplication;
-import dev.snowdrop.boot.narayana.pooled.PooledRecoveryIT;
-import org.junit.jupiter.api.Tag;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.MSSQLServerContainer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Tag("testcontainers")
-@Tag("agroal")
-@Testcontainers
-@SpringBootTest(classes = TestApplication.class, properties = {
-    "narayana.messaginghub.enabled=true",
-    "spring.datasource.generateUniqueName=false",
-    "spring.datasource.name=jdbc"
-})
-public class MSSQLPooledRecoveryIT extends PooledRecoveryIT {
+public interface MSSQLContainerConfiguration {
 
     @Container
     @ServiceConnection
-    static JdbcDatabaseContainer<?> mssql = new MSSQLServerContainer<>("mcr.microsoft.com/mssql/server:latest")
+    JdbcDatabaseContainer<?> mssql = new MSSQLServerContainer<>("mcr.microsoft.com/mssql/server:latest")
             .acceptLicense()
             .withInitScript("mssql-initscript.sql");
-
-    @Override
-    protected void assertEntriesAfterCrash(List<Entry> entries) {
-        // Empty because server locks table until successfully recovered.
-    }
 }
