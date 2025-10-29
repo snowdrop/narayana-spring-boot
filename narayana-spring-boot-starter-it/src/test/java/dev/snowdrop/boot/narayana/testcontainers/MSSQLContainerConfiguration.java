@@ -18,14 +18,14 @@ package dev.snowdrop.boot.narayana.testcontainers;
 
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.MSSQLServerContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.mssqlserver.MSSQLServerContainer;
 
 public interface MSSQLContainerConfiguration {
 
     @Container
     @ServiceConnection
-    JdbcDatabaseContainer<?> mssql = new MSSQLServerContainer<>("mcr.microsoft.com/mssql/server:latest")
+    JdbcDatabaseContainer<?> mssql = new MSSQLServerContainer("mcr.microsoft.com/mssql/server:latest")
             .acceptLicense()
             .withInitScript("mssql-initscript.sql");
 }
