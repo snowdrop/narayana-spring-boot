@@ -2,8 +2,7 @@
 <!DOCTYPE suppressions PUBLIC "-//Puppy Crawl//DTD Suppressions 1.1//EN"
     "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 <suppressions>
-  <suppress files=".+Application\.java" checks="FinalClass" />
   <suppress files=".+Application\.java" checks="HideUtilityClassConstructor" />
-  <suppress files=".+Configuration\.java" checks="HideUtilityClassConstructor"/>
+  <suppress files=".+ContainerConfiguration\.java" checks="InterfaceIsType" />
   <suppress files="[\\/]src[\\/]test[\\/]java[\\/]" checks="Javadoc*" />
 </suppressions>

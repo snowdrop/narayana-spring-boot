@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-package dev.snowdrop.boot.narayana.testcontainers;
+package dev.snowdrop.boot.narayana.testcontainers.pooled;
 
 import dev.snowdrop.boot.narayana.app.TestApplication;
-import dev.snowdrop.boot.narayana.pooled.PooledRecoveryIT;
+import dev.snowdrop.boot.narayana.pooled.PooledTransactionalIT;
+import dev.snowdrop.boot.narayana.testcontainers.DB2ContainerConfiguration;
 import org.junit.jupiter.api.Tag;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.Db2Container;
-import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Tag("testcontainers")
@@ -38,18 +33,5 @@ import org.testcontainers.junit.jupiter.Testcontainers;
         "spring.datasource.name=jdbc",
         "spring.datasource.xa.properties.driverType=4"
 })
-public class DB2PooledRecoveryIT extends PooledRecoveryIT {
-
-    @Container
-    @ServiceConnection
-    static JdbcDatabaseContainer<?> db2 = new Db2Container("icr.io/db2_community/db2")
-            .acceptLicense()
-            .withEnv("PERSISTENT_HOME", "false");
-
-    @DynamicPropertySource
-    static void setProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.xa.properties.serverName", db2::getHost);
-        registry.add("spring.datasource.xa.properties.portNumber", () -> db2.getMappedPort(Db2Container.DB2_PORT));
-        registry.add("spring.datasource.xa.properties.databaseName", db2::getDatabaseName);
-    }
+public class DB2PooledTransactionalIT extends PooledTransactionalIT implements DB2ContainerConfiguration {
 }

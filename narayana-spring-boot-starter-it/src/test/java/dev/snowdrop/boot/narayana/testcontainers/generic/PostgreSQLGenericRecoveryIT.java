@@ -14,31 +14,14 @@
  * limitations under the License.
  */
 
-package dev.snowdrop.boot.narayana.testcontainers;
+package dev.snowdrop.boot.narayana.testcontainers.generic;
 
-import java.util.List;
-
-import dev.snowdrop.boot.narayana.app.Entry;
 import dev.snowdrop.boot.narayana.generic.GenericRecoveryIT;
+import dev.snowdrop.boot.narayana.testcontainers.PostgreSQLContainerConfiguration;
 import org.junit.jupiter.api.Tag;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Tag("testcontainers")
 @Testcontainers
-public class MySQLGenericRecoveryIT extends GenericRecoveryIT {
-
-    @Container
-    @ServiceConnection
-    static JdbcDatabaseContainer<?> mysql = new MySQLContainer<>("mysql:9.2.0")
-            .withUsername("root")
-            .withPassword("root");
-
-    @Override
-    protected void assertEntriesAfterCrash(List<Entry> entries) {
-        // Empty because server locks table until successfully recovered.
-    }
+public class PostgreSQLGenericRecoveryIT extends GenericRecoveryIT implements PostgreSQLContainerConfiguration {
 }

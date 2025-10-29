@@ -16,26 +16,18 @@
 
 package dev.snowdrop.boot.narayana.testcontainers;
 
-import java.util.List;
-
-import dev.snowdrop.boot.narayana.app.Entry;
-import dev.snowdrop.boot.narayana.generic.GenericRecoveryIT;
-import org.junit.jupiter.api.Tag;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.Db2Container;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Tag("testcontainers")
-@Testcontainers
-public class DB2GenericRecoveryIT extends GenericRecoveryIT {
+public interface DB2ContainerConfiguration {
 
     @Container
     @ServiceConnection
-    static JdbcDatabaseContainer<?> db2 = new Db2Container("icr.io/db2_community/db2")
+    JdbcDatabaseContainer<?> db2 = new Db2Container("icr.io/db2_community/db2")
             .acceptLicense()
             .withEnv("PERSISTENT_HOME", "false");
 
@@ -45,10 +37,5 @@ public class DB2GenericRecoveryIT extends GenericRecoveryIT {
         registry.add("spring.datasource.xa.properties.serverName", db2::getHost);
         registry.add("spring.datasource.xa.properties.portNumber", () -> db2.getMappedPort(Db2Container.DB2_PORT));
         registry.add("spring.datasource.xa.properties.databaseName", db2::getDatabaseName);
-    }
-
-    @Override
-    protected void assertEntriesAfterCrash(List<Entry> entries) {
-        // Empty because server locks table until successfully recovered.
     }
 }
