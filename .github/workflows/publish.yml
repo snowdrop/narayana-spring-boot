@@ -1,14 +1,22 @@
 name: Publish package to the Maven Central Repository
+
 on:
   pull_request:
     types:
       - closed
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      base_branch:
+        description: 'Base branch for PR'
+        required: false
+        default: 'main'
 
 jobs:
-  run_if:
-    if: startsWith(github.head_ref, 'bump-version-')
+#  run_if:
+#    if: startsWith(github.head_ref, 'bump-version-')
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -25,7 +33,7 @@ jobs:
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE # Don't work => ${{ secrets.GPG_PASSPHRASE }} as env var name should be defined
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
       - name: Check the gpg key
         run: |
           gpg --list-keys

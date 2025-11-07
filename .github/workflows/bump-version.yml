@@ -1,22 +1,37 @@
 name: Manual Version Bump to Next SNAPSHOT
 
 on:
-  release:
-    types: [ created ]
+#  release:
+#    types: [ created ]
+  workflow_dispatch:
+    inputs:
+      base_branch:
+        description: 'Base branch for PR'
+        required: false
+        default: 'main'
 
 jobs:
   bump-version:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Determine base branch
+        id: branch
+        run: |
+          BASE="${{ github.event.inputs.base || 'main' }}"
+          if [ "${{ github.event_name }}" == "release" ]; then
+            BASE="main"
+          fi
+          echo "base_branch=$BASE" >> "$GITHUB_OUTPUT"
+
       - name: Show base branch
         run: |
-          echo "Branch is ${{ github.event.inputs.base_branch }}"
+          echo "Branch is ${{ steps.branch.outputs.base_branch }}"
 
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
-          ref: ${{ github.event.inputs.base_branch }}
+          ref: ${{ steps.branch.outputs.base_branch }}
           fetch-depth: 0
           submodules: recursive
 
@@ -44,20 +59,20 @@ jobs:
       - name: Create new branch
         run: |
           git checkout -b bump-version-${{ steps.bump.outputs.next_version }}
-          echo "Base version: "${{ github.event.inputs.base_branch }}
+          echo "Base version: "${{ steps.branch.outputs.base_branch }}
 
       - name: Bump version and commit
         run: |
           mvn versions:set -DnewVersion=${{ steps.bump.outputs.next_version }} -DgenerateBackupPoms=false
           mvn versions:commit
-          
+
           echo "::group::Git diff"
           git diff
           echo "::endgroup::"
-      
+
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-      
+
           if [ -n "$(git status --porcelain)" ]; then
             echo "There are changes to commit."
             find . -name "pom.xml.versionsBackup" -delete
@@ -75,7 +90,7 @@ jobs:
       - name: Push changes to new branch
         id: push_branch
         run: |
-          git pull --rebase origin ${{ github.event.inputs.base_branch }}
+          git pull --rebase origin ${{ steps.branch.outputs.base_branch }}
           OUTPUT=$(git push origin bump-version-${{ steps.bump.outputs.next_version }} 2>&1)
           echo "$OUTPUT"
           # extract url for creating PR
@@ -96,20 +111,20 @@ jobs:
           HEAD="bump-version-${{ steps.bump.outputs.next_version }}"
           TITLE="chore: bump version to ${{ steps.bump.outputs.next_version }}"
           BODY="This PR was created automatically by the release workflow."
-      
+
           DATA=$(jq -n \
             --arg title "$TITLE" \
             --arg head "$HEAD" \
             --arg base "$BASE" \
             --arg body "$BODY" \
             '{title: $title, head: $head, base: $base, body: $body}')
-      
+
           RESPONSE=$(curl -s -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/$OWNER/$REPO/pulls \
             -d "$DATA")
-      
+
           echo "API response: $RESPONSE"
           PR_URL=$(echo "$RESPONSE" | jq -r .html_url)
           echo "Created PR: $PR_URL"
