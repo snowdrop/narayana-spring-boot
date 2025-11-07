@@ -41,12 +41,12 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.transaction.TransactionManagerCustomizers;
-import org.springframework.boot.autoconfigure.transaction.jta.JtaAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.jdbc.XADataSourceWrapper;
 import org.springframework.boot.jms.XAConnectionFactoryWrapper;
 import org.springframework.boot.system.ApplicationHome;
+import org.springframework.boot.transaction.autoconfigure.TransactionManagerCustomizers;
+import org.springframework.boot.transaction.jta.autoconfigure.JtaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -157,6 +157,7 @@ public class NarayanaAutoConfiguration {
     /**
      * Generic data source wrapper configuration.
      */
+    @ConditionalOnClass(XADataSourceWrapper.class)
     static class GenericJdbcConfiguration {
 
         @Bean
@@ -174,7 +175,7 @@ public class NarayanaAutoConfiguration {
      * JMS connection factory wrapper configuration.
      */
     @ConditionalOnBooleanProperty(name = "narayana.messaginghub.enabled", havingValue = false, matchIfMissing = true)
-    @ConditionalOnClass(Message.class)
+    @ConditionalOnClass({Message.class, XAConnectionFactoryWrapper.class})
     static class GenericJmsConfiguration {
 
         @Bean
@@ -188,7 +189,7 @@ public class NarayanaAutoConfiguration {
     }
 
     @ConditionalOnBooleanProperty(name = "narayana.messaginghub.enabled")
-    @ConditionalOnClass({Message.class, JmsPoolConnectionFactory.class, PooledObject.class})
+    @ConditionalOnClass({Message.class, JmsPoolConnectionFactory.class, PooledObject.class, XAConnectionFactoryWrapper.class})
     static class PooledJmsConfiguration {
 
         @Bean

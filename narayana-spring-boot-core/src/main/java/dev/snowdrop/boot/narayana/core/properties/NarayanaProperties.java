@@ -149,16 +149,6 @@ public class NarayanaProperties {
         this.logDir = logDir;
     }
 
-    @Deprecated(forRemoval = true)
-    public String getTransactionManagerId() {
-        return getNodeIdentifier();
-    }
-
-    @Deprecated(forRemoval = true)
-    public void setTransactionManagerId(String nodeIdentifier) {
-        setNodeIdentifier(nodeIdentifier);
-    }
-
     public String getNodeIdentifier() {
         return this.nodeIdentifier;
     }
