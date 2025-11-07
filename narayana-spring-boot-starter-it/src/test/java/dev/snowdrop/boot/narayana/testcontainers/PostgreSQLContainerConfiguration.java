@@ -18,13 +18,13 @@ package dev.snowdrop.boot.narayana.testcontainers;
 
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 public interface PostgreSQLContainerConfiguration {
 
     @Container
     @ServiceConnection
-    JdbcDatabaseContainer<?> postgresql = new PostgreSQLContainer<>("postgres:latest")
+    JdbcDatabaseContainer<?> postgresql = new PostgreSQLContainer("postgres:latest")
             .withCommand("postgres -c max_prepared_transactions=10");
 }

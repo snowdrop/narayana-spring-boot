@@ -18,14 +18,14 @@ package dev.snowdrop.boot.narayana.testcontainers;
 
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.mysql.MySQLContainer;
 
 public interface MySQLContainerConfiguration {
 
     @Container
     @ServiceConnection
-    JdbcDatabaseContainer<?> mysql = new MySQLContainer<>("mysql:9.2.0")
+    JdbcDatabaseContainer<?> mysql = new MySQLContainer("mysql:latest")
             .withUsername("root")
             .withPassword("root");
 }
