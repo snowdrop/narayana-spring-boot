@@ -1,14 +1,13 @@
 name: Manual Version Bump to Next SNAPSHOT
 
 on:
-#  release:
-#    types: [ created ]
+  workflow_run:
+    workflows: [ "Publish package to the Maven Central Repository" ]
+    types:
+      - completed
+    branches:
+      - main
   workflow_dispatch:
-    inputs:
-      base_branch:
-        description: 'Base branch for PR'
-        required: false
-        default: 'main'
 
 jobs:
   bump-version:
