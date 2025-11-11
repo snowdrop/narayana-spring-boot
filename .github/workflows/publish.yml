@@ -1,27 +1,18 @@
 name: Publish package to the Maven Central Repository
 
 on:
-  pull_request:
-    types:
-      - closed
-    branches:
-      - main
-  workflow_dispatch:
-    inputs:
-      base_branch:
-        description: 'Base branch for PR'
-        required: false
-        default: 'main'
+  release:
+    types: [published]  # Triggered by a release publication
+  workflow_dispatch:    # Allows manual run if needed
 
 jobs:
-#  run_if:
-#    if: startsWith(github.head_ref, 'bump-version-')
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout repository at release tag
+        uses: actions/checkout@v5
         with:
-          ref: ${{ github.event.inputs.base_branch }}
+          ref: ${{ github.event.release.tag_name }}  # Uses the release tag
           fetch-depth: 0
           submodules: recursive
       - name: Set up JDK and Maven Settings
@@ -37,6 +28,29 @@ jobs:
       - name: Check the gpg key
         run: |
           gpg --list-keys
+
+      - name: Verify version matches release tag
+        run: |
+          POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          TAG_VERSION=${{ github.event.release.tag_name }}
+          # Remove 'v' prefix if present
+          TAG_VERSION=${TAG_VERSION#v}
+          
+          echo "POM version: $POM_VERSION"
+          echo "Release tag: $TAG_VERSION"
+          
+          if [ "$POM_VERSION" != "$TAG_VERSION" ]; then
+            echo "❌ ERROR: Version mismatch!"
+            echo "POM version ($POM_VERSION) does not match release tag ($TAG_VERSION)"
+            exit 1
+          fi
+          
+          if [[ "$POM_VERSION" == *"SNAPSHOT"* ]]; then
+            echo "❌ ERROR: Cannot publish SNAPSHOT version to Maven Central"
+            exit 1
+          fi
+          
+          echo "✅ Version verification passed"
 
       - name: Publish package
         run: mvn --batch-mode deploy -DskipTests -Prelease

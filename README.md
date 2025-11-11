@@ -115,51 +115,83 @@ you could do that by adding this entry to your application configuration:
 narayana.messaginghub.maxConnections=10
 ```
 
-# Release & Versioning Process
+# Release Process
 
-This repository uses a two-step process for releasing artifacts to Maven Central
+This repository uses an automated two-step process for releasing artifacts to Maven Central.
 
-## Step 1: Create a GitHub Release
+## Step 1: Prepare the Release Version
 
-To start the release process:
+Before creating a GitHub Release, you need to manually prepare the release version:
 
-1. Go to the **Releases** section in GitHub.
+1. **Update the version in `pom.xml`** files:
+   - Change from `X.Y.Z-SNAPSHOT` to `X.Y.Z` (remove the `-SNAPSHOT` suffix)
+   - Example: `1.2.3-SNAPSHOT` → `1.2.3`
+
+2. **Commit and push to main**:
+   ```bash
+   git add pom.xml
+   git commit -m "chore: prepare release X.Y.Z"
+   git push origin main
+   ```
+
+## Step 2: Create a GitHub Release
+
+1. Go to the [Releases section](../../releases) in GitHub.
 2. Click **"Draft a new release"**.
-3. In the **Tag version** field, enter the release version (e.g., `v1.2.3`).
-4. Fill in the **Release title** and description if needed.
+3. In the **Tag version** field, enter the release version (e.g., `1.2.3`).
+   - ⚠️ **Important**: The tag must match the version in `pom.xml`.
+4. Fill in the **Release title** and **description**.
 5. Click **"Publish release"**.
 
-This will trigger the `Manual Version Bump to Next SNAPSHOT` GitHub Action.
+## What Happens Next?
 
+### Automated Step 1: Publish to Maven Central
 
-## What happens next?
+The `Publish package to the Maven Central Repository` is triggered. This workflow will automatically:
+- Checkout the code at the release tag
+- Verify that the `pom.xml` version matches the release tag
+- Verify that the version is not a `-SNAPSHOT`
+- Publish the release to Maven Central
 
-1. The `Manual Version Bump to Next SNAPSHOT` workflow:
-   - Calculates the next `-SNAPSHOT` version (e.g., `1.2.4-SNAPSHOT`).
-   - Creates a new branch called bump-version-*
-   - Updates the `pom.xml`.
-   - Opens a Pull Request with the version bump.
+### Automated Step 2: Bump to Next SNAPSHOT Version
 
-## Next Step: Merge the PR
+Once the publish workflow completes successfully, the `Manual Version Bump to Next SNAPSHOT` is triggered. This workflow will automatically:
+- Calculate the next `-SNAPSHOT` version (e.g., `1.2.4-SNAPSHOT`)
+- Create a new branch called `bump-version-X.Y.Z-SNAPSHOT`
+- Update the `pom.xml` with the new version
+- Open a Pull Request with the version bump
 
-Once the Pull Request is created, manual action should be perform to:
+## Step 3: Merge the Version Bump PR
 
-1. Review the changes.
-2. If everything looks good, merge the PR.
-3. Your main branch will now be at the next `-SNAPSHOT` version, ready for development.
+1. Review the automatically created Pull Request.
+2. If everything looks correct, **merge the PR**.
+3. Your `main` branch will now be at the next `-SNAPSHOT` version, ready for development.
 
-This will trigger the `Publish package to the Maven Central Repository` GitHub Action.
+## Complete Flow Diagram
 
-## Final step: Publish the release.
+```
+1. Manual: Update pom.xml (1.2.3-SNAPSHOT → 1.2.3)
+   ↓
+2. Manual: Commit and push to main
+   ↓
+3. Manual: Create GitHub Release with tag v1.2.3
+   ↓
+4. Automated: Publish workflow verifies and publishes 1.2.3 to Maven Central
+   ↓
+5. Automated: Bump-version workflow creates PR for 1.2.4-SNAPSHOT
+   ↓
+6. Manual: Review and merge the PR
+   ↓
+7. Done: main branch is now at 1.2.4-SNAPSHOT
+```
 
-The `Publish package to the Maven Central Repository` workflow publishes the current version to Maven Central (via `mvn deploy`).
+## Important Notes
 
-
-### Notes
-
-- The tag created in the GitHub release must match the version being released.
-- The PR will be automatically created only if the `pom.xml` version changes.
-- The PR will be created with a branch called `bump-version-<next-version>`
+- ⚠️ The tag created in the GitHub release **must match** the version in `pom.xml` (e.g., tag `v1.2.3` for version `1.2.3`).
+- ⚠️ The version in `pom.xml` must **not** contain `-SNAPSHOT` when creating the release.
+- ✅ The publish workflow includes safety checks to prevent publishing incorrect versions.
+- ✅ The PR for the version bump will only be created if the publish workflow succeeds.
+- 🔧 Both workflows can also be triggered manually via `workflow_dispatch` if needed.
 
 
 ## Snapshot & debug release job (Post-Sonatype Migration)
