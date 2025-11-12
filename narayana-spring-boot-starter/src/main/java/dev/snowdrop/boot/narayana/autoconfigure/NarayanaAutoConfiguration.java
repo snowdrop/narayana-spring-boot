@@ -70,12 +70,6 @@ import org.springframework.util.StringUtils;
 @ConditionalOnMissingBean(PlatformTransactionManager.class)
 public class NarayanaAutoConfiguration {
 
-    private final TransactionManagerCustomizers transactionManagerCustomizers;
-
-    public NarayanaAutoConfiguration(ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers) {
-        this.transactionManagerCustomizers = transactionManagerCustomizers.getIfAvailable();
-    }
-
     @Bean
     @ConditionalOnMissingBean
     public static NarayanaBeanFactoryPostProcessor narayanaBeanFactoryPostProcessor() {
@@ -114,12 +108,11 @@ public class NarayanaAutoConfiguration {
     @ConditionalOnMissingBean
     public JtaTransactionManager transactionManager(UserTransaction userTransaction,
             TransactionManager transactionManager,
-            TransactionSynchronizationRegistry transactionSynchronizationRegistry) {
+            TransactionSynchronizationRegistry transactionSynchronizationRegistry,
+            ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers) {
         JtaTransactionManager jtaTransactionManager = new JtaTransactionManager(userTransaction, transactionManager);
         jtaTransactionManager.setTransactionSynchronizationRegistry(transactionSynchronizationRegistry);
-        if (this.transactionManagerCustomizers != null) {
-            this.transactionManagerCustomizers.customize(jtaTransactionManager);
-        }
+        transactionManagerCustomizers.ifAvailable(customizer -> customizer.customize(jtaTransactionManager));
         return jtaTransactionManager;
     }
 

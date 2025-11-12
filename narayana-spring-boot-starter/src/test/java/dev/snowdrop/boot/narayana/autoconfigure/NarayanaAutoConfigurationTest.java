@@ -17,6 +17,7 @@
 package dev.snowdrop.boot.narayana.autoconfigure;
 
 import java.io.File;
+import java.util.stream.Stream;
 
 import jakarta.transaction.TransactionManager;
 import jakarta.transaction.TransactionSynchronizationRegistry;
@@ -27,6 +28,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.system.ApplicationHome;
@@ -36,6 +38,7 @@ import org.springframework.transaction.jta.JtaTransactionManager;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -45,7 +48,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class NarayanaAutoConfigurationTest {
 
-    @Mock
+    @Spy
     private ObjectProvider<TransactionManagerCustomizers> mockTransactionManagerCustomizersProvider;
 
     @Mock
@@ -67,7 +70,7 @@ class NarayanaAutoConfigurationTest {
 
     @BeforeEach
     void before() {
-        this.configuration = new NarayanaAutoConfiguration(this.mockTransactionManagerCustomizersProvider);
+        this.configuration = new NarayanaAutoConfiguration();
     }
 
     @Test
@@ -86,22 +89,14 @@ class NarayanaAutoConfigurationTest {
     }
 
     @Test
-    void jtaTransactionManagerShouldBeCreated() {
+    void jtaTransactionManagerShouldBeCreatedAndCustomized() {
+        doReturn(Stream.of(this.mockTransactionManagerCustomizers)).when(this.mockTransactionManagerCustomizersProvider).stream();
         JtaTransactionManager jtaTransactionManager = this.configuration.transactionManager(
-                this.mockUserTransaction, this.mockTransactionManager, this.mockTransactionSynchronizationRegistry);
+                this.mockUserTransaction, this.mockTransactionManager, this.mockTransactionSynchronizationRegistry, this.mockTransactionManagerCustomizersProvider);
         assertThat(jtaTransactionManager.getUserTransaction()).isEqualTo(this.mockUserTransaction);
         assertThat(jtaTransactionManager.getTransactionManager()).isEqualTo(this.mockTransactionManager);
         assertThat(jtaTransactionManager.getTransactionSynchronizationRegistry())
                 .isEqualTo(this.mockTransactionSynchronizationRegistry);
-    }
-
-    @Test
-    void jtaTransactionManagerShouldBeCustomized() {
-        given(this.mockTransactionManagerCustomizersProvider.getIfAvailable()).willReturn(
-                this.mockTransactionManagerCustomizers);
-        this.configuration = new NarayanaAutoConfiguration(this.mockTransactionManagerCustomizersProvider);
-        JtaTransactionManager jtaTransactionManager = this.configuration.transactionManager(
-                this.mockUserTransaction, this.mockTransactionManager, this.mockTransactionSynchronizationRegistry);
         verify(this.mockTransactionManagerCustomizers).customize(jtaTransactionManager);
     }
 }
