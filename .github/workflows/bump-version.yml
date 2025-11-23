@@ -28,7 +28,7 @@ jobs:
           echo "Branch is ${{ steps.branch.outputs.base_branch }}"
 
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: ${{ steps.branch.outputs.base_branch }}
           fetch-depth: 0
