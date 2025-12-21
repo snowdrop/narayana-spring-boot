@@ -52,7 +52,7 @@
 
     <agroal.version>2.8</agroal.version>
     <awaitility.version>4.3.0</awaitility.version>
-    <byteman.version>4.0.25</byteman.version>
+    <byteman.version>4.0.26</byteman.version>
     <camel.version>4.14.2</camel.version>
     <camel-spring-boot.version>4.14.2</camel-spring-boot.version>
     <checkstyle.version>12.1.2</checkstyle.version>
