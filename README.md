@@ -108,7 +108,7 @@ and many other features. To enable MessagingHub add the following dependency and
 narayana.messaginghub.enabled=true
 ```
 
-All MessagingHub configuration properties described in its [documentation](https://github.com/messaginghub/pooled-jms/blob/master/pooled-jms-docs/Configuration.md)
+All MessagingHub configuration properties described in its [documentation](https://github.com/messaginghub/pooled-jms/blob/main/pooled-jms-docs/Configuration.md)
 are mapped with a prefix `narayana.messaginghub`. So for example if you'd like to set a max connections pool size to 10,
 you could do that by adding this entry to your application configuration:
 ```properties
