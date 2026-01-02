@@ -18,11 +18,11 @@ package dev.snowdrop.boot.narayana.core.jms.pool;
 
 import javax.transaction.xa.XAResource;
 
-import org.jboss.tm.LastResource;
+import org.jboss.tm.FirstResource;
 
-public class NamedLastXAResource extends NamedXAResource implements LastResource {
+public class NamedFirstXAResource extends NamedXAResource implements FirstResource {
 
-    public NamedLastXAResource(XAResource xaResource, String name) {
+    public NamedFirstXAResource(XAResource xaResource, String name) {
         super(xaResource, name);
     }
 }

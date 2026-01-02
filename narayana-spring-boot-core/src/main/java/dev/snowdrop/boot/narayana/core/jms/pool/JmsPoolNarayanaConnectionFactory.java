@@ -30,6 +30,7 @@ public class JmsPoolNarayanaConnectionFactory extends JmsPoolXAConnectionFactory
     private static final long serialVersionUID = 1709204966732828338L;
 
     private String name;
+    private boolean firstResource;
     private boolean lastResource;
 
     public String getName() {
@@ -38,6 +39,14 @@ public class JmsPoolNarayanaConnectionFactory extends JmsPoolXAConnectionFactory
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isFirstResource() {
+        return this.firstResource;
+    }
+
+    public void setFirstResource(boolean firstResource) {
+        this.firstResource = firstResource;
     }
 
     public boolean isLastResource() {
@@ -50,11 +59,11 @@ public class JmsPoolNarayanaConnectionFactory extends JmsPoolXAConnectionFactory
 
     @Override
     protected PooledNarayanaConnection createPooledConnection(Connection connection) {
-        return new PooledNarayanaConnection(connection, getTransactionManager(), getName(), isLastResource());
+        return new PooledNarayanaConnection(connection, getTransactionManager(), getName(), isFirstResource(), isLastResource());
     }
 
     @Override
     protected JmsPoolXAJMSContext newPooledConnectionContext(JmsPoolConnection connection, int sessionMode) {
-        return new JmsPoolNarayanaJmsContext(connection, sessionMode, getName(), isLastResource());
+        return new JmsPoolNarayanaJmsContext(connection, sessionMode, getName(), isFirstResource(), isLastResource());
     }
 }
