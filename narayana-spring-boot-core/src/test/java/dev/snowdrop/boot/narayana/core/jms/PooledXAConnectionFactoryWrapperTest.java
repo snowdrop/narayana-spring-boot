@@ -31,6 +31,7 @@ import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import dev.snowdrop.boot.narayana.core.properties.MessagingHubConnectionFactoryProperties;
 import dev.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
 import org.jboss.narayana.jta.jms.JmsXAResourceRecoveryHelper;
+import org.jboss.tm.FirstResource;
 import org.jboss.tm.LastResource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,6 +43,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -96,6 +98,26 @@ class PooledXAConnectionFactoryWrapperTest {
     }
 
     @Test
+    void wrapWithFirstResource() throws Exception {
+        given(this.spyMessagingHubConnectionFactoryProperties.isFirstResource()).willReturn(true);
+        given(this.mockRecoveryCredentialsProperties.isValid()).willReturn(false);
+        ConnectionFactory connectionFactory = this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory);
+
+        XAConnection mockXaConnection = mock(XAConnection.class);
+        given(this.mockXaConnectionFactory.createXAConnection()).willReturn(mockXaConnection);
+        given(mockXaConnection.getMetaData()).willReturn(mock(ConnectionMetaData.class));
+        try (Connection connection = connectionFactory.createConnection()) {
+            Transaction mockTransaction = mock(Transaction.class);
+            given(this.mockTransactionManager.getTransaction()).willReturn(mockTransaction);
+            ArgumentCaptor<XAResource> captorXaResource = ArgumentCaptor.captor();
+            given(mockTransaction.enlistResource(captorXaResource.capture())).willReturn(true);
+            try (Session ignored = connection.createSession()) {
+                assertThat(captorXaResource.getValue()).isInstanceOf(FirstResource.class);
+            }
+        }
+    }
+
+    @Test
     void wrapWithLastResource() throws Exception {
         given(this.spyMessagingHubConnectionFactoryProperties.isLastResource()).willReturn(true);
         given(this.mockRecoveryCredentialsProperties.isValid()).willReturn(false);
@@ -113,5 +135,15 @@ class PooledXAConnectionFactoryWrapperTest {
                 assertThat(captorXaResource.getValue()).isInstanceOf(LastResource.class);
             }
         }
+    }
+
+    @Test
+    void invalidFirstLastResourceConfiguration() throws Exception {
+        given(this.spyMessagingHubConnectionFactoryProperties.isFirstResource()).willReturn(true);
+        given(this.spyMessagingHubConnectionFactoryProperties.isLastResource()).willReturn(true);
+        given(this.mockRecoveryCredentialsProperties.isValid()).willReturn(false);
+        assertThatThrownBy(() -> this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Setting both firstResource and lastResource is not allowed");
     }
 }

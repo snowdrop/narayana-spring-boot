@@ -61,8 +61,12 @@ public class PooledXAConnectionFactoryWrapper extends AbstractXAConnectionFactor
 
     @Override
     protected ConnectionFactory wrapConnectionFactoryInternal(XAConnectionFactory xaConnectionFactory) {
+        if (this.properties.isFirstResource() && this.properties.isLastResource()) {
+            throw new IllegalArgumentException("Setting both firstResource and lastResource is not allowed");
+        }
         JmsPoolNarayanaConnectionFactory pooledConnectionFactory = new JmsPoolNarayanaConnectionFactory();
         pooledConnectionFactory.setName(this.properties.getName());
+        pooledConnectionFactory.setFirstResource(this.properties.isFirstResource());
         pooledConnectionFactory.setLastResource(this.properties.isLastResource());
         pooledConnectionFactory.setTransactionManager(this.transactionManager);
         pooledConnectionFactory.setConnectionFactory(xaConnectionFactory);
