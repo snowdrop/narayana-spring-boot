@@ -168,7 +168,7 @@
               <reuseForks>false</reuseForks>
               <parallel>false</parallel>
               <argLine>-Djdk.attach.allowAttachSelf=true</argLine>
-              <excludedGroups>testcontainers,agroal</excludedGroups>
+              <excludedGroups>testcontainers</excludedGroups>
             </configuration>
           </execution>
         </executions>
@@ -190,7 +190,7 @@
                   <reuseForks>false</reuseForks>
                   <parallel>false</parallel>
                   <argLine>-Djdk.attach.allowAttachSelf=true</argLine>
-                  <excludedGroups>agroal</excludedGroups>
+                  <excludedGroups>none</excludedGroups>
                 </configuration>
               </execution>
             </executions>
