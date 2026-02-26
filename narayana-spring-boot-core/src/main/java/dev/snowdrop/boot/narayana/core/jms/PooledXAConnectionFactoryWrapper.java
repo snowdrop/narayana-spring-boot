@@ -25,7 +25,7 @@ import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
 import dev.snowdrop.boot.narayana.core.jms.pool.JmsPoolNarayanaConnectionFactory;
 import dev.snowdrop.boot.narayana.core.jms.pool.NamedJmsXAResourceRecoveryHelper;
 import dev.snowdrop.boot.narayana.core.properties.MessagingHubConnectionFactoryProperties;
-import dev.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
+import dev.snowdrop.boot.narayana.core.properties.RecoveryProperties;
 
 public class PooledXAConnectionFactoryWrapper extends AbstractXAConnectionFactoryWrapper {
 
@@ -41,7 +41,7 @@ public class PooledXAConnectionFactoryWrapper extends AbstractXAConnectionFactor
      */
     public PooledXAConnectionFactoryWrapper(TransactionManager transactionManager, XARecoveryModule xaRecoveryModule,
             MessagingHubConnectionFactoryProperties properties) {
-        this(transactionManager, xaRecoveryModule, properties, RecoveryCredentialsProperties.DEFAULT);
+        this(transactionManager, xaRecoveryModule, properties, RecoveryProperties.DEFAULT);
     }
 
     /**
@@ -53,7 +53,7 @@ public class PooledXAConnectionFactoryWrapper extends AbstractXAConnectionFactor
      * @param recoveryCredentials Credentials for recovery helper
      */
     public PooledXAConnectionFactoryWrapper(TransactionManager transactionManager, XARecoveryModule xaRecoveryModule,
-            MessagingHubConnectionFactoryProperties properties, RecoveryCredentialsProperties recoveryCredentials) {
+            MessagingHubConnectionFactoryProperties properties, RecoveryProperties recoveryCredentials) {
         super(xaRecoveryModule, recoveryCredentials);
         this.properties = properties;
         this.transactionManager = transactionManager;
@@ -82,7 +82,7 @@ public class PooledXAConnectionFactoryWrapper extends AbstractXAConnectionFactor
     }
 
     @Override
-    protected XAResourceRecoveryHelper getRecoveryHelper(XAConnectionFactory xaConnectionFactory, RecoveryCredentialsProperties recoveryCredentials) {
+    protected XAResourceRecoveryHelper getRecoveryHelper(XAConnectionFactory xaConnectionFactory, RecoveryProperties recoveryCredentials) {
         if (recoveryCredentials.isValid()) {
             return new NamedJmsXAResourceRecoveryHelper(xaConnectionFactory, recoveryCredentials.getUser(),
                 recoveryCredentials.getPassword(), this.properties.getName());

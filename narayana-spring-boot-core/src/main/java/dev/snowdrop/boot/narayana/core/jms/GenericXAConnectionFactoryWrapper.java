@@ -21,7 +21,7 @@ import jakarta.jms.XAConnectionFactory;
 import jakarta.transaction.TransactionManager;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
-import dev.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
+import dev.snowdrop.boot.narayana.core.properties.RecoveryProperties;
 import org.jboss.narayana.jta.jms.ConnectionFactoryProxy;
 import org.jboss.narayana.jta.jms.TransactionHelperImpl;
 
@@ -36,7 +36,7 @@ public class GenericXAConnectionFactoryWrapper extends AbstractXAConnectionFacto
      * @param xaRecoveryModule    recovery module to register data source with.
      */
     public GenericXAConnectionFactoryWrapper(TransactionManager transactionManager, XARecoveryModule xaRecoveryModule) {
-        this(transactionManager, xaRecoveryModule, RecoveryCredentialsProperties.DEFAULT);
+        this(transactionManager, xaRecoveryModule, RecoveryProperties.DEFAULT);
     }
 
     /**
@@ -47,7 +47,7 @@ public class GenericXAConnectionFactoryWrapper extends AbstractXAConnectionFacto
      * @param recoveryCredentials Credentials for recovery helper
      */
     public GenericXAConnectionFactoryWrapper(TransactionManager transactionManager, XARecoveryModule xaRecoveryModule,
-            RecoveryCredentialsProperties recoveryCredentials) {
+            RecoveryProperties recoveryCredentials) {
         super(xaRecoveryModule, recoveryCredentials);
         this.transactionManager = transactionManager;
     }

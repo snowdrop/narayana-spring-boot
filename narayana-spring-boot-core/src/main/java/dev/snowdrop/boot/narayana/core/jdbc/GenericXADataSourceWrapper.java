@@ -28,7 +28,7 @@ import com.arjuna.ats.internal.jdbc.drivers.modifiers.ModifierFactory;
 import com.arjuna.ats.internal.jdbc.drivers.modifiers.SupportsMultipleConnectionsModifier;
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import com.arjuna.ats.jta.recovery.XAResourceRecoveryHelper;
-import dev.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
+import dev.snowdrop.boot.narayana.core.properties.RecoveryProperties;
 import dev.snowdrop.boot.narayana.core.properties.TransactionalDriverProperties;
 import org.springframework.boot.jdbc.DatabaseDriver;
 import org.springframework.boot.jdbc.XADataSourceWrapper;
@@ -44,7 +44,7 @@ public class GenericXADataSourceWrapper implements XADataSourceWrapper {
 
     private final XARecoveryModule xaRecoveryModule;
     private final TransactionalDriverProperties transactionalDriverProperties;
-    private final RecoveryCredentialsProperties recoveryCredentials;
+    private final RecoveryProperties recoveryCredentials;
 
     /**
      * Create a new {@link GenericXADataSourceWrapper} instance.
@@ -52,7 +52,7 @@ public class GenericXADataSourceWrapper implements XADataSourceWrapper {
      * @param xaRecoveryModule              recovery module to register data source with.
      */
     public GenericXADataSourceWrapper(XARecoveryModule xaRecoveryModule) {
-        this(xaRecoveryModule, RecoveryCredentialsProperties.DEFAULT);
+        this(xaRecoveryModule, RecoveryProperties.DEFAULT);
     }
 
     /**
@@ -61,7 +61,7 @@ public class GenericXADataSourceWrapper implements XADataSourceWrapper {
      * @param xaRecoveryModule              recovery module to register data source with.
      * @param recoveryCredentials           credentials for recovery helper
      */
-    public GenericXADataSourceWrapper(XARecoveryModule xaRecoveryModule, RecoveryCredentialsProperties recoveryCredentials) {
+    public GenericXADataSourceWrapper(XARecoveryModule xaRecoveryModule, RecoveryProperties recoveryCredentials) {
         this(xaRecoveryModule, new TransactionalDriverProperties(), recoveryCredentials);
     }
 
@@ -72,7 +72,7 @@ public class GenericXADataSourceWrapper implements XADataSourceWrapper {
      * @param transactionalDriverProperties Transactional driver properties
      */
     public GenericXADataSourceWrapper(XARecoveryModule xaRecoveryModule, TransactionalDriverProperties transactionalDriverProperties) {
-        this(xaRecoveryModule, transactionalDriverProperties, RecoveryCredentialsProperties.DEFAULT);
+        this(xaRecoveryModule, transactionalDriverProperties, RecoveryProperties.DEFAULT);
     }
 
     /**
@@ -83,7 +83,7 @@ public class GenericXADataSourceWrapper implements XADataSourceWrapper {
      * @param recoveryCredentials           credentials for recovery helper
      */
     public GenericXADataSourceWrapper(XARecoveryModule xaRecoveryModule, TransactionalDriverProperties transactionalDriverProperties,
-                                      RecoveryCredentialsProperties recoveryCredentials) {
+                                      RecoveryProperties recoveryCredentials) {
         this.xaRecoveryModule = xaRecoveryModule;
         this.transactionalDriverProperties = transactionalDriverProperties;
         this.recoveryCredentials = recoveryCredentials;
@@ -98,8 +98,10 @@ public class GenericXADataSourceWrapper implements XADataSourceWrapper {
      */
     @Override
     public DataSource wrapDataSource(XADataSource dataSource) throws Exception {
-        XAResourceRecoveryHelper recoveryHelper = getRecoveryHelper(dataSource);
-        this.xaRecoveryModule.addXAResourceRecoveryHelper(recoveryHelper);
+        if (this.recoveryCredentials.isEnabled()) {
+            XAResourceRecoveryHelper recoveryHelper = getRecoveryHelper(dataSource);
+            this.xaRecoveryModule.addXAResourceRecoveryHelper(recoveryHelper);
+        }
         registerModifier(dataSource);
         return new NarayanaDataSource(dataSource, this.transactionalDriverProperties);
     }
