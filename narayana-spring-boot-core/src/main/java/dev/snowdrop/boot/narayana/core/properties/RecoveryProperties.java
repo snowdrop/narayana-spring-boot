@@ -16,30 +16,45 @@
 
 package dev.snowdrop.boot.narayana.core.properties;
 
-public class RecoveryCredentialsProperties {
+public class RecoveryProperties {
 
     /**
      * default instance for convenience.
      */
-    public static final RecoveryCredentialsProperties DEFAULT;
+    public static final RecoveryProperties DEFAULT;
 
+    private boolean enabled;
     private String user;
     private String password;
 
     static {
-        DEFAULT = new RecoveryCredentialsProperties();
+        DEFAULT = new RecoveryProperties();
     }
 
-    public RecoveryCredentialsProperties() {
+    public RecoveryProperties() {
+        this(true);
     }
 
-    public RecoveryCredentialsProperties(String user, String password) {
+    public RecoveryProperties(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public RecoveryProperties(String user, String password) {
+        this(true);
         this.user = user;
         this.password = password;
     }
 
     public boolean isValid() {
         return !(this.user == null && this.password == null);
+    }
+
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public String getUser() {

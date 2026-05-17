@@ -29,7 +29,7 @@ import jakarta.transaction.TransactionManager;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
 import dev.snowdrop.boot.narayana.core.properties.MessagingHubConnectionFactoryProperties;
-import dev.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
+import dev.snowdrop.boot.narayana.core.properties.RecoveryProperties;
 import org.jboss.narayana.jta.jms.JmsXAResourceRecoveryHelper;
 import org.jboss.tm.FirstResource;
 import org.jboss.tm.LastResource;
@@ -47,6 +47,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -61,46 +62,57 @@ class PooledXAConnectionFactoryWrapperTest {
     @Spy
     private MessagingHubConnectionFactoryProperties spyMessagingHubConnectionFactoryProperties;
     @Mock
-    private RecoveryCredentialsProperties mockRecoveryCredentialsProperties;
+    private RecoveryProperties mockRecoveryProperties;
     private PooledXAConnectionFactoryWrapper wrapper;
 
     @BeforeEach
     void before() {
+        given(this.mockRecoveryProperties.isEnabled()).willReturn(true);
         this.wrapper = new PooledXAConnectionFactoryWrapper(this.mockTransactionManager, this.mockXaRecoveryModule,
-                this.spyMessagingHubConnectionFactoryProperties, this.mockRecoveryCredentialsProperties);
+                this.spyMessagingHubConnectionFactoryProperties, this.mockRecoveryProperties);
     }
 
     @Test
     void wrap() throws Exception {
-        given(this.mockRecoveryCredentialsProperties.isValid()).willReturn(false);
+        given(this.mockRecoveryProperties.isValid()).willReturn(false);
         ConnectionFactory connectionFactory = this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory);
         assertThat(connectionFactory).isInstanceOf(JmsPoolXAConnectionFactory.class);
         JmsPoolXAConnectionFactory pooledConnectionFactory = (JmsPoolXAConnectionFactory) connectionFactory;
         assertThat(pooledConnectionFactory.getTransactionManager()).isEqualTo(this.mockTransactionManager);
         assertThat(pooledConnectionFactory.getConnectionFactory()).isEqualTo(this.mockXaConnectionFactory);
+        verify(this.mockRecoveryProperties).isValid();
         verify(this.mockXaRecoveryModule).addXAResourceRecoveryHelper(any(JmsXAResourceRecoveryHelper.class));
-        verify(this.mockRecoveryCredentialsProperties).isValid();
     }
 
     @Test
     void wrapWithCredentials() throws Exception {
-        given(this.mockRecoveryCredentialsProperties.isValid()).willReturn(true);
-        given(this.mockRecoveryCredentialsProperties.getUser()).willReturn("userName");
-        given(this.mockRecoveryCredentialsProperties.getPassword()).willReturn("password");
+        given(this.mockRecoveryProperties.isValid()).willReturn(true);
+        given(this.mockRecoveryProperties.getUser()).willReturn("userName");
+        given(this.mockRecoveryProperties.getPassword()).willReturn("password");
         ConnectionFactory connectionFactory = this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory);
         assertThat(connectionFactory).isInstanceOf(JmsPoolXAConnectionFactory.class);
         JmsPoolXAConnectionFactory pooledConnectionFactory = (JmsPoolXAConnectionFactory) connectionFactory;
         assertThat(pooledConnectionFactory.getTransactionManager()).isEqualTo(this.mockTransactionManager);
         assertThat(pooledConnectionFactory.getConnectionFactory()).isEqualTo(this.mockXaConnectionFactory);
+        verify(this.mockRecoveryProperties).isValid();
+        verify(this.mockRecoveryProperties).getUser();
+        verify(this.mockRecoveryProperties).getPassword();
         verify(this.mockXaRecoveryModule).addXAResourceRecoveryHelper(any(JmsXAResourceRecoveryHelper.class));
-        verify(this.mockRecoveryCredentialsProperties).getUser();
-        verify(this.mockRecoveryCredentialsProperties).getPassword();
+    }
+
+    @Test
+    void wrapWithRecoveryDisabled() throws Exception {
+        given(this.mockRecoveryProperties.isEnabled()).willReturn(false);
+        ConnectionFactory connectionFactory = this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory);
+        assertThat(connectionFactory).isInstanceOf(JmsPoolXAConnectionFactory.class);
+        verify(this.mockXaRecoveryModule, times(0)).addXAResourceRecoveryHelper(any(JmsXAResourceRecoveryHelper.class));
+        verify(this.mockRecoveryProperties, times(0)).isValid();
     }
 
     @Test
     void wrapWithFirstResource() throws Exception {
         given(this.spyMessagingHubConnectionFactoryProperties.isFirstResource()).willReturn(true);
-        given(this.mockRecoveryCredentialsProperties.isValid()).willReturn(false);
+        given(this.mockRecoveryProperties.isValid()).willReturn(false);
         ConnectionFactory connectionFactory = this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory);
 
         XAConnection mockXaConnection = mock(XAConnection.class);
@@ -120,7 +132,7 @@ class PooledXAConnectionFactoryWrapperTest {
     @Test
     void wrapWithLastResource() throws Exception {
         given(this.spyMessagingHubConnectionFactoryProperties.isLastResource()).willReturn(true);
-        given(this.mockRecoveryCredentialsProperties.isValid()).willReturn(false);
+        given(this.mockRecoveryProperties.isValid()).willReturn(false);
         ConnectionFactory connectionFactory = this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory);
 
         XAConnection mockXaConnection = mock(XAConnection.class);
@@ -141,7 +153,7 @@ class PooledXAConnectionFactoryWrapperTest {
     void invalidFirstLastResourceConfiguration() throws Exception {
         given(this.spyMessagingHubConnectionFactoryProperties.isFirstResource()).willReturn(true);
         given(this.spyMessagingHubConnectionFactoryProperties.isLastResource()).willReturn(true);
-        given(this.mockRecoveryCredentialsProperties.isValid()).willReturn(false);
+        given(this.mockRecoveryProperties.isValid()).willReturn(false);
         assertThatThrownBy(() -> this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Setting both firstResource and lastResource is not allowed");

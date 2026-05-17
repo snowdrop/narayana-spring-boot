@@ -21,7 +21,7 @@ import jakarta.jms.XAConnectionFactory;
 import jakarta.transaction.TransactionManager;
 
 import com.arjuna.ats.internal.jta.recovery.arjunacore.XARecoveryModule;
-import dev.snowdrop.boot.narayana.core.properties.RecoveryCredentialsProperties;
+import dev.snowdrop.boot.narayana.core.properties.RecoveryProperties;
 import org.jboss.narayana.jta.jms.ConnectionFactoryProxy;
 import org.jboss.narayana.jta.jms.JmsXAResourceRecoveryHelper;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +33,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -53,34 +54,45 @@ class GenericXAConnectionFactoryWrapperTests {
     private XARecoveryModule mockXaRecoveryModule;
 
     @Mock
-    private RecoveryCredentialsProperties mockRecoveryCredentialsProperties;
+    private RecoveryProperties mockRecoveryProperties;
 
     private GenericXAConnectionFactoryWrapper wrapper;
 
     @BeforeEach
     void before() {
+        given(this.mockRecoveryProperties.isEnabled()).willReturn(true);
         this.wrapper = new GenericXAConnectionFactoryWrapper(this.mockTransactionManager, this.mockXaRecoveryModule,
-                this.mockRecoveryCredentialsProperties);
+                this.mockRecoveryProperties);
     }
 
     @Test
     void wrap() throws Exception {
-        given(this.mockRecoveryCredentialsProperties.isValid()).willReturn(false);
+        given(this.mockRecoveryProperties.isValid()).willReturn(false);
         ConnectionFactory wrapped = this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory);
         assertThat(wrapped).isInstanceOf(ConnectionFactoryProxy.class);
+        verify(this.mockRecoveryProperties).isValid();
         verify(this.mockXaRecoveryModule).addXAResourceRecoveryHelper(any(JmsXAResourceRecoveryHelper.class));
-        verify(this.mockRecoveryCredentialsProperties).isValid();
     }
 
     @Test
     void wrapWithCredentials() throws Exception {
-        given(this.mockRecoveryCredentialsProperties.isValid()).willReturn(true);
-        given(this.mockRecoveryCredentialsProperties.getUser()).willReturn("userName");
-        given(this.mockRecoveryCredentialsProperties.getPassword()).willReturn("password");
+        given(this.mockRecoveryProperties.isValid()).willReturn(true);
+        given(this.mockRecoveryProperties.getUser()).willReturn("userName");
+        given(this.mockRecoveryProperties.getPassword()).willReturn("password");
         ConnectionFactory wrapped = this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory);
         assertThat(wrapped).isInstanceOf(ConnectionFactoryProxy.class);
+        verify(this.mockRecoveryProperties).isValid();
+        verify(this.mockRecoveryProperties).getUser();
+        verify(this.mockRecoveryProperties).getPassword();
         verify(this.mockXaRecoveryModule).addXAResourceRecoveryHelper(any(JmsXAResourceRecoveryHelper.class));
-        verify(this.mockRecoveryCredentialsProperties).getUser();
-        verify(this.mockRecoveryCredentialsProperties).getPassword();
+    }
+
+    @Test
+    void wrapWithRecoveryDisabled() throws Exception {
+        given(this.mockRecoveryProperties.isEnabled()).willReturn(false);
+        ConnectionFactory wrapped = this.wrapper.wrapConnectionFactory(this.mockXaConnectionFactory);
+        assertThat(wrapped).isInstanceOf(ConnectionFactoryProxy.class);
+        verify(this.mockXaRecoveryModule, times(0)).addXAResourceRecoveryHelper(any(JmsXAResourceRecoveryHelper.class));
+        verify(this.mockRecoveryProperties, times(0)).isValid();
     }
 }

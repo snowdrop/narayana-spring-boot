@@ -76,14 +76,14 @@ public class NarayanaProperties {
     private int expiryScanInterval = 12;
 
     /**
-     * Database credentials to be used by recovery manager.
+     * Database recovery properties to be used by recovery manager.
      */
-    private RecoveryCredentialsProperties recoveryDbCredentials = new RecoveryCredentialsProperties();
+    private RecoveryProperties dbRecoveryProperties = new RecoveryProperties();
 
     /**
-     * JMS credentials to be used by recovery manager.
+     * JMS recovery properties to be used by recovery manager.
      */
-    private RecoveryCredentialsProperties recoveryJmsCredentials = new RecoveryCredentialsProperties();
+    private RecoveryProperties jmsRecoveryProperties = new RecoveryProperties();
 
     /**
      * Comma-separated list of orphan filters.
@@ -253,20 +253,40 @@ public class NarayanaProperties {
         this.expiryScanners = expiryScanners;
     }
 
-    public RecoveryCredentialsProperties getRecoveryDbCredentials() {
-        return this.recoveryDbCredentials;
+    @Deprecated(forRemoval = true)
+    public RecoveryProperties getRecoveryDbCredentials() {
+        return this.dbRecoveryProperties;
     }
 
-    public void setRecoveryDbCredentials(RecoveryCredentialsProperties recoveryDbCredentials) {
-        this.recoveryDbCredentials = recoveryDbCredentials;
+    @Deprecated(forRemoval = true)
+    public void setRecoveryDbCredentials(RecoveryProperties dbRecoveryProperties) {
+        this.dbRecoveryProperties = dbRecoveryProperties;
     }
 
-    public RecoveryCredentialsProperties getRecoveryJmsCredentials() {
-        return this.recoveryJmsCredentials;
+    @Deprecated(forRemoval = true)
+    public RecoveryProperties getRecoveryJmsCredentials() {
+        return this.jmsRecoveryProperties;
     }
 
-    public void setRecoveryJmsCredentials(RecoveryCredentialsProperties recoveryJmsCredentials) {
-        this.recoveryJmsCredentials = recoveryJmsCredentials;
+    @Deprecated(forRemoval = true)
+    public void setRecoveryJmsCredentials(RecoveryProperties jmsRecoveryProperties) {
+        this.jmsRecoveryProperties = jmsRecoveryProperties;
+    }
+
+    public RecoveryProperties getDbRecoveryProperties() {
+        return this.dbRecoveryProperties;
+    }
+
+    public void setDbRecoveryProperties(RecoveryProperties dbRecoveryProperties) {
+        this.dbRecoveryProperties = dbRecoveryProperties;
+    }
+
+    public RecoveryProperties getJmsRecoveryProperties() {
+        return this.jmsRecoveryProperties;
+    }
+
+    public void setJmsRecoveryProperties(RecoveryProperties jmsRecoveryProperties) {
+        this.jmsRecoveryProperties = jmsRecoveryProperties;
     }
 
     public TransactionalDriverProperties getTransactionalDriver() {
