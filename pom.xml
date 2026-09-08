@@ -57,7 +57,7 @@
     <camel-spring-boot.version>4.22.0</camel-spring-boot.version>
     <checkstyle.version>13.8.0</checkstyle.version>
     <narayana.version>7.3.4.Final</narayana.version>
-    <openshift-client.version>7.8.0</openshift-client.version>
+    <openshift-client.version>7.9.0</openshift-client.version>
     <spring-boot.version>4.1.1</spring-boot.version>
 
     <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
