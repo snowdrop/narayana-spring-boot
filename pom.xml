@@ -50,7 +50,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <agroal.version>3.2.1</agroal.version>
+    <agroal.version>3.3</agroal.version>
     <awaitility.version>4.3.0</awaitility.version>
     <byteman.version>4.0.28.1</byteman.version>
     <camel.version>4.22.2</camel.version>
